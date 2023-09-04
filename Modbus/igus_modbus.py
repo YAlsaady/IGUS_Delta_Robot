@@ -35,3 +35,23 @@ class Robot:
         :return: None
         """
         self.client.close()
+
+    def enable(self):
+        """
+        Enable the motors of the Robot.
+
+        This method enables the motors of the robot by writing 1 the coil 53.
+
+        :return: None
+        """
+        self.client.write_single_coil(53, True)
+
+    def disable(self):
+        """
+        Disable the motors of the Robot.
+
+        This method disables the motors of the robot by writing 0 to the coil 53.
+
+        :return: None
+        """
+        self.client.write_single_coil(53, False)
