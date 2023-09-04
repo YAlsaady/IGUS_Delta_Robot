@@ -14,8 +14,9 @@ Usage:
 
 from pyModbusTCP.client import ModbusClient
 
+
 class Robot:
-    def __init__(self, address, port=502): 
+    def __init__(self, address, port=502):
         """
         Initialize a Robot instance and establish the communication
 
@@ -26,3 +27,11 @@ class Robot:
         """
         self.address = address
         self.client = ModbusClient(host=address, port=port)
+
+    def __del__(self):
+        """
+        Close current TCP connection.
+
+        :return: None
+        """
+        self.client.close()
