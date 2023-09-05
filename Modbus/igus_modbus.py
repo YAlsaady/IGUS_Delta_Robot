@@ -57,6 +57,8 @@ class Robot:
 
         :return: None
         """
+        if not self.enable():
+            self.client.write_single_coil(53, False)
         self.client.write_single_coil(53, True)
 
     def disable(self):
@@ -91,10 +93,8 @@ class Robot:
         :return: True if successful, False if out of range is set.
         :rtype: bool
         """
-        if self.client.read_coils(53):
-            self.enable()
-        if self.client.read_coils(60):
-            self.reference()
+        print(self.client.read_coils(53))
+        print(self.client.read_coils(60))
         self.client.write_single_coil(100, False)
         self.client.write_single_coil(100, True)
         if self.client.read_coils(41):
@@ -126,11 +126,11 @@ class Robot:
         y_val *= 100
         z_val *= 100
         self.client.write_single_register(130, (x_val & 0x0000FFFF))
-        self.client.write_single_register(131, (x_val >> 16))
+        self.client.write_single_register(131, (x_val >> 16) & 0x0000FFFF)
         self.client.write_single_register(132, (y_val & 0x0000FFFF))
-        self.client.write_single_register(133, (y_val >> 16))
+        self.client.write_single_register(133, (y_val >> 16) & 0x0000FFFF)
         self.client.write_single_register(134, (z_val & 0x0000FFFF))
-        self.client.write_single_register(135, z_val >> 16)
+        self.client.write_single_register(135, (z_val >> 16) & 0x0000FFFF)
 
     def set_velocity(self, velocity):
         """
