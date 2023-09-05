@@ -71,14 +71,22 @@ class Robot:
         """
         self.client.write_single_coil(53, False)
 
-    def reference(self):
+    def reference(self, only_once=True):
         """
         Reference the Robot.
 
         This method references the robot by writing a rising edge to the coil 60.
+        If 'only_once' is set to True (default), it will only reference the robot if it's not already referenced.
 
+        :param only_once: If True, the robot will only be referenced if not already referenced,
+                         otherwise, it will be referenced each time this method is called (default is True).
+        :type only_once: bool
         :return: None
         """
+        if not only_once:
+            self.client.write_single_coil(60, False)
+            self.client.write_single_coil(60, True)
+            return
         if not self.is_referenced():
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
