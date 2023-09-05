@@ -57,7 +57,7 @@ class Robot:
 
         :return: None
         """
-        if not self.enable():
+        if not self.is_enabled():
             self.client.write_single_coil(53, False)
         self.client.write_single_coil(53, True)
 
@@ -79,8 +79,31 @@ class Robot:
 
         :return: None
         """
-        self.client.write_single_coil(60, False)
-        self.client.write_single_coil(60, True)
+        if not self.is_referenced():
+            self.client.write_single_coil(60, False)
+            self.client.write_single_coil(60, True)
+
+    def is_enabled(self):
+        """
+        Check if the Robot is enabled.
+
+        This method checks the state of the Robot's motors by reading coil 53.
+
+        :return: True if the motors are enabled, False otherwise.
+        :rtype: bool
+        """
+        return self.client.read_coils((53))
+
+    def is_referenced(self):
+        """
+        Check if the Robot is referenced.
+
+        This method checks if the Robot has been referenced by reading coil 60.
+
+        :return: True if the Robot is referenced, False otherwise.
+        :rtype: bool
+        """
+        return self.client.read_coils((60))
 
     def move_endeffector_absolute(self):
         """
@@ -137,7 +160,7 @@ class Robot:
         Set the velocity of the Robot.
 
         This method sets the velocity of the robot in millimeters per second.
-        For cartesian motions the value is set as a multiple of 1mm/s, 
+        For cartesian motions the value is set as a multiple of 1mm/s,
         for joint motions it is a multiple of 1% (relative to the maximum velocity)
         The actual motion speed also depends on the global override value (holding register 187).
 
