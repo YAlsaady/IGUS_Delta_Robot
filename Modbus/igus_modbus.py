@@ -118,3 +118,18 @@ class Robot:
         self.client.write_single_register(133, (y_val >> 16))
         self.client.write_single_register(134, (z_val & 0x0000FFFF))
         self.client.write_single_register(135, z_val >> 16)
+
+    def set_velocity(self, velocity):
+        """
+        Set the velocity of the Robot.
+
+        This method sets the velocity of the robot in millimeters per second.
+        For cartesian motions the value is set as a multiple of 1mm/s, 
+        for joint motions it is a multiple of 1% (relative to the maximum velocity)
+        The actual motion speed also depends on the global override value (holding register 187).
+
+        :param velocity: The desired velocity in millimeters per second (or in percent).
+        :type velocity: float
+        :return: None
+        """
+        self.client.write_single_register(180, velocity * 10)
