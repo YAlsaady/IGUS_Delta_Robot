@@ -55,3 +55,14 @@ class Robot:
         :return: None
         """
         self.client.write_single_coil(53, False)
+
+    def reference(self):
+        """
+        Reference the Robot.
+
+        This method references the robot by writing a rising edge to the coil 60.
+
+        :return: None
+        """
+        self.client.write_single_coil(60, False)
+        self.client.write_single_coil(60, True)
