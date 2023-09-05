@@ -67,6 +67,27 @@ class Robot:
         self.client.write_single_coil(60, False)
         self.client.write_single_coil(60, True)
 
+    def move_endeffector_absolute(self):
+        """
+        Move the endeffector to the target position.
+
+        This method moves the endeffector to the specified Cartesian position by writing a rising edge to the coil 100.
+        It checks if the robot is enabled and referenced before moving.
+        To specify the position, use the method set_position_endeffector(x, y, z).
+
+        :return: True if successful, False if out of range is set.
+        :rtype: bool
+        """
+        if self.client.read_coils(53):
+            self.enable()
+        if self.client.read_coils(60):
+            self.reference()
+        self.client.write_single_coil(100, False)
+        self.client.write_single_coil(100, True)
+        if self.client.read_coils(41):
+            return False
+        return True
+
     def set_position_endeffector(self, x_val, y_val, z_val):
         """
         Set the target position of the endeffector
