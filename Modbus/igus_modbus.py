@@ -112,24 +112,45 @@ class Robot:
         :rtype: bool
         """
         return self.client.read_coils((60))
-
-    def move_endeffector_absolute(self):
+    def is_moving(self):
         """
-        Move the endeffector to the target position.
+        Check if the Robot is moving.
 
-        This method moves the endeffector to the specified Cartesian position by writing a rising edge to the coil 100.
-        It checks if the robot is enabled and referenced before moving.
-        To specify the position, use the method set_position_endeffector(x, y, z).
+        This method checks the state of the Robot's motion by reading coil 112.
 
-        :return: True if successful, False if out of range is set.
+        :return: True if the Robot is currently moving, False otherwise.
         :rtype: bool
         """
-        print(self.client.read_coils(53))
-        print(self.client.read_coils(60))
-        self.client.write_single_coil(100, False)
-        self.client.write_single_coil(100, True)
-        if self.client.read_coils(41):
-            return False
+        return self.client.read_coils(112)[0]
+
+
+    def move_endeffector(self, wait=True, relative = None):
+        """
+        Move the end effector to the target position.
+
+        This method moves the end effector to the specified Cartesian position by controlling the appropriate coil.
+        The movement can be relative to different reference frames (base, tool) based on the 'relative' parameter.
+        To specify the position, use the method set_position_endeffector(x, y, z).
+
+        :param wait: If True (default), wait until the movement is complete before returning.
+        :type wait: bool
+        :param relative: Specifies the reference frame for the movement (None for absolute, 'base', or 'tool').
+        :type relative: str or None
+        :return: True if the movement was successful, False if out of range is set.
+        :rtype: bool
+        """
+        if wait:
+            while self.is_moving():
+                pass
+        if relative == None:
+            self.client.write_single_coil(100, False)
+            self.client.write_single_coil(100, True)
+        if relative == "base":
+            self.client.write_single_coil(101, False)
+            self.client.write_single_coil(101, True)
+        if relative == "tool":
+            self.client.write_single_coil(102, False)
+            self.client.write_single_coil(102, True)
         return True
 
     def set_position_endeffector(self, x_val, y_val, z_val):
