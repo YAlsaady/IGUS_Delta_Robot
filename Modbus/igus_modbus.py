@@ -100,7 +100,7 @@ class Robot:
         :return: True if the motors are enabled, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils((53))
+        return self.client.read_coils(53)[0]
 
     def is_referenced(self):
         """
@@ -111,7 +111,8 @@ class Robot:
         :return: True if the Robot is referenced, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils((60))
+        return self.client.read_coils(60)[0]
+
     def is_moving(self):
         """
         Check if the Robot is moving.
@@ -122,7 +123,6 @@ class Robot:
         :rtype: bool
         """
         return self.client.read_coils(112)[0]
-
 
     def move_endeffector(self, wait=True, relative = None):
         """
