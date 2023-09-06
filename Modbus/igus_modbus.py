@@ -26,6 +26,7 @@ Example:
 """
 
 from pyModbusTCP.client import ModbusClient
+from ctypes import c_int32
 
 
 class Robot:
@@ -198,3 +199,23 @@ class Robot:
         :return: None
         """
         self.client.write_single_register(180, velocity * 10)
+
+    def get_cartesian_position(self):
+        """
+        Get the Cartesian position of the Delta Robot.
+
+        This method reads the X, Y, and Z positions from input registers and returns them in millimeters.
+
+        :return: A tuple (x_pos, y_pos, z_pos) representing the Cartesian position in millimeters.
+        :rtype: tuple
+        """
+        x_pos = self.client.read_input_registers(130)[0]
+        x_pos2 = self.client.read_input_registers(131)[0]
+        y_pos = self.client.read_input_registers(132)[0]
+        y_pos2 = self.client.read_input_registers(133)[0]
+        z_pos = self.client.read_input_registers(134)[0]
+        z_pos2 = self.client.read_input_registers(135)[0]
+        x_pos = c_int32(x_pos | (x_pos2 << 16)).value / 100
+        y_pos = c_int32(y_pos | (y_pos2 << 16)).value / 100
+        z_pos = c_int32(z_pos | (z_pos2 << 16)).value / 100
+        return x_pos, y_pos, z_pos
