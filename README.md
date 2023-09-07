@@ -6,7 +6,7 @@ A Library to control the movement for the Delta Robot from IGUS and the opening 
 - [x] shutdown:                      coil 51
 - [x] reset:                         coil 52 
   
-- [ ] move_axes:                     coil 103, coil 104(relative)
+- [x] move_axes:                     coil 103, coil 104(relative)
 - [ ] enable_zero_torque:            coil 111
 - [ ] is_program_loaded:             coil 120
 
@@ -22,13 +22,13 @@ A Library to control the movement for the Delta Robot from IGUS and the opening 
 - [ ] get_operation_mode_code        input_register 96                    enum
 
 - [ ] get_cartesian_orientation      input_registers 136-141 
-- [ ] get_axis_position              input_registers 142-153
+- [ ] get_axes_position              input_registers 142-153
 
 - [ ] read_count_programs            input_register 262
 - [ ] read_program_number            input_register 263
 - [ ] get_why_stopped                input_register 266                   enum 
 
-- [ ] directories                     input_registers 331-396 
+- [ ] directories                    input_registers 331-396 
 
 - [ ] read_digital_input             input_registers 207-210
 - [ ] read_short_message             input_registers 400-431              string
@@ -36,8 +36,8 @@ A Library to control the movement for the Delta Robot from IGUS and the opening 
 - [ ] get_position_variables
   
   
-- [ ] set_orientation_endeffector    holding_registers 136-141 
-- [ ] set_position_axes              holding_registers 142-153 
+- [x] set_orientation_endeffector    holding_registers 136-141 
+- [x] set_position_axes              holding_registers 142-153 
 - [ ] set_override_velocity          holding_registers 181-186
 
 - [ ] run_state                      holding_register 260                 enum

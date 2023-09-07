@@ -27,6 +27,8 @@ Example:
 
 from pyModbusTCP.client import ModbusClient
 from ctypes import c_int32
+from math import sin, cos, radians
+from numpy import arange
 
 
 class Robot:
@@ -49,6 +51,28 @@ class Robot:
         :return: None
         """
         self.client.close()
+
+    def shutdown(self):
+        """
+        Reset the Delta Robot.
+
+        This method shut the robot down by writing a rising edge to the coil.
+
+        :return: None
+        """
+        self.client.write_single_coil(51, False)
+        self.client.write_single_coil(51, True)
+
+    def reset(self):
+        """
+        Reset the Delta Robot.
+
+        This method resets the robot by writing a rising edge to the coil.
+
+        :return: None
+        """
+        self.client.write_single_coil(52, False)
+        self.client.write_single_coil(52, True)
 
     def enable(self):
         """
@@ -125,7 +149,7 @@ class Robot:
         """
         return self.client.read_coils(112)[0]
 
-    def move_endeffector(self, wait=True, relative = None):
+    def move_endeffector(self, wait=True, relative=None):
         """
         Move the end effector to the target position.
 
@@ -154,6 +178,32 @@ class Robot:
             self.client.write_single_coil(102, True)
         return True
 
+    def move_axes(self, wait=True, relative=False):
+        """
+        Move the end effector to the target position.
+
+        This method moves the end effector to the specified axes position by controlling the appropriate coil.
+        The movement can be relative or absolute 'relative' parameter.
+        To specify the position, use the method set_position_endeffector(x, y, z).
+
+        :param wait: If True (default), wait until the movement is complete before returning.
+        :type wait: bool
+        :param relative: If False (default), the movement will be absolute, otherwise will be relative to the current position
+        :type relative: bool
+        :return: True if the movement was successful, False if out of range is set.
+        :rtype: bool
+        """
+        if wait:
+            while self.is_moving():
+                pass
+        if relative:
+            self.client.write_single_coil(104, False)
+            self.client.write_single_coil(104, True)
+        else:
+            self.client.write_single_coil(103, False)
+            self.client.write_single_coil(103, True)
+        return True
+
     def set_position_endeffector(self, x_val, y_val, z_val):
         """
         Set the target position of the endeffector
@@ -162,10 +212,7 @@ class Robot:
         It converts the input values to the appropriate format and writes them to registers 130-135.
 
         The position can be absolute or relative to the the base or to itself.
-        To make the robot move, use the one of the folling methods
-        * move_endeffector_absolute()
-        * move_endeffector_relative_tool()
-        * move_endeffector_relative_base()
+        To make the robot move, use the one of the folling method move_endeffector()
 
         :param x_val: The target X position in millimeters.
         :type x_val: float
@@ -185,6 +232,46 @@ class Robot:
         self.client.write_single_register(134, (z_val & 0x0000FFFF))
         self.client.write_single_register(135, (z_val >> 16) & 0x0000FFFF)
 
+    def set_orientation_endeffector(self, a_val, b_val, c_val):
+        self.client.write_single_register(130, a_val)
+        self.client.write_single_register(132, b_val)
+        self.client.write_single_register(134, c_val)
+
+    def set_position_axes(self, a_val, b_val, c_val):
+        """
+        Set the target position of the endeffector
+
+        This method sets the target position of the axes
+        It converts the input values to the appropriate format and writes them to registers 142-154
+
+        The position can be absolute or relative.
+        To make the robot move, use the one of the method move_endeffector()
+
+        :param a_val: The target A position in millimeters.
+        :type x_val: float
+        :param b_val: The target B position in millimeters.
+        :type y_val: float
+        :param c_val: The target C position in millimeters.
+        :type z_val: float
+        :return: None
+        """
+        x_val *= 100
+        y_val *= 100
+        z_val *= 100
+        self.client.write_single_register(142, (a_val & 0x000000000000FFFF))
+        self.client.write_single_register(143, (a_val >> 16) & 0x000000000000FFFF)
+        self.client.write_single_register(144, (a_val >> 24) & 0x000000000000FFFF)
+        self.client.write_single_register(145, (a_val >> 32) & 0x000000000000FFFF)
+        self.client.write_single_register(146, (b_val & 0x000000000000FFFF))
+        self.client.write_single_register(147, (b_val >> 16) & 0x000000000000FFFF)
+        self.client.write_single_register(148, (b_val >> 24) & 0x000000000000FFFF)
+        self.client.write_single_register(149, (b_val >> 32) & 0x000000000000FFFF)
+        self.client.write_single_register(150, (c_val & 0x000000000000FFFF))
+        self.client.write_single_register(151, (c_val >> 16) & 0x000000000000FFFF)
+        self.client.write_single_register(152, (c_val >> 16) & 0x000000000000FFFF)
+        self.client.write_single_register(153, (c_val >> 24) & 0x000000000000FFFF)
+        self.client.write_single_register(154, (c_val >> 32) & 0x000000000000FFFF)
+
     def set_velocity(self, velocity):
         """
         Set the velocity of the Robot.
@@ -199,6 +286,14 @@ class Robot:
         :return: None
         """
         self.client.write_single_register(180, velocity * 10)
+
+    def set_and_move(
+        self, x_val, y_val, z_val, relative=None, wait=True, velocity=None
+    ):
+        self.set_position_endeffector(x_val, y_val, z_val)
+        if velocity:
+            self.set_velocity(velocity)
+        self.move_endeffector(wait=wait, relative=relative)
 
     def get_cartesian_position(self):
         """
@@ -219,3 +314,29 @@ class Robot:
         y_pos = c_int32(y_pos | (y_pos2 << 16)).value / 100
         z_pos = c_int32(z_pos | (z_pos2 << 16)).value / 100
         return x_pos, y_pos, z_pos
+
+    def controll_programs(self, action):
+        if action == "start":
+            self.client.write_single_coil(124, False)
+            self.client.write_single_coil(124, True)
+            self.client.write_single_coil(122, False)
+            self.client.write_single_coil(122, True)
+        elif action == "continue":
+            self.client.write_single_coil(122, False)
+            self.client.write_single_coil(122, True)
+        elif action == "pause":
+            self.client.write_single_coil(123, False)
+            self.client.write_single_coil(123, True)
+        elif action == "stop":
+            self.client.write_single_coil(124, False)
+            self.client.write_single_coil(124, True)
+
+    def read_loaded_programmes(self):
+        return self.client.read_holding_registers(267, 32)
+
+    def move_circular(self, radius, step=0.5, start_angle=0, stop_angle=360):
+        x_val, y_val, z_val = self.get_cartesian_position()
+        for angle in arange(start_angle, stop_angle, step):
+            x = radius * cos(radians(angle)) + x_val
+            y = radius * sin(radians(angle)) + y_val
+            self.set_and_move(round(x, 2), round(y, 2), z_val)
