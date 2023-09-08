@@ -15,10 +15,12 @@ gripper.controll(50, 90)
 
 delta_robot.set_position_endeffector(0, 0, 250)
 delta_robot.move_endeffector()
+time.sleep(2)
 gripper.open()
 
 delta_robot.set_position_endeffector(0, 0, -120)
 delta_robot.move_endeffector(relative = "base")
+time.sleep(2)
 gripper.close()
 time.sleep(2)
 
@@ -28,7 +30,9 @@ delta_robot.set_position_endeffector(200, 200, 0)
 delta_robot.move_endeffector(relative = "base")
 delta_robot.set_position_endeffector(0, 0, -130)
 delta_robot.move_endeffector(relative = "base")
+time.sleep(2)
 gripper.rotate(180)
+time.sleep(2)
 gripper.open()
 time.sleep(2)
 
