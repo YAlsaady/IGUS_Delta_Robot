@@ -152,6 +152,9 @@ class Robot:
         """
         return self.client.read_coils(112)[0]
 
+    def set_zero_torque(self, enable = True):
+        self.client.write_single_coil(111, enable)
+
     def move_endeffector(self, wait=True, relative=None):
         """
         Move the end effector to the target position.
@@ -225,9 +228,9 @@ class Robot:
         :type z_val: float
         :return: None
         """
-        x_val *= 100
-        y_val *= 100
-        z_val *= 100
+        x_val = int(x_val * 100)
+        y_val = int(y_val * 100)
+        z_val = int(z_val * 100)
         self.client.write_single_register(130, (x_val & 0x0000FFFF))
         self.client.write_single_register(131, (x_val >> 16) & 0x0000FFFF)
         self.client.write_single_register(132, (y_val & 0x0000FFFF))
@@ -334,12 +337,26 @@ class Robot:
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
 
-    def read_loaded_programmes(self):
-        return self.client.read_holding_registers(267, 32)
+    def read_loaded_program(self):
+        read = self.client.read_holding_registers(267, 32)
+        return self.read_string(read)
 
     def move_circular(self, radius, step=0.5, start_angle=0, stop_angle=360):
+        while self.is_moving():
+            pass
         x_val, y_val, z_val = self.get_cartesian_position()
         for angle in arange(start_angle, stop_angle, step):
             x = radius * cos(radians(angle)) + x_val
             y = radius * sin(radians(angle)) + y_val
+            print(round(x,2))
+            print(round(y,2))
             self.set_and_move(round(x, 2), round(y, 2), z_val)
+
+    def read_string(self, read):
+        string = ""
+        for i in read:
+            if i:
+                string += chr(i & 0x00FF)
+                string += chr(i >> 8)
+        return string
+
