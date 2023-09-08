@@ -112,9 +112,12 @@ class Robot:
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
             return
-        if not self.is_referenced():
-            self.client.write_single_coil(60, False)
-            self.client.write_single_coil(60, True)
+        else:
+            if not self.is_referenced():
+                self.client.write_single_coil(60, False)
+                self.client.write_single_coil(60, True)
+            else:
+                return
 
     def is_enabled(self):
         """
