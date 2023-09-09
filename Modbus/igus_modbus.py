@@ -152,7 +152,7 @@ class Robot:
         """
         return self.client.read_coils(112)[0]
 
-    def set_zero_torque(self, enable = True):
+    def set_zero_torque(self, enable=True):
         self.client.write_single_coil(111, enable)
 
     def move_endeffector(self, wait=True, relative=None):
@@ -254,16 +254,16 @@ class Robot:
         To make the robot move, use the one of the method move_endeffector()
 
         :param a_val: The target A position in millimeters.
-        :type x_val: float
+        :type a_val: float
         :param b_val: The target B position in millimeters.
-        :type y_val: float
+        :type b_val: float
         :param c_val: The target C position in millimeters.
-        :type z_val: float
+        :type c_val: float
         :return: None
         """
-        x_val *= 100
-        y_val *= 100
-        z_val *= 100
+        a_val *= 100
+        b_val *= 100
+        c_val *= 100
         self.client.write_single_register(142, (a_val & 0x000000000000FFFF))
         self.client.write_single_register(143, (a_val >> 16) & 0x000000000000FFFF)
         self.client.write_single_register(144, (a_val >> 24) & 0x000000000000FFFF)
@@ -301,7 +301,7 @@ class Robot:
             self.set_velocity(velocity)
         self.move_endeffector(wait=wait, relative=relative)
 
-    def get_cartesian_position(self):
+    def get_position_endeffector(self):
         """
         Get the Cartesian position of the Delta Robot.
 
@@ -321,6 +321,12 @@ class Robot:
         z_pos = c_int32(z_pos | (z_pos2 << 16)).value / 100
         return x_pos, y_pos, z_pos
 
+    def get_orientation_endeffector(self):
+        a = self.client.read_input_registers(136)[0]
+        b = self.client.read_input_registers(138)[0]
+        c = self.client.read_input_registers(140)[0]
+        return a, b, c
+
     def controll_programs(self, action):
         if action == "start":
             self.client.write_single_coil(124, False)
@@ -337,7 +343,11 @@ class Robot:
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
 
-    def read_loaded_program(self):
+    def set_program_name(self, name):
+        self.write_string(name, 267, 31)
+        pass
+
+    def get_program_name(self):
         read = self.client.read_holding_registers(267, 32)
         return self.read_string(read)
 
@@ -348,9 +358,29 @@ class Robot:
         for angle in arange(start_angle, stop_angle, step):
             x = radius * cos(radians(angle)) + x_val
             y = radius * sin(radians(angle)) + y_val
-            print(round(x,2))
-            print(round(y,2))
+            print(round(x, 2))
+            print(round(y, 2))
             self.set_and_move(round(x, 2), round(y, 2), z_val)
+
+    def set_globale_signal(self, state: bool, number):
+        if 1 >= number <= 100:
+            self.client.write_single_coil(199 + number, state)
+
+    def set_digital_output(self, state: bool, number):
+        if 1 >= number <= 64:
+            self.client.write_single_coil(299 + number, state)
+
+    def get_globale_signal(self, number):
+        if 1 >= number <= 100:
+            return self.client.read_coils(199 + number)[0]
+
+    def get_digital_output(self, number):
+        if 1 >= number <= 64:
+            return self.client.read_coils(299 + number)[0]
+
+    def get_digital_input(self, number):
+        if 1 >= number <= 64:
+            return self.client.read_coils(263 + number)[0]
 
     def read_string(self, read):
         string = ""
@@ -360,3 +390,10 @@ class Robot:
                 string += chr(i >> 8)
         return string
 
+    def write_string(self, ad, string, number=32):
+        string = iter(string)
+        for count, i in string:
+            if count == number:
+                break
+            val = (next(string) + i).encode("utf-8").hex()
+            self.client.write_single_register(count + ad, val)
