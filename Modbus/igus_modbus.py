@@ -812,8 +812,8 @@ class Robot:
             return False
         number = 456 + (16 * (number - 1))
         if movement == "cartesian":
-            # if not (x & y & z & a & b & c):
-            #     return False
+            if not (x & y & z):
+                return False
             x *= 10
             y *= 10
             z *= 10
