@@ -1,3 +1,4 @@
+# {{{ Description
 """
 igus_modbus Module
 ==================
@@ -24,15 +25,23 @@ Example:
     delta_robot.move_endeffector_absolute()
 
 """
+# }}}
 
+# {{{ Import
+from time import sleep
 from pyModbusTCP.client import ModbusClient
 from ctypes import c_int32
 from math import sin, cos, radians
-from numpy import arange
+from numpy import arange, cov
+
+# }}}
 
 
+# {{{ Init
 class Robot:
-    def __init__(self, address, port=502):
+    is_connected = False
+
+    def __init__(self, address: str, port: int = 502):
         """
         Initialize a Robot instance and establish the communication
 
@@ -43,6 +52,7 @@ class Robot:
         """
         self.address = address
         self.client = ModbusClient(host=address, port=port)
+        self.is_connected = self.client.open()
 
     def __del__(self):
         """
@@ -52,6 +62,9 @@ class Robot:
         """
         self.client.close()
 
+    # }}}
+
+    # {{{ Robot Control
     def shutdown(self):
         """
         Reset the Delta Robot.
@@ -85,6 +98,7 @@ class Robot:
         if not self.is_enabled():
             self.client.write_single_coil(53, False)
         self.client.write_single_coil(53, True)
+        sleep(0.1)
 
     def disable(self):
         """
@@ -94,9 +108,12 @@ class Robot:
 
         :return: None
         """
-        self.client.write_single_coil(53, False)
+        if self.is_enabled():
+            self.client.write_single_coil(53, False)
+        self.client.write_single_coil(53, True)
+        sleep(0.1)
 
-    def reference(self, only_once=True):
+    def reference(self, only_once: bool = True):
         """
         Reference the Robot.
 
@@ -111,14 +128,23 @@ class Robot:
         if not only_once:
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
+            sleep(0.2)
+            while not self.is_referenced():
+                pass
             return
         else:
             if not self.is_referenced():
                 self.client.write_single_coil(60, False)
                 self.client.write_single_coil(60, True)
+                sleep(0.2)
+                while not self.is_referenced():
+                    pass
             else:
                 return
 
+    # }}}
+
+    # {{{ Info
     def is_enabled(self):
         """
         Check if the Robot is enabled.
@@ -152,10 +178,146 @@ class Robot:
         """
         return self.client.read_coils(112)[0]
 
-    def set_zero_torque(self, enable=True):
-        self.client.write_single_coil(111, enable)
+    def is_general_error(self):
+        """
+        Check if the robot has general errors.
 
-    def move_endeffector(self, wait=True, relative=None):
+        This method checks the state of the robot's error status coil
+        and returns True if the robot has general errors, or False if
+        there are no errors.
+
+        :return: True if the robot has general errors, False otherwise.
+        :rtype: bool
+        """
+        return not self.client.read_coils(20)[0]
+
+    def is_kinematics_error(self):
+        """
+        Check if the robot has kinematics-related errors.
+
+        This method checks the state of the robot's kinematics error status coil
+        and returns True if the robot has kinematics-related errors, or False if
+        there are no kinematics errors.
+
+        :return: True if the robot has kinematics-related errors, False otherwise.
+        :rtype: bool
+        """
+        return not self.client.read_coils(37)[0]
+
+    def is_program_loaded(self):
+        """
+        Check if a program is loaded.
+
+        This method checks if a program is loaded on the robot controller.
+
+        :return: True if a program is loaded, False otherwise.
+        :rtype: bool
+        """
+        return self.client.read_coils(120)[0]
+
+    def is_zero_torque(self):
+        return self.client.read_coils(111)[0]
+
+    # }}}
+
+    # {{{ General
+    def set_zero_torque(self, enable: bool = True):
+        """
+        Set the zero torque state for manual movement.
+
+        This method allows you to enable or disable the zero torque state, which allows manual movement of the robot by hand.
+
+        :param enable: True to enable zero torque (for manual movement), False to disable.
+        :type enable: bool
+        """
+        if enable & (not self.is_zero_torque()):
+            self.client.write_single_coil(111, False)
+            self.client.write_single_coil(111, True)
+        elif not enable & (self.is_zero_torque()):
+            self.client.write_single_coil(111, False)
+            self.reset()
+            sleep(0.2)
+            self.enable()
+
+    def set_override_velocity(self, velocity: float = 20):
+        """
+        Set the override velocity for robot movements.
+
+        This method allows you to adjust the velocity override for robot movements.
+        The `velocity` parameter specifies the desired velocity as a percentage (0-100),
+        with 100 being the maximum velocity. The default is 20%.
+
+        :param velocity: The desired velocity override as a percentage (0-100).
+        :type velocity: float
+        :return: True if the velocity was successfully set, False if the provided velocity is out of range.
+        :rtype: bool
+        """
+        if 0 < velocity <= 100:
+            return self.client.write_single_register(187, 100 * velocity)
+
+    def set_velocity(self, velocity: bool):
+        """
+        Set the velocity of the Robot.
+
+        This method sets the velocity of the robot in millimeters per second.
+        For cartesian motions the value is set as a multiple of 1mm/s,
+        for joint motions it is a multiple of 1% (relative to the maximum velocity)
+        The actual motion speed also depends on the global override value (holding register 187).
+
+        :param velocity: The desired velocity in millimeters per second (or in percent).
+        :type velocity: float
+        :return: None
+        """
+        return self.client.write_single_register(180, velocity * 10)
+
+    def set_and_move(
+        self,
+        val_1: float,
+        val_2: float,
+        val_3: float,
+        movement: int = "cartesian",
+        relative: str = None,
+        wait: bool = True,
+        velocity: float = None,
+    ):
+        """
+        Set the target position and move the end effector.
+
+        This method sets the target position of the end effector using the 'set_position_endeffector' method,
+        adjusts the velocity if specified, and then moves the end effector to the target position using the 'move_endeffector' method.
+        The movement can be relative to different reference frames (base, tool) based on the 'relative' parameter.
+        You can choose to wait until the movement is complete before returning.
+
+        :param val_1: The target position value (X, A1, or other axis, depending on the 'movement' parameter).
+        :type val_1: float
+        :param val_2: The target position value (Y, A2, or other axis, depending on the 'movement' parameter).
+        :type val_2: float
+        :param val_3: The target position value (Z, A3, or other axis, depending on the 'movement' parameter).
+        :type val_3: float
+        :param movement: Specifies the type of movement ('cartesian' or 'axes').
+        :type movement: str
+        :param relative: Specifies the reference frame for the movement (None for absolute, 'base', or 'tool').
+        :type relative: str or None
+        :param wait: If True (default), wait until the movement is complete before returning.
+        :type wait: bool
+        :param velocity: Optional velocity setting in millimeters per second.
+        :type velocity: float or None
+        """
+        if velocity:
+            self.set_velocity(velocity)
+        if movement == "cartesian":
+            self.set_position_endeffector(val_1, val_2, val_3)
+            self.move_endeffector(wait=wait, relative=relative)
+        elif movement == "axes":
+            self.set_position_axes(val_1, val_2, val_3)
+            self.move_axes(wait=wait, relative=relative)
+        else:
+            return None
+
+    # }}}
+
+    # {{{ End effector
+    def move_endeffector(self, wait: bool = True, relative: str = None):
         """
         Move the end effector to the target position.
 
@@ -184,41 +346,12 @@ class Robot:
             self.client.write_single_coil(102, True)
         return True
 
-    def move_axes(self, wait=True, relative=False):
+    def set_position_endeffector(self, x_val: float, y_val: float, z_val: float):
         """
-        Move the end effector to the target position.
+        Set the target position of the end effector in millimeters.
 
-        This method moves the end effector to the specified axes position by controlling the appropriate coil.
-        The movement can be relative or absolute 'relative' parameter.
-        To specify the position, use the method set_position_endeffector(x, y, z).
-
-        :param wait: If True (default), wait until the movement is complete before returning.
-        :type wait: bool
-        :param relative: If False (default), the movement will be absolute, otherwise will be relative to the current position
-        :type relative: bool
-        :return: True if the movement was successful, False if out of range is set.
-        :rtype: bool
-        """
-        if wait:
-            while self.is_moving():
-                pass
-        if relative:
-            self.client.write_single_coil(104, False)
-            self.client.write_single_coil(104, True)
-        else:
-            self.client.write_single_coil(103, False)
-            self.client.write_single_coil(103, True)
-        return True
-
-    def set_position_endeffector(self, x_val, y_val, z_val):
-        """
-        Set the target position of the endeffector
-
-        This method sets the target position of the endeffector in millimeters.
-        It converts the input values to the appropriate format and writes them to registers 130-135.
-
-        The position can be absolute or relative to the the base or to itself.
-        To make the robot move, use the one of the folling method move_endeffector()
+        This method sets the target position of the end effector in millimeters. The position can be absolute or relative
+        to the base or to itself. To make the robot move to the specified position, use the 'move_endeffector' method.
 
         :param x_val: The target X position in millimeters.
         :type x_val: float
@@ -231,6 +364,7 @@ class Robot:
         x_val = int(x_val * 100)
         y_val = int(y_val * 100)
         z_val = int(z_val * 100)
+
         self.client.write_single_register(130, (x_val & 0x0000FFFF))
         self.client.write_single_register(131, (x_val >> 16) & 0x0000FFFF)
         self.client.write_single_register(132, (y_val & 0x0000FFFF))
@@ -238,96 +372,155 @@ class Robot:
         self.client.write_single_register(134, (z_val & 0x0000FFFF))
         self.client.write_single_register(135, (z_val >> 16) & 0x0000FFFF)
 
-    def set_orientation_endeffector(self, a_val, b_val, c_val):
-        self.client.write_single_register(130, a_val)
-        self.client.write_single_register(132, b_val)
-        self.client.write_single_register(134, c_val)
-
-    def set_position_axes(self, a_val, b_val, c_val):
+    def set_orientation_endeffector(self, a_val: float, b_val: float, c_val: float):
         """
-        Set the target position of the endeffector
+        Set the orientation of the end effector.
 
-        This method sets the target position of the axes
-        It converts the input values to the appropriate format and writes them to registers 142-154
+        This method allows you to set the orientation of the robot's end effector by specifying the angles
+        'a_val', 'b_val', and 'c_val' for orientation around the X, Y, and Z axes, respectively.
 
-        The position can be absolute or relative.
-        To make the robot move, use the one of the method move_endeffector()
-
-        :param a_val: The target A position in millimeters.
+        :param a_val: The orientation angle around the X-axis in degrees.
         :type a_val: float
-        :param b_val: The target B position in millimeters.
+        :param b_val: The orientation angle around the Y-axis in degrees.
         :type b_val: float
-        :param c_val: The target C position in millimeters.
+        :param c_val: The orientation angle around the Z-axis in degrees.
         :type c_val: float
         :return: None
         """
         a_val *= 100
         b_val *= 100
         c_val *= 100
-        self.client.write_single_register(142, (a_val & 0x000000000000FFFF))
-        self.client.write_single_register(143, (a_val >> 16) & 0x000000000000FFFF)
-        self.client.write_single_register(144, (a_val >> 24) & 0x000000000000FFFF)
-        self.client.write_single_register(145, (a_val >> 32) & 0x000000000000FFFF)
-        self.client.write_single_register(146, (b_val & 0x000000000000FFFF))
-        self.client.write_single_register(147, (b_val >> 16) & 0x000000000000FFFF)
-        self.client.write_single_register(148, (b_val >> 24) & 0x000000000000FFFF)
-        self.client.write_single_register(149, (b_val >> 32) & 0x000000000000FFFF)
-        self.client.write_single_register(150, (c_val & 0x000000000000FFFF))
-        self.client.write_single_register(151, (c_val >> 16) & 0x000000000000FFFF)
-        self.client.write_single_register(152, (c_val >> 16) & 0x000000000000FFFF)
-        self.client.write_single_register(153, (c_val >> 24) & 0x000000000000FFFF)
-        self.client.write_single_register(154, (c_val >> 32) & 0x000000000000FFFF)
-
-    def set_velocity(self, velocity):
-        """
-        Set the velocity of the Robot.
-
-        This method sets the velocity of the robot in millimeters per second.
-        For cartesian motions the value is set as a multiple of 1mm/s,
-        for joint motions it is a multiple of 1% (relative to the maximum velocity)
-        The actual motion speed also depends on the global override value (holding register 187).
-
-        :param velocity: The desired velocity in millimeters per second (or in percent).
-        :type velocity: float
-        :return: None
-        """
-        self.client.write_single_register(180, velocity * 10)
-
-    def set_and_move(
-        self, x_val, y_val, z_val, relative=None, wait=True, velocity=None
-    ):
-        self.set_position_endeffector(x_val, y_val, z_val)
-        if velocity:
-            self.set_velocity(velocity)
-        self.move_endeffector(wait=wait, relative=relative)
+        self.client.write_single_register(130, a_val)
+        self.client.write_single_register(132, b_val)
+        self.client.write_single_register(134, c_val)
 
     def get_position_endeffector(self):
         """
-        Get the Cartesian position of the Delta Robot.
+        Get the Cartesian position of the Delta Robot's end effector.
+        This method reads the X, Y, and Z positions of the end effector from input registers and returns them in millimeters as a tuple.
 
-        This method reads the X, Y, and Z positions from input registers and returns them in millimeters.
-
-        :return: A tuple (x_pos, y_pos, z_pos) representing the Cartesian position in millimeters.
+        :return: A tuple (x_pos, y_pos, z_pos) representing the Cartesian position of the end effector in millimeters.
         :rtype: tuple
         """
+        # Read the X, Y, and Z positions from input registers
         x_pos = self.client.read_input_registers(130)[0]
         x_pos2 = self.client.read_input_registers(131)[0]
         y_pos = self.client.read_input_registers(132)[0]
         y_pos2 = self.client.read_input_registers(133)[0]
         z_pos = self.client.read_input_registers(134)[0]
         z_pos2 = self.client.read_input_registers(135)[0]
+        # Combine the two 16-bit values into a 32-bit integer for each position
         x_pos = c_int32(x_pos | (x_pos2 << 16)).value / 100
         y_pos = c_int32(y_pos | (y_pos2 << 16)).value / 100
         z_pos = c_int32(z_pos | (z_pos2 << 16)).value / 100
         return x_pos, y_pos, z_pos
 
     def get_orientation_endeffector(self):
-        a = self.client.read_input_registers(136)[0]
-        b = self.client.read_input_registers(138)[0]
-        c = self.client.read_input_registers(140)[0]
+        """
+        Get the orientation of the Delta Robot's end effector.
+
+        This method reads the orientation values from input registers and returns them.
+
+        :return: A tuple (a, b, c) representing the orientation values.
+        :rtype: tuple
+        """
+        a = self.client.read_input_registers(136)[0] / 100
+        b = self.client.read_input_registers(138)[0] / 100
+        c = self.client.read_input_registers(140)[0] / 100
         return a, b, c
 
-    def controll_programs(self, action):
+    # }}}
+
+    # {{{ Axes
+    def move_axes(self, wait: bool = True, relative: str = False):
+        """
+        Move the end effector to the target position.
+
+        This method moves the end effector to the specified axes position by controlling the appropriate coil.
+        The movement can be relative or absolute 'relative' parameter.
+        To specify the position, use the method set_position_axes.
+
+        :param wait: If True (default), wait until the movement is complete before returning.
+        :type wait: bool
+        :param relative: If False (default), the movement will be absolute, otherwise will be relative to the current position
+        :type relative: bool
+        """
+        if wait:
+            while self.is_moving():
+                pass
+        if relative:
+            self.client.write_single_coil(104, False)
+            self.client.write_single_coil(104, True)
+        else:
+            self.client.write_single_coil(103, False)
+            self.client.write_single_coil(103, True)
+
+    def set_position_axes(self, a1_val: float, a2_val: float, a3_val: float):
+        """
+        Set the target position of the endeffector
+
+        This method allows you to set the target positions of the robot's axes.
+        The input values 'a1_val', 'a2_val', and 'a3_val' represent the target positions for each axis.
+        The positions are converted to the appropriate format and written to the respective registers.
+
+        The position can be absolute or relative.
+        To make the robot move, use the method move_axes().
+
+        :param a1_val: The target position for axis A1.
+        :type a1_val: float
+        :param a2_val: The target position for axis A2.
+        :type a2_val: float
+        :param a3_val: The target position for axis A3.
+        :type a3_val: float
+        :return: None
+        """
+        a1_val *= 100
+        a2_val *= 100
+        a3_val *= 100
+
+        self.client.write_single_register(142, (a1_val & 0x0000FFFF))
+        self.client.write_single_register(143, (a1_val >> 16) & 0x0000FFFF)
+        self.client.write_single_register(144, (a2_val & 0x0000FFFF))
+        self.client.write_single_register(145, (a2_val >> 16) & 0x0000FFFF)
+        self.client.write_single_register(146, (a3_val & 0x0000FFFF))
+        self.client.write_single_register(147, (a3_val >> 16) & 0x0000FFFF)
+
+    def get_position_axes(self):
+        """
+        Get the positions of the Delta Robot's axes.
+
+        This method reads the positions of the robot's axes (A1, A2, and A3) from input registers
+        and returns them as a tuple.
+
+        :return: A tuple (a1_pos, a2_pos, a3_pos) representing the positions of the robot's axes.
+        :rtype: tuple
+        """
+        a1_pos = self.client.read_input_registers(142)[0]
+        a1_pos2 = self.client.read_input_registers(143)[0]
+        a2_pos = self.client.read_input_registers(144)[0]
+        a2_pos2 = self.client.read_input_registers(145)[0]
+        a3_pos = self.client.read_input_registers(146)[0]
+        a3_pos2 = self.client.read_input_registers(147)[0]
+
+        # Combine the two 16-bit values into a 32-bit integer for each axis
+        a1_pos = c_int32(a1_pos | (a1_pos2 << 16)).value / 100
+        a2_pos = c_int32(a2_pos | (a2_pos2 << 16)).value / 100
+        a3_pos = c_int32(a3_pos | (a3_pos2 << 16)).value / 100
+        return a1_pos, a2_pos, a3_pos
+
+    # }}}
+
+    # {{{ Programs
+    def controll_programs(self, action: str):
+        """
+        Control robot programs.
+
+        This method allows you to control robot programs by sending specific commands.
+        Supported actions are: 'start', 'continue', 'pause', and 'stop'.
+
+        :param action: The action to perform ('start', 'continue', 'pause', or 'stop').
+        :type action: str
+        """
         if action == "start":
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
@@ -343,15 +536,552 @@ class Robot:
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
 
+    def set_program_replay_mode(self, mode: str = "once"):
+        """
+        Set the program replay mode for the robot.
+
+        This method allows you to configure the program replay mode for the robot.
+        The `mode` parameter specifies the desired mode and can take one of the following values:
+        - "once" (Default): Play the program once.
+        - "repeat": Repeat the program continuously.
+        - "step": Step through the program one instruction at a time.
+        - "fast": Not used (for future expansion).
+
+        :param mode: The desired program replay mode.
+        :type mode: str
+        :return: True if the mode was successfully set, False if an invalid mode is provided.
+        :rtype: bool
+        """
+        if mode == "once":
+            return self.client.write_single_register(261, 0)
+        elif mode == "repeat":
+            return self.client.write_single_register(261, 1)
+        elif mode == "step":
+            return self.client.write_single_register(261, 2)
+        elif mode == "fast":
+            return self.client.write_single_register(261, 3)
+        else:
+            return False
+
     def set_program_name(self, name):
+        """
+        Set the name of the robot program.
+
+        This method allows you to set the name of the robot program.
+
+        :param name: The name of the robot program.
+        :type name: str
+        """
         self.write_string(name, 267, 31)
         pass
 
     def get_program_name(self):
+        """
+        Get the name of the robot program.
+
+        This method reads the name of the robot program.
+
+        :return: The name of the robot program.
+        :rtype: str
+        """
         read = self.client.read_holding_registers(267, 32)
         return self.read_string(read)
 
-    def move_circular(self, radius, step=0.5, start_angle=0, stop_angle=360):
+    def get_program_runstate(self):
+        """
+        Get the current run state of the robot program.
+
+        This method reads the run state of the robot program and returns a descriptive string.
+        The possible run states are:
+        - "Program is not running": The robot program is not currently executing.
+        - "Program is running": The robot program is actively running.
+        - "Program is paused": The robot program is paused but can be resumed.
+
+        :return: A descriptive string representing the current run state.
+        :rtype: str
+        """
+        code = self.client.read_holding_registers(260)[0]
+        if code == 0:
+            return "Programm is not running"
+        elif code == 1:
+            return "Program is running"
+        elif code == 2:
+            return "Program is paused"
+        else:
+            return None
+
+    def get_program_replay_mode(self):
+        """
+        Get the current replay mode of the robot program.
+
+        This method reads the replay mode of the robot program and returns a descriptive string.
+        The possible replay modes are:
+        - "Run program once": The robot program will run once and stop.
+        - "Repeat program": The robot program will continuously repeat.
+        - "Execute instructions step by step": The robot program will execute instructions one at a time.
+        - "Fast" (Not used): A mode that is not currently used.
+
+        :return: A descriptive string representing the current replay mode.
+        :rtype: str
+        """
+        code = self.client.read_holding_registers(260)[0]
+        if code == 0:
+            return "Run program once"
+        elif code == 1:
+            return "Repeat program"
+        elif code == 2:
+            return "Execute instructions step by step"
+        elif code == 3:
+            return "Fast"  # Not used
+        else:
+            return None
+
+    def get_number_of_loaded_programs(self):
+        """
+        Get the number of loaded programs on the Delta Robot.
+
+        This method reads the number of loaded programs on the Delta Robot and returns the count.
+
+        :return: The number of loaded programs.
+        :rtype: int
+        """
+        return self.client.read_input_registers(262)[0]
+
+    def get_number_of_current_program(self):
+        """
+        Get the number of currently active programs on the Delta Robot.
+
+        This method reads the number of currently active programs on the Delta Robot and returns the count.
+        Note: The main program is typically represented as program number 0.
+
+        :return: The number of currently active programs.
+        :rtype: int
+        """
+        return self.client.read_input_registers(263)[0]
+
+    # }}}
+
+    # {{{ Signals
+    def set_globale_signal(self, number: int, state: bool):
+        """
+        Set the state of a global signal.
+
+        This method allows you to set the state of a global signal by specifying its number and state.
+
+        :param number: The number of the global signal (1 to 100).
+        :type number: int
+        :param state: The state to set (True for ON, False for OFF).
+        :type state: bool
+        """
+        if 1 <= number <= 100:
+            self.client.write_single_coil(199 + number, state)
+
+    def set_digital_output(self, number: int, state: bool):
+        """
+        Set the state of a digital output.
+
+        This method allows you to set the state of a digital output by specifying its number and state.
+
+        :param number: The number of the digital output (1 to 64).
+        :type number: int
+        :param state: The state to set (True for ON, False for OFF).
+        :type state: bool
+        """
+        if 1 <= number <= 64:
+            self.client.write_single_coil(299 + number, state)
+        else:
+            return "Out of range"
+
+    def get_globale_signal(self, number: int):
+        """
+        Get the state of a global signal.
+
+        This method allows you to get the state of a global signal by specifying its number.
+
+        :param number: The number of the global signal (1 to 100).
+        :type number: int
+        :return: The state of the global signal (True for ON, False for OFF).
+        :rtype: bool
+        """
+        if 1 <= number <= 100:
+            return self.client.read_coils(199 + number)[0]
+        else:
+            return "Out of range"
+
+    def get_digital_output(self, number):
+        """
+        Get the state of a digital output.
+
+        This method allows you to get the state of a digital output by specifying its number.
+
+        :param number: The number of the digital output (1 to 64).
+        :type number: int
+        :return: The state of the digital output (True for ON, False for OFF).
+        :rtype: bool
+        """
+        if 1 <= number <= 64:
+            return self.client.read_coils(299 + number)[0]
+        else:
+            return "Out of range"
+
+    def get_digital_input(self, number: int):
+        """
+        Get the state of a digital input.
+
+        This method allows you to get the state of a digital input by specifying its number.
+
+        :param number: The number of the digital input (1 to 64).
+        :type number: int
+        :return: The state of the digital input (True for ON, False for OFF).
+        :rtype: bool
+        """
+        if 1 <= number <= 64:
+            return self.client.read_coils(263 + number)[0]
+        else:
+            return "Out of range"
+        # }}}
+
+    # {{{ Variables
+    def set_number_variables(self, number: int = 1, value: int = 0):
+        """
+        Set the value of a writable Modbus variable.
+
+        This method allows you to set the value of a Modbus variable for program use. Please note that
+        the variable name in your program should follow the naming convention: mb_num_w1 - mb_num_w16.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :param value: The value to set for the Modbus variable.
+        :type value: int
+        :return: True if the operation was successful, False if the number is out of range.
+        :rtype: bool
+        """
+        if 1 <= number <= 16:
+            return self.client.write_single_register(439 + number, value)
+
+    def set_position_variable(
+        self,
+        number=1,
+        movement: str = "cartesian",
+        a1: int = None,
+        a2: int = None,
+        a3: int = None,
+        x: int = None,
+        y: int = None,
+        z: int = None,
+        a: int = 0,
+        b: int = 0,
+        c: int = 180,
+        conversion: int = 0,
+    ):
+        """
+        Set the target position for robot movement in a robot program.
+
+        This method allows you to set the target position for robot movement in a program. You can specify
+        the target position either in Cartesian or axis values. Ensure the variable name in your program
+        follows the naming convention, e.g., mb_pos_w1.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :param movement: The type of movement (either "cartesian" or "axes").
+        :type movement: str
+        :param a1: The value of axis A1 (if movement is "axes").
+        :type a1: int
+        :param a2: The value of axis A2 (if movement is "axes").
+        :type a2: int
+        :param a3: The value of axis A3 (if movement is "axes").
+        :type a3: int
+        :param x: The X-coordinate value (if movement is "cartesian").
+        :type x: int
+        :param y: The Y-coordinate value (if movement is "cartesian").
+        :type y: int
+        :param z: The Z-coordinate value (if movement is "cartesian").
+        :type z: int
+        :param a: The orientation A value (if movement is "cartesian").
+        :type a: int
+        :param b: The orientation B value (if movement is "cartesian").
+        :type b: int
+        :param c: The orientation C value (if movement is "cartesian").
+        :type c: int
+        :param conversion: The conversion type (useful for converting between joint and cartesian positions).
+        :type conversion: int
+        :return: True if the operation was successful, False if the number is out of range or invalid parameters.
+        :rtype: bool
+        """
+        if not (1 <= number <= 16):
+            return False
+        number = 456 + (16 * (number - 1))
+        if movement == "cartesian":
+            # if not (x & y & z & a & b & c):
+            #     return False
+            x *= 10
+            y *= 10
+            z *= 10
+            a *= 10
+            b *= 10
+            c *= 10
+            return self.client.write_multiple_registers(
+                number, [0, 0, 0, 0, 0, 0, 0, 0, 0, x, y, z, a, b, c, conversion]
+            )
+        elif movement == "axes":
+            if not (a & b & c):
+                return False
+            return self.client.write_multiple_registers(
+                number, a1, a2, a3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, conversion
+            )
+        else:
+            return False
+
+    def get_readable_number_variable(self, number: int):
+        """
+        Get the value of a readable Modbus variable.
+
+        This method allows you to retrieve the value of a Modbus variable for reading. Please ensure that
+        the variable name in your program follows the naming convention: mb_num_r1 - mb_num_r16.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :return: The value of the Modbus variable, or False if the number is out of range.
+        :rtype: int or bool
+        """
+        if 1 <= number <= 16:
+            return self.client.read_input_registers(439 + number)[0]
+        else:
+            return False
+
+    def get_writable_number_variable(self, number: int):
+        """
+        Get the value of a writable Modbus variable.
+
+        This method allows you to retrieve the value of a Modbus variable for writing. Ensure that the
+        variable name in your program adheres to the naming convention: mb_num_w1 - mb_num_w16.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :return: The value of the Modbus variable, or False if the number is out of range.
+        :rtype: int or bool
+        """
+        if 1 <= number <= 16:
+            return self.client.read_holding_registers(439 + number)[0]
+        else:
+            return False
+
+    def get_readable_position_variable(self, number: int):
+        """
+        Get the value of a readable position Modbus variable.
+
+        This method allows you to retrieve the value of a readable position Modbus variable.
+        Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_r1.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :return: A dictionary containing axis, cartesian, orientation values, and conversion type,
+                 or False if the number is out of range.
+        :rtype: dict or bool
+        """
+        if not (1 <= number <= 16):
+            return False
+        number = 456 + (16 * (number - 1))
+        postion = self.client.read_input_registers(number, 16)
+        if not postion:
+            return False
+        axes = {"a1": postion[0], "a2": postion[1], "a3": postion[2]}
+        cartesian = {
+            "x_val": postion[9],
+            "y_val": postion[10],
+            "z_val": postion[11],
+        }
+        orientation = {"a": postion[12], "b": postion[13], "c": postion[14]}
+        conversion = postion[15]
+        return axes, cartesian, orientation, conversion
+
+    def get_writable_position_variable(self, number: int):
+        """
+        Get the value of a writable position Modbus variable.
+
+        This method allows you to retrieve the value of a writable position Modbus variable.
+        Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_w1.
+
+        :param number: The number of the Modbus variable (1 to 16).
+        :type number: int
+        :return: A dictionary containing axis, cartesian, orientation values, and conversion type,
+                 or False if the number is out of range.
+        :rtype: dict or bool
+        """
+        if not (1 <= number <= 16):
+            return False
+        number = 456 + (16 * (number - 1))
+        postion = self.client.read_holding_registers(number, 16)
+        if not postion:
+            return False
+        axes = {"a1": postion[0] / 10, "a2": postion[1] / 10, "a3": postion[2] / 10}
+        cartesian = {
+            "x_val": postion[9] / 10,
+            "y_val": postion[10] / 10,
+            "z_val": postion[11] / 10,
+        }
+        orientation = {
+            "a": postion[12] / 10,
+            "b": postion[13] / 10,
+            "c": postion[14] / 10,
+        }
+        conversion = postion[15]
+        return axes, cartesian, orientation, conversion
+
+    # }}}
+
+    # {{{ Messages
+    def get_info_message(self):
+        """
+        Get the information or error message from the Delta Robot.
+
+        This method reads the information or error message from the Delta Robot's control unit.
+        The message is typically a short text, similar to what is displayed on a manual control unit.
+
+        :return: The information or error message as a string.
+        :rtype: str
+        """
+        message = self.client.read_holding_registers(400, 32)
+        if message:
+            print(hex(message[0]))
+        return self.read_string(message)
+
+    def get_robot_errors(self):
+        """
+        Get a list of error descriptions indicating the robot's current error states.
+
+        This method reads the status of various error-related coils on the robot controller
+        and returns a list of error descriptions if any errors are detected.
+
+        :return: A list of error descriptions or "No error" if there are no errors.
+        :rtype: list[str]
+        """
+        errors_list = []
+
+        if not self.is_general_error():
+            errors_list.append("No error")
+        else:
+            if self.client.read_coils(21)[0]:
+                errors_list.append("Temperature")
+            if self.client.read_coils(22)[0]:
+                errors_list.append("Emergency stop")
+            if self.client.read_coils(23)[0]:
+                errors_list.append("Motor not activated")
+            if self.client.read_coils(24)[0]:
+                errors_list.append("Communication")
+            if self.client.read_coils(25)[0]:
+                errors_list.append("Contouring error")
+            if self.client.read_coils(26)[0]:
+                errors_list.append("Encoder error")
+            if self.client.read_coils(27)[0]:
+                errors_list.append("Overcurrent")
+            if self.client.read_coils(28)[0]:
+                errors_list.append("Driver error")
+            if self.client.read_coils(29)[0]:
+                errors_list.append("Bus dead")
+            if self.client.read_coils(30)[0]:
+                errors_list.append("Module dead")
+
+        return errors_list
+
+    def get_kinematics_error(self):
+        """
+        Get the kinematics error description.
+
+        This method reads the kinematics error code from the robot controller and returns a human-readable description of the error.
+
+        :return: A string describing the kinematics error.
+        :rtype: str
+        """
+        code = self.client.read_input_registers(95)[0]
+        if self.client.read_coils(37)[0]:
+            return "No error"
+        if self.client.read_coils(38)[0]:
+            return "Axis limit Min"
+        if self.client.read_coils(39)[0]:
+            return "Axis limit Max"
+        if self.client.read_coils(40)[0]:
+            return "Central axis singularity"
+        if self.client.read_coils(41)[0]:
+            return "Out of range"
+        if self.client.read_coils(42)[0]:
+            return "Wrist singularity"
+        if self.client.read_coils(43)[0]:
+            return "Virtual box reached"
+        if self.client.read_coils(44)[0]:
+            return "Motion not allowed"
+
+    def get_stop_reason_description(self):
+        """
+        Get a description of the reason for the robot's current stop condition.
+
+        This method reads the stop reason code from the robot controller and returns a human-readable description of the reason for the stop.
+
+        :return: A string describing the reason for the stop.
+        :rtype: str
+        """
+        code = self.client.read_input_registers(266)[0]
+        if code == 0:
+            return "User (Teach pendant, CRI, Modbus, etc.)"
+        if code == 1:
+            return "PLC"
+        if code == 2:
+            return "Program (stop/pause instruction)"
+        if code == 3:
+            return "Replay Step (step operation)"
+        if code == 4:
+            return "Shoutdown (system shuts down)"
+        if code == 100:
+            return "Error"
+        if code == 101:
+            return "Path generator error 1"
+        if code == 102:
+            return "Path generator error 2"
+        if code == 103:
+            return "Error in state machine"
+
+    def get_operation_mode(self):
+        """
+        Get the operation mode description.
+
+        This method reads the operation mode code from the robot controller and returns a human-readable description of the mode.
+
+        :return: A string describing the operation mode.
+        :rtype: str
+        """
+        code = self.client.read_input_registers(96)[0]
+        if code == 0:
+            return "Standerd - normal operation"
+        if code == 1:
+            return "Serious error, control must be restarted"
+        if code == 2:
+            return "CAN-Bridge (CRI, e.g. retrieve firmware parameters)"
+
+    # }}}
+
+    # {{{ Misc
+    def move_circular(
+        self,
+        radius: float,
+        step: float = 0.5,
+        start_angle: int = 0,
+        stop_angle: int = 360,
+    ):
+        """
+        Move the robot's end effector in a circular path.
+
+        This method moves the robot's end effector in a circular path in the X-Y plane.
+        The circular path is defined by a radius, and you can specify the step size, start angle, and stop angle.
+
+        :param radius: The radius of the circular path in millimeters.
+        :type radius: float
+        :param step: The step size in degrees for moving along the circular path (default is 0.5 degrees).
+        :type step: float
+        :param start_angle: The starting angle of the circular path in degrees (default is 0 degrees).
+        :type start_angle: float
+        :param stop_angle: The stopping angle of the circular path in degrees (default is 360 degrees).
+        :type stop_angle: float
+        """
         while self.is_moving():
             pass
         x_val, y_val, z_val = self.get_cartesian_position()
@@ -362,27 +1092,17 @@ class Robot:
             print(round(y, 2))
             self.set_and_move(round(x, 2), round(y, 2), z_val)
 
-    def set_globale_signal(self, state: bool, number):
-        if 1 >= number <= 100:
-            self.client.write_single_coil(199 + number, state)
-
-    def set_digital_output(self, state: bool, number):
-        if 1 >= number <= 64:
-            self.client.write_single_coil(299 + number, state)
-
-    def get_globale_signal(self, number):
-        if 1 >= number <= 100:
-            return self.client.read_coils(199 + number)[0]
-
-    def get_digital_output(self, number):
-        if 1 >= number <= 64:
-            return self.client.read_coils(299 + number)[0]
-
-    def get_digital_input(self, number):
-        if 1 >= number <= 64:
-            return self.client.read_coils(263 + number)[0]
-
     def read_string(self, read):
+        """
+        Read a string from a sequence of registers.
+
+        This method reads a string from a sequence of registers and returns the decoded string.
+
+        :param read: The sequence of registers containing the string data.
+        :type read: list
+        :return: The decoded string.
+        :rtype: str
+        """
         string = ""
         for i in read:
             if i:
@@ -390,10 +1110,31 @@ class Robot:
                 string += chr(i >> 8)
         return string
 
-    def write_string(self, ad, string, number=32):
+    def write_string(self, string, ad, number=32):
+        """
+        Write a string to a sequence of registers.
+
+        This method allows you to write a string to a sequence of registers, starting from a specified address.
+
+        :param string: The string to write.
+        :type string: str
+        :param ad: The starting address to write the string.
+        :type ad: int
+        :param number: The maximum number of characters to write (default is 32).
+        :type number: int
+        """
         string = iter(string)
-        for count, i in string:
+        for count, i in enumerate(string):
             if count == number:
                 break
-            val = (next(string) + i).encode("utf-8").hex()
+            # val = (next(string) + i)
+            try:
+                val = ord(next(string)) << 8 | ord(i)
+            except:
+                val = ord(i)
             self.client.write_single_register(count + ad, val)
+
+    # }}}
+
+
+# vim:foldmethod=marker

@@ -2,24 +2,25 @@ from igus_modbus import Robot
 from time import sleep
 
 
-# delta_robot = Robot("192.168.3.11")
-#
-# delta_robot.enable()
-# delta_robot.reference()
-#
-# delta_robot.controll_programs("start")
-# sleep(3)
-# delta_robot.controll_programs("stop")
-# delta_robot.client.write_single_register(180,0xFFFF)
-# delta_robot.client.write_single_register(187,0xFFFF)
-# delta_robot.set_position_endeffector(0, 0, 150)
-# delta_robot.move_endeffector()
-# delta_robot.set_velocity(2000)
-# delta_robot.move_circular(100, step=40)
+delta_robot = Robot("192.168.3.11")
 
-it = "viereick.xml"
-it = iter(it)
-for count, i in enumerate(it):
-    val = (next(it)+i).encode("utf-8").hex() #| (((next(it)).encode("utf-8").hex()) << 8)
-    print(count, (val))
-    # print(count, next(it).encode("utf-8").hex())
+if delta_robot.is_connected:
+    delta_robot.enable()
+    delta_robot.reference()
+    delta_robot.set_override_velocity(50)
+
+    delta_robot.set_program_name("test_var.xml")
+    delta_robot.controll_programs("start")
+    delta_robot.set_program_replay_mode("repeat")
+    print(delta_robot.get_program_runstate())
+    print(delta_robot.get_number_of_current_program())
+
+    delta_robot.set_position_variable(movement="cartesian",x=10,y=10,z=150)
+    print(delta_robot.get_writable_position_variable(1))
+    delta_robot.set_number_variables(1,100)
+    delta_robot.set_number_variables(2,100)
+
+    print(delta_robot.get_kinematics_error())
+    print(delta_robot.get_robot_errors())
+else:
+    print("No Connection")
