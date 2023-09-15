@@ -1,10 +1,12 @@
 from gripper import Gripper
 from igus_modbus import Robot
 
-# gripper = Gripper()
-delta = Robot("192.168.3.11")
 
+delta = Robot("192.168.3.11")
+gripper = Gripper()
 while True:
-    open = delta.client.read_input_registers(54)[0]
-    orient = delta.client.read_input_registers(55)[0]
-    print(open, orient)
+    if delta.get_globale_signal(6):
+        open = delta.get_readable_number_variable(15)
+        orient = delta.get_readable_number_variable(16)
+        gripper.controll(open)
+        gripper.rotate(orient)

@@ -27,9 +27,12 @@ class Gripper:
         :param timeout: The timeout for serial communication (default is 1 second).
         :type timeout: int or float
         """
-        self.ser = serial.Serial(port, baudrate, timeout = timeout)
-        self.orientation = 90
-        self.opening = 100
+        try:
+            self.ser = serial.Serial(port, baudrate, timeout = timeout)
+            self.orientation = 90
+            self.opening = 100
+        except:
+            pass
 
     def controll(self, opening: int, orientation: int = None) -> bool:
         """

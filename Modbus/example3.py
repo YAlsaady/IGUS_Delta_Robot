@@ -21,5 +21,7 @@ if delta.is_connected:
     # for i in range(64):
     print(delta.get_kinematics_error())
     print(delta.get_robot_errors())
+    for i in range(16):
+        print(i,delta.get_readable_number_variable(i+1))
 else:
     print("No Connection")
