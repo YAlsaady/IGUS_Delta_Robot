@@ -272,6 +272,7 @@ def update():
     app.y_label.config(text=y_val)
     app.z_label.config(text=z_val)
     app.enalbe_var.set(app.dr.is_enabled())
+    print(app.gripper.is_connected)
     app.after(dt, update)
 
 
