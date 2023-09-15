@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from igus_modbus import Robot
+from gripper import Gripper
 import datetime
 
 
@@ -10,6 +11,7 @@ class App(ttk.Frame):
         ttk.Frame.__init__(self)
 
         self.dr = Robot("192.168.3.11")
+        self.gripper = Gripper()
         # Make the app responsive
         for index in [0, 1, 2]:
             self.columnconfigure(index=index, weight=1)
@@ -23,9 +25,6 @@ class App(ttk.Frame):
         self.gripper_var = tk.DoubleVar(value=0)
         self.gripper_orient_var = tk.DoubleVar(value=90)
         self.time_var = None
-        self.x_var = tk.DoubleVar(value=100)
-        self.y_var = tk.DoubleVar(value=101)
-        self.z_var = tk.DoubleVar(value=102)
 
         # Create widgets :)
         self.setup_widgets()
@@ -106,7 +105,7 @@ class App(ttk.Frame):
             to=100,
             variable=self.speed_var,
             command=lambda event: (
-                print(int(self.speed_scale.get())),
+                self.dr.set_velocity(int(self.speed_scale.get())),
                 self.speed_var.set(self.speed_scale.get()),
                 self.speed_label.config(text=int(self.speed_var.get())),
             ),
@@ -138,7 +137,7 @@ class App(ttk.Frame):
             to=100,
             variable=self.gripper_var,
             command=lambda event: (
-                print(int(self.gripper_scale.get())),
+                self.gripper.controll(int(self.gripper_scale.get())),
                 self.gripper_var.set(self.gripper_scale.get()),
                 self.gripper_label.config(text=int(self.gripper_var.get())),
             ),
@@ -168,6 +167,7 @@ class App(ttk.Frame):
             variable=self.gripper_orient_var,
             command=lambda event: (
                 print(int(self.gripper_orient_scale.get())),
+                self.gripper.rotate(int(self.gripper_orient_scale.get())),
                 self.gripper_orient_var.set(self.gripper_orient_scale.get()),
                 self.gripper_orient_label.config(
                     text=int(self.gripper_orient_var.get())
@@ -217,7 +217,7 @@ class App(ttk.Frame):
 
         self.x_label = ttk.Label(
             self.move_frame,
-            text=float(self.x_var.get()),
+            text="X",
             font=("-size", 12)
         )
         self.x_label.grid(row=0, column=1, padx=5, pady=10)
@@ -238,7 +238,7 @@ class App(ttk.Frame):
 
         self.y_label = ttk.Label(
             self.move_frame,
-            text=float(self.y_var.get()),
+            text="Y",
             font=("-size", 12)
         )
         self.y_label.grid(row=1, column=1, padx=5, pady=10)
@@ -259,7 +259,7 @@ class App(ttk.Frame):
 
         self.z_label = ttk.Label(
             self.move_frame,
-            text=float(self.z_var.get()),
+            text="Z",
             font=("-size", 12)
         )
         self.z_label.grid(row=2, column=1, padx=5, pady=10)
@@ -268,11 +268,10 @@ class App(ttk.Frame):
 
 def update():
     x_val, y_val,z_val =app.dr.get_position_endeffector()
-    app.x_var.set(x_val)
-    app.y_var.set(y_val)
-    app.z_var.set(z_val)
+    app.x_label.config(text=x_val)
+    app.y_label.config(text=y_val)
+    app.z_label.config(text=z_val)
     app.enalbe_var.set(app.dr.is_enabled())
-    print(x_val,y_val,z_val)
     app.after(dt, update)
 
 
