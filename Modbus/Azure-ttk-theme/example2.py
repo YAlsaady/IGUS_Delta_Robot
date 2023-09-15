@@ -31,6 +31,10 @@ class App(ttk.Frame):
 
     # }}}
 
+    def gripper_mov(self):
+        if not self.dr.get_globale_signal(6)[0]:
+            self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
+
     def enable_robot(self):
         if self.enalbe_var.get():
             self.dr.enable()
@@ -137,9 +141,10 @@ class App(ttk.Frame):
             to=100,
             variable=self.gripper_var,
             command=lambda event: (
-                self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
+                # self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
                 self.gripper_var.set(self.gripper_scale.get()),
                 self.gripper_label.config(text=int(self.gripper_var.get())),
+                self.gripper_mov(),
             ),
         )
         self.gripper_scale.grid(
@@ -166,7 +171,8 @@ class App(ttk.Frame):
             to=180,
             variable=self.gripper_orient_var,
             command=lambda event: (
-                self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
+                # self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
+                self.gripper_mov(),
                 # self.gripper.rotate(int(self.gripper_orient_scale.get())),
                 self.gripper_orient_var.set(self.gripper_orient_scale.get()),
                 self.gripper_orient_label.config(
