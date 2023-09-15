@@ -137,7 +137,7 @@ class App(ttk.Frame):
             to=100,
             variable=self.gripper_var,
             command=lambda event: (
-                self.gripper.controll(int(self.gripper_scale.get())),
+                self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
                 self.gripper_var.set(self.gripper_scale.get()),
                 self.gripper_label.config(text=int(self.gripper_var.get())),
             ),
@@ -166,8 +166,8 @@ class App(ttk.Frame):
             to=180,
             variable=self.gripper_orient_var,
             command=lambda event: (
-                print(int(self.gripper_orient_scale.get())),
-                self.gripper.rotate(int(self.gripper_orient_scale.get())),
+                self.gripper.controll(int(self.gripper_scale.get()),int(self.gripper_orient_scale.get())),
+                # self.gripper.rotate(int(self.gripper_orient_scale.get())),
                 self.gripper_orient_var.set(self.gripper_orient_scale.get()),
                 self.gripper_orient_label.config(
                     text=int(self.gripper_orient_var.get())
