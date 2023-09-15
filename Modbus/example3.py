@@ -2,25 +2,24 @@ from igus_modbus import Robot
 from time import sleep
 
 
-delta_robot = Robot("192.168.3.11")
+delta = Robot("192.168.3.11")
 
-if delta_robot.is_connected:
-    delta_robot.enable()
-    delta_robot.reference()
-    delta_robot.set_override_velocity(50)
+if delta.is_connected:
+    delta.enable()
+    delta.reference()
+    delta.set_override_velocity(50)
 
-    delta_robot.set_program_name("test_var.xml")
-    delta_robot.controll_programs("start")
-    delta_robot.set_program_replay_mode("repeat")
-    print(delta_robot.get_program_runstate())
-    print(delta_robot.get_number_of_current_program())
+    # delta.print_list_of_programs()
+    list = delta.get_list_of_porgrams()
+    delta.set_program_name(list[2])
 
-    delta_robot.set_position_variable(movement="cartesian",x=10,y=10,z=150)
-    print(delta_robot.get_writable_position_variable(1))
-    delta_robot.set_number_variables(1,100)
-    delta_robot.set_number_variables(2,100)
-
-    print(delta_robot.get_kinematics_error())
-    print(delta_robot.get_robot_errors())
+    delta.controll_programs("stop")
+    delta.set_position_variable(number=1,movement="cartesian",x=200,y=100,z=150)
+    # delta_robot.set_position_variable(number=1,movement="axes",a1=30,a2=30,a3=30,conversion=1)
+    delta.set_globale_signal(1,False)
+    delta.set_digital_output(2,True)
+    # for i in range(64):
+    print(delta.get_kinematics_error())
+    print(delta.get_robot_errors())
 else:
     print("No Connection")
