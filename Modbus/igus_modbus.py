@@ -368,7 +368,10 @@ class Robot:
             return
         if wait:
             while self.is_moving():
-                pass
+                if self.is_general_error():
+                    break
+                if self.is_kinematics_error():
+                    break
         if relative == None:
             self.client.write_single_coil(100, False)
             self.client.write_single_coil(100, True)
@@ -491,7 +494,10 @@ class Robot:
             return
         if wait:
             while self.is_moving():
-                pass
+                if self.is_general_error():
+                    break
+                if self.is_kinematics_error():
+                    break
         if relative:
             self.client.write_single_coil(104, False)
             self.client.write_single_coil(104, True)
@@ -1182,7 +1188,10 @@ class Robot:
         if not self.is_connected:
             return
         while self.is_moving():
-            pass
+            if self.is_general_error():
+                break
+            if self.is_kinematics_error():
+                break
         x_val, y_val, z_val = self.get_cartesian_position()
         for angle in arange(start_angle, stop_angle, step):
             x = radius * cos(radians(angle)) + x_val
