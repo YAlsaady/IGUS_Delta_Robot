@@ -1,4 +1,4 @@
-from igus_modbus import Robot
+from src.igus_modbus import Robot
 from time import sleep
 from pyPS4Controller.controller import Controller
 

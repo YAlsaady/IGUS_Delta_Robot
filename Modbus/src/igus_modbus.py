@@ -32,7 +32,7 @@ from time import sleep
 from pyModbusTCP.client import ModbusClient
 from ctypes import c_int32
 from math import sin, cos, radians
-from numpy import arange, cov
+from numpy import arange
 
 # }}}
 

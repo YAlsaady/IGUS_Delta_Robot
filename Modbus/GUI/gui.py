@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from igus_modbus import Robot
-from Gripper.gripper import Gripper
+from src.igus_modbus import Robot
+from src.gripper import Gripper
 
 PATH = "Modbus/GUI/"
 
@@ -23,6 +23,7 @@ class App(ttk.Frame):
         self.theme = ["dark", "light"]
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
+        self.sort_var=tk.StringVar()
         self.pos_list = []
         self.zero_torque_var = tk.BooleanVar(value=False)
         self.reset_var = tk.BooleanVar(value=False)
@@ -55,26 +56,12 @@ class App(ttk.Frame):
         self.after(self.update_delay.get(), self.update)
 
     def tabs(self):
-        # self.paned = ttk.PanedWindow(self)
-        # self.paned.grid(row=1, column=0, padx=(10, 10), pady=(0, 10), sticky="ewns", columnspan=2)
-        # self.pane_1 = ttk.Frame(self)
-        # self.paned.add(self.pane_1)
-        # self.notebook = ttk.Notebook(self.pane_1)
-        # self.notebook.pack(fill="both", expand=True)
         self.tabs = ttk.Notebook(self)
         self.tabs.grid(
             row=1, column=0, padx=(10, 10), pady=(0, 10), sticky="nwewns", columnspan=2
         )
         self.tabs.bind("<<NotebookTabChanged>>", self.update_tabs)
-        #
-        # self.frames = []
-        # self.texts = []
-        # for i in range(8):
-        #   self.frames.append(ttk.Frame(self))
-        #   self.notebook.add(self.frames[i])
-        #   self.texts.append(tk.Text(self.frames[i]))
-        #   self.texts[i].pack(fill='both')
-        # Tab #1
+
         self.tab_1 = ttk.Frame(self)
         self.tabs.add(self.tab_1, text="Control")
         self.tab_2 = ttk.Frame(self)
@@ -556,8 +543,6 @@ class App(ttk.Frame):
         self.load_button.grid(row=1, column=1, padx=5, pady=10, sticky="nw")
 
     def teach_widgets(self):
-        # self.separator = ttk.Separator(self.tab_3)
-        # self.separator.grid(row=1, column=0, padx=(10, 10), pady=10, sticky="nwewns")
         self.teach_frame = ttk.LabelFrame(
             self.tab_3, text="Teach and Play", padding=(20, 10)
         )
@@ -567,7 +552,7 @@ class App(ttk.Frame):
         self.teach_label = ttk.Label(
             self.teach_frame, text="Positions:", font=("-size", 12)
         )
-        self.teach_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
+        self.teach_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=3)
 
         self.add_button = ttk.Button(
             self.teach_frame, text="Add", command=lambda: self.add()
@@ -579,7 +564,7 @@ class App(ttk.Frame):
             text="Run",
             style="Toggle.TButton",
             variable=self.run_var,
-            command=lambda: (self.run_list(), self.run_var.set(False)),
+            command=lambda: (self.run_list()),
         )
         self.run_button.grid(row=1, column=1, padx=5, pady=10, sticky="nw")
 
@@ -588,8 +573,6 @@ class App(ttk.Frame):
         )
         self.clear_button.grid(row=1, column=2, padx=5, pady=10, sticky="nw")
 
-        # self.step = ttk.Spinbox(
-        #     self.move_tab, from_=1, to=100, increment=1, textvariable=self.step_var
         self.remove_entry = ttk.Entry(self.teach_frame, textvariable=self.remove_var)
         self.remove_entry.grid(
             row=2, column=0, padx=5, pady=10, sticky="nw", columnspan=2
@@ -605,12 +588,12 @@ class App(ttk.Frame):
         )
         self.remove_button.grid(row=2, column=2, padx=5, pady=10, sticky="nw")
 
-        self.sort_entry = ttk.Entry(self.teach_frame)
+        self.sort_entry = ttk.Entry(self.teach_frame, textvariable=self.sort_var)
         self.sort_entry.grid(
             row=3, column=0, padx=5, pady=10, sticky="nw", columnspan=2
         )
         self.sort_button = ttk.Button(
-            self.teach_frame, text="Sort", command=lambda: print("Sort")
+            self.teach_frame, text="Sort", command=lambda: self.sort_list()
         )
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
 
@@ -652,7 +635,6 @@ class App(ttk.Frame):
         self.teach_label.config(
             text="Positions:\n" + self.show_positions(self.pos_list)
         )
-        print(self.dr.get_kinematics_error())
         self.after(self.update_delay.get(), self.update)
 
     def update_theme(self, _):
@@ -723,12 +705,9 @@ class App(ttk.Frame):
         list = []
         if self.dr.is_connected:
             list.append(self.dr.get_position_endeffector())
-            # if self.gripper.is_connected:
         else:
             list.append([0, 0, 0])
         list.append([self.gripper_var.get(), self.gripper_orient_var.get()])
-        # else:
-        #     list.append([])
         self.pos_list.append(list)
 
     def run_list(self):
@@ -741,8 +720,16 @@ class App(ttk.Frame):
                 for i in self.pos_list:
                     if i[1]:
                         self.gripper.controll(*[1])
-        # self.run_var.set(False)
-        #     self.run_list()
+        self.run_var.set(False)
+    
+    def sort_list(self):
+        sort = self.sort_var.get().split()
+        list = []
+        for i in sort:
+            i = int(i)
+            list.append(self.pos_list[i-1])
+        self.pos_list = list
+        self.sort_var.set("")
 
     def clear_list(self):
         self.pos_list = []
@@ -753,7 +740,6 @@ def main():
     root.title("HS Emden/Leer: Delta Robot")
     app = App(root)
     app.pack(fill="both", expand=True)
-    # app.tk.call("set_theme", "light")
 
     root.update()
     app.mainloop()

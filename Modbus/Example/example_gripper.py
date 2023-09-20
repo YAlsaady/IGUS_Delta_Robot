@@ -1,4 +1,4 @@
-from gripper import Gripper
+from src.gripper import Gripper
 import time
 
 dt = 2

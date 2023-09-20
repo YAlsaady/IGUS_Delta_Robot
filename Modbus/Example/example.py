@@ -1,5 +1,5 @@
-from igus_modbus import Robot
-from gripper import Gripper
+from src.igus_modbus import Robot
+from src.gripper import Gripper
 import time
 
 # Create a Delta Robot instance with the IP address '192.168.1.11'

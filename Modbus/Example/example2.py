@@ -1,4 +1,4 @@
-from igus_modbus import Robot
+from src.igus_modbus import Robot
 import time
 
 # Create a Delta Robot instance with the IP address '192.168.1.11'
