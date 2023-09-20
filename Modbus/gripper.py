@@ -13,7 +13,10 @@ Usage:
 
 import serial
 
+
 class Gripper:
+    is_connected: bool = False
+
     def __init__(
         self, port: str = "/dev/ttyUSB0", baudrate: int = 9600, timeout: int = 1
     ):
@@ -28,9 +31,11 @@ class Gripper:
         :type timeout: int or float
         """
         try:
-            self.ser = serial.Serial(port, baudrate, timeout = timeout)
+            self.ser = serial.Serial(port, baudrate, timeout=timeout)
             self.orientation = 90
             self.opening = 100
+            self.is_connected = self.ser.is_open
+            self.ser.is_open
         except:
             pass
 
@@ -47,6 +52,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         if not (0 <= opening <= 100):
             return False  # Opening value out of range
         if orientation is not None and not (0 <= orientation <= 180):
@@ -68,6 +75,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         return self.controll(0)
 
     def close(self) -> bool:
@@ -79,6 +88,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         return self.controll(100)
 
     def rotate(self, orientation: int) -> bool:
@@ -92,6 +103,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         if not (0 <= orientation <= 180):
             return False  # Orientation value out of range
 
