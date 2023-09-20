@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from igus_modbus import Robot
-from gripper import Gripper
+from Gripper.gripper import Gripper
 
 PATH = "Modbus/GUI/"
 
@@ -757,6 +757,3 @@ def main():
 
     root.update()
     app.mainloop()
-
-
-main()
