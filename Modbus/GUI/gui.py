@@ -6,6 +6,7 @@ from src.gripper import Gripper
 
 PATH = "Modbus/GUI/"
 
+
 class App(ttk.Frame):
     def __init__(self, _):
         ttk.Frame.__init__(self)
@@ -23,7 +24,7 @@ class App(ttk.Frame):
         self.theme = ["dark", "light"]
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
-        self.sort_var=tk.StringVar()
+        self.sort_var = tk.StringVar()
         self.pos_list = []
         self.zero_torque_var = tk.BooleanVar(value=False)
         self.reset_var = tk.BooleanVar(value=False)
@@ -58,7 +59,7 @@ class App(ttk.Frame):
     def tabs(self):
         self.tabs = ttk.Notebook(self)
         self.tabs.grid(
-            row=1, column=0, padx=(10, 10), pady=(0, 10), sticky="nwewns", columnspan=2
+            row=1, column=1, padx=(10, 10), pady=(0, 10), sticky="nwewns", columnspan=2
         )
         self.tabs.bind("<<NotebookTabChanged>>", self.update_tabs)
 
@@ -78,7 +79,7 @@ class App(ttk.Frame):
 
     def setting_widgets(self):
         self.setting_frame = ttk.LabelFrame(self, text="Setting", padding=(20, 10))
-        self.setting_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nwewns")
+        self.setting_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nwewns")
 
         self.enable = ttk.Checkbutton(
             self.setting_frame,
@@ -92,7 +93,7 @@ class App(ttk.Frame):
         self.reset = ttk.Button(
             self.setting_frame, text="Reset", command=lambda: self.dr.reset()
         )
-        self.reset.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+        self.reset.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
         self.reference = ttk.Button(
             self.setting_frame,
@@ -102,7 +103,7 @@ class App(ttk.Frame):
                 self.dr.reference(True),
             ),
         )
-        self.reference.grid(row=0, column=2, padx=5, pady=10, sticky="nsew")
+        self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
 
         self.zero_torque = ttk.Checkbutton(
             self.setting_frame,
@@ -111,19 +112,19 @@ class App(ttk.Frame):
             variable=self.zero_torque_var,
             command=lambda: self.dr.set_zero_torque(self.zero_torque_var.get()),
         )
-        self.zero_torque.grid(row=0, column=3, padx=5, pady=10, sticky="nsew")
+        self.zero_torque.grid(row=3, column=0, padx=5, pady=10, sticky="nsew")
 
         self.theme = ttk.Combobox(
             self.setting_frame, state="readonly", values=self.theme
         )
         self.theme.current(0)
-        self.theme.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.theme.grid(row=4, column=0, padx=5, pady=10, sticky="nsew")
         self.theme.bind("<<ComboboxSelected>>", self.update_theme)
 
         self.update_label = ttk.Label(
             self.setting_frame, text="Update delay:", font=("-size", 12)
         )
-        self.update_label.grid(row=1, column=1, padx=5, pady=10)
+        self.update_label.grid(row=5, column=0, padx=5, pady=10)
 
         self.update_box = ttk.Spinbox(
             self.setting_frame,
@@ -131,8 +132,9 @@ class App(ttk.Frame):
             to=1000,
             increment=10,
             textvariable=self.update_delay,
+            width=10
         )
-        self.update_box.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
+        self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
@@ -375,7 +377,7 @@ class App(ttk.Frame):
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
         self.step = ttk.Spinbox(
-            self.move_tab, from_=1, to=100, increment=1, textvariable=self.step_var
+            self.move_tab, from_=1, to=100, increment=1, textvariable=self.step_var, width=10,
         )
         self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
@@ -452,7 +454,7 @@ class App(ttk.Frame):
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
         self.step = ttk.Spinbox(
-            self.axes_tab, from_=1, to=100, increment=1, textvariable=self.step_var
+            self.axes_tab, from_=1, to=100, increment=1, textvariable=self.step_var, width=10
         )
         self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
@@ -552,7 +554,9 @@ class App(ttk.Frame):
         self.teach_label = ttk.Label(
             self.teach_frame, text="Positions:", font=("-size", 12)
         )
-        self.teach_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=3)
+        self.teach_label.grid(
+            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=3
+        )
 
         self.add_button = ttk.Button(
             self.teach_frame, text="Add", command=lambda: self.add()
@@ -569,7 +573,7 @@ class App(ttk.Frame):
         self.run_button.grid(row=1, column=1, padx=5, pady=10, sticky="nw")
 
         self.clear_button = ttk.Button(
-            self.teach_frame, text="Clear", command=lambda: self.clear_list()
+            self.teach_frame, text="Clear", command=lambda: self.pos_list.clear()
         )
         self.clear_button.grid(row=1, column=2, padx=5, pady=10, sticky="nw")
 
@@ -580,11 +584,7 @@ class App(ttk.Frame):
         self.remove_button = ttk.Button(
             self.teach_frame,
             text="Remove",
-            command=lambda: (
-                self.pos_list.remove(
-                    self.pos_list.remove(self.pos_list[int(self.remove_var.get())])
-                ),
-            ),
+            command=lambda: self.remove_list_element(),
         )
         self.remove_button.grid(row=2, column=2, padx=5, pady=10, sticky="nw")
 
@@ -629,7 +629,7 @@ class App(ttk.Frame):
                 self.reference_label.config(text="Reference: Robot is referenced")
             else:
                 self.reference_label.config(text="Reference: Robot is not referenced")
-
+            self.zero_torque_var.set(self.dr.is_zero_torque())
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
         self.teach_label.config(
@@ -653,8 +653,8 @@ class App(ttk.Frame):
         elif current == 2:
             self.move_widgets(self.tab_3, 0, 0)
             self.gripper_widgets(self.tab_3, 2, 0)
-    def program_names(self, list):
 
+    def program_names(self, list):
         if list:
             string = ""
             for count, i in enumerate(list):
@@ -716,23 +716,32 @@ class App(ttk.Frame):
                 for i in self.pos_list:
                     if i[0]:
                         self.dr.set_and_move(*i[0])
-            if self.gripper.is_connected:
-                for i in self.pos_list:
-                    if i[1]:
-                        self.gripper.controll(*[1])
+                    if self.gripper.is_connected:
+                        if i[1]:
+                            self.gripper.controll(*i[1])
+                self.dr.set_zero_torque(False)
+                self.dr.enable()
+        self.zero_torque_var.set(False)
         self.run_var.set(False)
-    
+
     def sort_list(self):
         sort = self.sort_var.get().split()
         list = []
         for i in sort:
             i = int(i)
-            list.append(self.pos_list[i-1])
+            list.append(self.pos_list[i - 1])
         self.pos_list = list
         self.sort_var.set("")
 
     def clear_list(self):
         self.pos_list = []
+
+    def remove_list_element(self):
+        try:
+            index = int(self.remove_var.get()) + 1
+            self.pos_list.pop(index)
+        except:
+            pass
 
 
 def main():
