@@ -46,7 +46,7 @@ A Library to control the movement for the Delta Robot from IGUS and the opening 
 - [x] replay_mode                    holding_register 261                 enum
   
 - [x] set_program_name               holding_registers 267-298            string
-- [ ] number_selected_directory      holding_register 332
+- [x] number_selected_directory      holding_register 332
   
 - [x] set_global_signals             holding_registers 200-206
 - [x] set_digital outputs            holding_registers 207-210
