@@ -749,7 +749,7 @@ class App(ttk.Frame):
 
     def remove_list_element(self):
         try:
-            index = int(self.remove_var.get()) + 1
+            index = int(self.remove_var.get()) - 1
             self.pos_list.pop(index)
         except:
             pass
