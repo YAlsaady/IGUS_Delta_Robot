@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+import os
 
 from src.igus_modbus import Robot
 from src.gripper import Gripper
 
-PATH = "Modbus/GUI/"
+PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 class App(ttk.Frame):
@@ -132,7 +133,7 @@ class App(ttk.Frame):
             to=1000,
             increment=10,
             textvariable=self.update_delay,
-            width=10
+            width=10,
         )
         self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
 
@@ -377,7 +378,12 @@ class App(ttk.Frame):
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
         self.step = ttk.Spinbox(
-            self.move_tab, from_=1, to=100, increment=1, textvariable=self.step_var, width=10,
+            self.move_tab,
+            from_=1,
+            to=100,
+            increment=1,
+            textvariable=self.step_var,
+            width=10,
         )
         self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
@@ -454,7 +460,12 @@ class App(ttk.Frame):
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
         self.step = ttk.Spinbox(
-            self.axes_tab, from_=1, to=100, increment=1, textvariable=self.step_var, width=10
+            self.axes_tab,
+            from_=1,
+            to=100,
+            increment=1,
+            textvariable=self.step_var,
+            width=10,
         )
         self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
