@@ -3,3 +3,4 @@ build/
 Modbus/__pycache__
 Modbus_
 Modbus/GUI/__pycache__
+Modbus/.venv
