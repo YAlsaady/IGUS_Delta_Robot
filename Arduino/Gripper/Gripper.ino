@@ -20,7 +20,7 @@ void setup() {
 }
 
 void loop() {
-  static char reading[10];
+  static char reading[20];
   static byte i = 0, val1 = CLOSE, val2 = 90;
 
   while (Serial.available() == 0) {
