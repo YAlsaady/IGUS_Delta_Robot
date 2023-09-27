@@ -52,7 +52,7 @@ class Robot:
         """
         self.address = address
         self.client = ModbusClient(host=address, port=port)
-        self.is_connected = self.client.is_open
+        self.is_connected = self.client.open()
 
     def __del__(self):
         """

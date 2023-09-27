@@ -1,4 +1,6 @@
 import GUI.gui as gui
+from Example import example
 
 if __name__ == "__main__":
-    gui.main()
+    example.main()
+    # gui.main()
