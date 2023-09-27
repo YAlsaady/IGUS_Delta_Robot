@@ -736,6 +736,7 @@ class App(ttk.Frame):
                 for i in self.pos_list:
                     if i[0]:
                         self.dr.set_and_move(*i[0])
+                        print(*i[0])
                     if self.gripper.is_connected:
                         if i[1]:
                             self.gripper.controll(*i[1])
