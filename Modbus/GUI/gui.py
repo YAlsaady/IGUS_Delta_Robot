@@ -774,7 +774,8 @@ class App(ttk.Frame):
 def main():
     root = tk.Tk()
     root.title("HS Emden/Leer: Delta Robot")
-    root.attributes("-fullscreen", True)
+    # root.attributes("-fullscreen", True)
+    root.attributes('-zoomed', True)
     # root.iconbitmap(PATH+"img/hsel_logo.ico")
     root.iconphoto(False, tk.PhotoImage(file=PATH+"img/hsel_icon.png"))
     app = App(root)
