@@ -5,11 +5,7 @@ import time
 # Create a Delta Robot instance with the IP address '192.168.1.11'
 def main():
     delta_robot = Robot("192.168.3.11")
-    while not delta_robot.is_connected:
-        delta_robot = Robot("192.168.3.11")
-        print(delta_robot.is_connected)
     gripper = Gripper()
-    print("X")
 
 # Perform actions with the Delta Robot
     delta_robot.enable()
@@ -21,7 +17,6 @@ def main():
     delta_robot.set_position_endeffector(0, 0, 250)
     delta_robot.move_endeffector()
     time.sleep(2)
-    print("X")
     gripper.open()
 
     delta_robot.set_position_endeffector(0, 0, -120)

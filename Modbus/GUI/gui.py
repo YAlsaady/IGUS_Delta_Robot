@@ -57,6 +57,7 @@ class App(ttk.Frame):
         self.teach_widgets()
 
         self.after(self.update_delay.get(), self.update)
+        print(PATH)
 
     def tabs(self):
         self.tabs = ttk.Notebook(self)
@@ -619,37 +620,40 @@ class App(ttk.Frame):
 
     def update(self):
         if self.dr.is_connected:
-            cart_pos = self.dr.get_position_endeffector()
-            axes_pos = self.dr.get_position_axes()
-            self.x_label.config(text=cart_pos[0])
-            self.y_label.config(text=cart_pos[1])
-            self.z_label.config(text=cart_pos[2])
-            self.a1_label.config(text=axes_pos[0])
-            self.a2_label.config(text=axes_pos[1])
-            self.a3_label.config(text=axes_pos[2])
-            self.status_p.config(text="status: " + self.dr.get_program_runstate())
-            self.loaded_p.config(text="Loaded Program: " + self.dr.get_program_name())
-            self.robot_label.config(
-                text="Robot:\n" + self.split_list(self.dr.get_robot_errors())
-            )
-            self.kinematic_label.config(
-                text="Kinematic:\n" + self.dr.get_kinematics_error()
-            )
-            self.load_label.config(
-                text="Programs:\n" + self.program_names(self.dr.get_list_of_porgrams())
-            )
-            self.enalbe_var.set(self.dr.is_enabled())
+            try:
+                cart_pos = self.dr.get_position_endeffector()
+                axes_pos = self.dr.get_position_axes()
+                self.x_label.config(text=cart_pos[0])
+                self.y_label.config(text=cart_pos[1])
+                self.z_label.config(text=cart_pos[2])
+                self.a1_label.config(text=axes_pos[0])
+                self.a2_label.config(text=axes_pos[1])
+                self.a3_label.config(text=axes_pos[2])
+                self.status_p.config(text="status: " + self.dr.get_program_runstate())
+                self.loaded_p.config(text="Loaded Program: " + self.dr.get_program_name())
+                self.robot_label.config(
+                    text="Robot:\n" + self.split_list(self.dr.get_robot_errors())
+                )
+                self.kinematic_label.config(
+                    text="Kinematic:\n" + self.dr.get_kinematics_error()
+                )
+                self.load_label.config(
+                    text="Programs:\n" + self.program_names(self.dr.get_list_of_porgrams())
+                )
+                self.enalbe_var.set(self.dr.is_enabled())
 
-            if self.dr.is_connected:
-                self.connect_label.config(text="Connection: Robot is connected")
-            else:
-                self.connect_label.config(text="Connection: Robot is not connected")
+                if self.dr.is_connected:
+                    self.connect_label.config(text="Connection: Robot is connected")
+                else:
+                    self.connect_label.config(text="Connection: Robot is not connected")
 
-            if self.dr.is_referenced():
-                self.reference_label.config(text="Reference: Robot is referenced")
-            else:
-                self.reference_label.config(text="Reference: Robot is not referenced")
-            self.zero_torque_var.set(self.dr.is_zero_torque())
+                if self.dr.is_referenced():
+                    self.reference_label.config(text="Reference: Robot is referenced")
+                else:
+                    self.reference_label.config(text="Reference: Robot is not referenced")
+                self.zero_torque_var.set(self.dr.is_zero_torque())
+            except:
+                pass
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
         self.teach_label.config(
@@ -731,17 +735,19 @@ class App(ttk.Frame):
         self.pos_list.append(list)
 
     def run_list(self):
+        self.enalbe_var.set(True)
+        self.dr.enable()
         if self.run_var.get():
-            if self.dr.is_connected:
+            if self.dr.is_connected or True:
+                k = 1
                 for i in self.pos_list:
                     if i[0]:
                         self.dr.set_and_move(*i[0])
-                        print(*i[0])
+                        print(k,*i[0],*i[1])
+                        k += 1
                     if self.gripper.is_connected:
                         if i[1]:
                             self.gripper.controll(*i[1])
-                self.dr.set_zero_torque(False)
-                self.dr.enable()
         self.zero_torque_var.set(False)
         self.run_var.set(False)
 
@@ -768,6 +774,7 @@ class App(ttk.Frame):
 def main():
     root = tk.Tk()
     root.title("HS Emden/Leer: Delta Robot")
+    # root.attributes("-fullscreen", True)
     app = App(root)
     app.pack(fill="both", expand=True)
 

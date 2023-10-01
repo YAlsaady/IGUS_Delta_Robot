@@ -52,7 +52,7 @@ class Robot:
         """
         self.address = address
         self.client = ModbusClient(host=address, port=port)
-        # self.is_connected = self.client.open()
+        self.is_connected = self.client.open()
 
     def __del__(self):
         """
@@ -156,8 +156,6 @@ class Robot:
 
     # {{{ Info
     def is_enabled(self):
-        if not self.is_connected:
-            return
         """
         Check if the Robot is enabled.
 
@@ -166,11 +164,14 @@ class Robot:
         :return: True if the motors are enabled, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils(53)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(53)[0]:
+            return True
+        else:
+            return False
 
     def is_referenced(self):
-        if not self.is_connected:
-            return
         """
         Check if the Robot is referenced.
 
@@ -179,11 +180,14 @@ class Robot:
         :return: True if the Robot is referenced, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils(60)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(60)[0]:
+            return True
+        else:
+            return False
 
     def is_moving(self):
-        if not self.is_connected:
-            return
         """
         Check if the Robot is moving.
 
@@ -192,11 +196,14 @@ class Robot:
         :return: True if the Robot is currently moving, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils(112)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(112)[0]:
+            return True
+        else:
+            return False
 
     def is_general_error(self):
-        if not self.is_connected:
-            return
         """
         Check if the robot has general errors.
 
@@ -207,11 +214,14 @@ class Robot:
         :return: True if the robot has general errors, False otherwise.
         :rtype: bool
         """
-        return not self.client.read_coils(20)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(20)[0]:
+            return False
+        else:
+            return True
 
     def is_kinematics_error(self):
-        if not self.is_connected:
-            return
         """
         Check if the robot has kinematics-related errors.
 
@@ -222,11 +232,14 @@ class Robot:
         :return: True if the robot has kinematics-related errors, False otherwise.
         :rtype: bool
         """
-        return not self.client.read_coils(37)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(37)[0]:
+            return False
+        else:
+            return True
 
     def is_program_loaded(self):
-        if not self.is_connected:
-            return
         """
         Check if a program is loaded.
 
@@ -235,12 +248,29 @@ class Robot:
         :return: True if a program is loaded, False otherwise.
         :rtype: bool
         """
-        return self.client.read_coils(120)[0]
+        if not self.is_connected:
+            return False
+        if self.client.read_coils(120)[0]:
+            return True
+        else:
+            return False
 
     def is_zero_torque(self):
+        """
+        Check if the robot is in a zero torque state.
+
+        This method reads a Modbus coil to determine if the robot is currently in a state
+        where it applies zero torque. It returns True if zero torque is detected, False otherwise.
+
+        :return: True if the robot is in a zero torque state, False otherwise.
+        :rtype: bool
+        """
         if not self.is_connected:
-            return
-        return self.client.read_coils(111)[0]
+            return False
+        if self.client.read_coils(111)[0]:
+            return True
+        else:
+            return False
 
     # }}}
 
@@ -253,6 +283,7 @@ class Robot:
 
         :param enable: True to enable zero torque (for manual movement), False to disable.
         :type enable: bool
+        :return: None
         """
         if not self.is_connected:
             return
@@ -266,8 +297,6 @@ class Robot:
             self.enable()
 
     def set_override_velocity(self, velocity: float = 20):
-        if not self.is_connected:
-            return
         """
         Set the override velocity for robot movements.
 
@@ -277,15 +306,14 @@ class Robot:
 
         :param velocity: The desired velocity override as a percentage (0-100).
         :type velocity: float
-        :return: True if the velocity was successfully set, False if the provided velocity is out of range.
-        :rtype: bool
+        :return: None
         """
-        if 0 < velocity <= 100:
-            return self.client.write_single_register(187, 100 * velocity)
-
-    def set_velocity(self, velocity: bool):
         if not self.is_connected:
             return
+        if 0 < velocity <= 100:
+            self.client.write_single_register(187, 100 * velocity)
+
+    def set_velocity(self, velocity: bool):
         """
         Set the velocity of the Robot.
 
@@ -298,7 +326,9 @@ class Robot:
         :type velocity: float
         :return: None
         """
-        return self.client.write_single_register(180, velocity * 10)
+        if not self.is_connected:
+            return
+        self.client.write_single_register(180, velocity * 10)
 
     def set_and_move(
         self,
@@ -344,7 +374,7 @@ class Robot:
             self.set_position_axes(val_1, val_2, val_3)
             self.move_axes(wait=wait, relative=relative)
         else:
-            return None
+            return
 
     # }}}
 
@@ -361,8 +391,6 @@ class Robot:
         :type wait: bool
         :param relative: Specifies the reference frame for the movement (None for absolute, 'base', or 'tool').
         :type relative: str or None
-        :return: True if the movement was successful, False if out of range is set.
-        :rtype: bool
         """
         if not self.is_connected:
             return
@@ -381,7 +409,7 @@ class Robot:
         if relative == "tool":
             self.client.write_single_coil(102, False)
             self.client.write_single_coil(102, True)
-        return True
+        return
 
     def set_position_endeffector(self, x_val: float, y_val: float, z_val: float):
         """
@@ -441,10 +469,10 @@ class Robot:
         This method reads the X, Y, and Z positions of the end effector from input registers and returns them in millimeters as a tuple.
 
         :return: A list (x_pos, y_pos, z_pos) representing the Cartesian position of the end effector in millimeters.
-        :rtype: list
+        :rtype: list[float]
         """
         if not self.is_connected:
-            return
+            return []
         # Read the X, Y, and Z positions from input registers
         x_pos = self.client.read_input_registers(130)[0]
         x_pos2 = self.client.read_input_registers(131)[0]
@@ -465,10 +493,10 @@ class Robot:
         This method reads the orientation values from input registers and returns them.
 
         :return: A list (a, b, c) representing the orientation values.
-        :rtype: list
+        :rtype: list[float]
         """
         if not self.is_connected:
-            return
+            return []
         a = self.client.read_input_registers(136)[0] / 100
         b = self.client.read_input_registers(138)[0] / 100
         c = self.client.read_input_registers(140)[0] / 100
@@ -545,10 +573,10 @@ class Robot:
         and returns them as a tuple.
 
         :return: A list (a1_pos, a2_pos, a3_pos) representing the positions of the robot's axes.
-        :rtype: list[int]
+        :rtype: list[float]
         """
         if not self.is_connected:
-            return
+            return []
         a1_pos = self.client.read_input_registers(142)[0]
         a1_pos2 = self.client.read_input_registers(143)[0]
         a2_pos = self.client.read_input_registers(144)[0]
@@ -609,7 +637,7 @@ class Robot:
         :rtype: bool
         """
         if not self.is_connected:
-            return
+            return False
         if mode == "once":
             return self.client.write_single_register(261, 0)
         elif mode == "repeat":
@@ -644,7 +672,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         read = self.client.read_holding_registers(267, 32)
         return self.read_string(read)
 
@@ -662,7 +690,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         code = self.client.read_holding_registers(260)[0]
         if code == 0:
             return "Programm is not running"
@@ -671,7 +699,7 @@ class Robot:
         elif code == 2:
             return "Program is paused"
         else:
-            return None
+            return ""
 
     def get_program_replay_mode(self):
         """
@@ -688,7 +716,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         code = self.client.read_holding_registers(260)[0]
         if code == 0:
             return "Run program once"
@@ -699,7 +727,7 @@ class Robot:
         elif code == 3:
             return "Fast"  # Not used
         else:
-            return None
+            return ""
 
     def get_number_of_loaded_programs(self):
         """
@@ -711,7 +739,7 @@ class Robot:
         :rtype: int
         """
         if not self.is_connected:
-            return
+            return 0
         return self.client.read_input_registers(262)[0]
 
     def get_number_of_current_program(self):
@@ -725,7 +753,7 @@ class Robot:
         :rtype: int
         """
         if not self.is_connected:
-            return
+            return 0
         return self.client.read_input_registers(263)[0]
 
     # }}}
@@ -759,12 +787,12 @@ class Robot:
         :type state: bool
         """
         if not self.is_connected:
-            return
+            return False
         number += 20
         if 1 <= number <= 64:
             return self.client.write_single_coil(299 + number, state)
         else:
-            return "Out of range"
+            return False
 
     def get_globale_signal(self, number: int):
         """
@@ -778,11 +806,11 @@ class Robot:
         :rtype: bool
         """
         if not self.is_connected:
-            return
+            return False
         if 1 <= number <= 100:
             return self.client.read_coils(199 + number)[0]
         else:
-            return "Out of range"
+            return False
 
     def get_digital_output(self, number):
         """
@@ -796,12 +824,12 @@ class Robot:
         :rtype: bool
         """
         if not self.is_connected:
-            return
+            return False
         number += 20
         if 1 <= number <= 64:
             return self.client.read_coils(299 + number)[0]
         else:
-            return "Out of range"
+            return False
 
     def get_digital_input(self, number: int):
         """
@@ -815,12 +843,12 @@ class Robot:
         :rtype: bool
         """
         if not self.is_connected:
-            return
+            return False
         number += 20
         if 1 <= number <= 64:
             return self.client.read_coils(263 + number)[0]
         else:
-            return "Out of range"
+            return False
         # }}}
 
     # {{{ Variables
@@ -930,11 +958,11 @@ class Robot:
         :rtype: int or bool
         """
         if not self.is_connected:
-            return
+            return 0
         if 1 <= number <= 16:
             return self.client.read_input_registers(439 + number)[0]
         else:
-            return False
+            return 0
 
     def get_writable_number_variable(self, number: int):
         """
@@ -964,18 +992,18 @@ class Robot:
 
         :param number: The number of the Modbus variable (1 to 16).
         :type number: int
-        :return: A dictionary containing axis, cartesian, orientation values, and conversion type,
+        :return: A list containing axis, cartesian, orientation values, and conversion type,
                  or False if the number is out of range.
-        :rtype: dict or bool
+        :rtype: list
         """
         if not self.is_connected:
-            return
+            return []
         if not (1 <= number <= 16):
-            return False
+            return []
         number = 456 + (16 * (number - 1))
         postion = self.client.read_input_registers(number, 16)
         if not postion:
-            return False
+            return []
         axes = {"a1": postion[0], "a2": postion[1], "a3": postion[2]}
         cartesian = {
             "x_val": postion[9],
@@ -984,7 +1012,7 @@ class Robot:
         }
         orientation = {"a": postion[12], "b": postion[13], "c": postion[14]}
         conversion = postion[15]
-        return axes, cartesian, orientation, conversion
+        return [axes, cartesian, orientation, conversion]
 
     def get_writable_position_variable(self, number: int):
         """
@@ -995,18 +1023,18 @@ class Robot:
 
         :param number: The number of the Modbus variable (1 to 16).
         :type number: int
-        :return: A dictionary containing axis, cartesian, orientation values, and conversion type,
+        :return: A list containing axis, cartesian, orientation values, and conversion type,
                  or False if the number is out of range.
-        :rtype: dict or bool
+        :rtype: list
         """
         if not self.is_connected:
-            return
+            return []
         if not (1 <= number <= 16):
-            return False
+            return []
         number = 456 + (16 * (number - 1))
         postion = self.client.read_holding_registers(number, 16)
         if not postion:
-            return False
+            return []
         axes = {"a1": postion[0] / 10, "a2": postion[1] / 10, "a3": postion[2] / 10}
         cartesian = {
             "x_val": postion[9] / 10,
@@ -1019,7 +1047,7 @@ class Robot:
             "c": postion[14] / 10,
         }
         conversion = postion[15]
-        return axes, cartesian, orientation, conversion
+        return [axes, cartesian, orientation, conversion]
 
     # }}}
 
@@ -1035,7 +1063,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         message = self.client.read_holding_registers(400, 32)
         if message:
             print(hex(message[0]))
@@ -1052,7 +1080,7 @@ class Robot:
         :rtype: list[str]
         """
         if not self.is_connected:
-            return
+            return []
         errors_list = []
 
         if not self.is_general_error():
@@ -1091,8 +1119,8 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
-        code = self.client.read_input_registers(95)[0]
+            return ""
+        # code = self.client.read_input_registers(95)[0]
         if self.client.read_coils(37)[0]:
             return "No error"
         if self.client.read_coils(38)[0]:
@@ -1109,6 +1137,8 @@ class Robot:
             return "Virtual box reached"
         if self.client.read_coils(44)[0]:
             return "Motion not allowed"
+        else:
+            return ""
 
     def get_stop_reason_description(self):
         """
@@ -1120,7 +1150,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         code = self.client.read_input_registers(266)[0]
         if code == 0:
             return "User (Teach pendant, CRI, Modbus, etc.)"
@@ -1140,6 +1170,8 @@ class Robot:
             return "Path generator error 2"
         if code == 103:
             return "Error in state machine"
+        else:
+            return ""
 
     def get_operation_mode(self):
         """
@@ -1151,7 +1183,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         code = self.client.read_input_registers(96)[0]
         if code == 0:
             return "Standerd - normal operation"
@@ -1159,6 +1191,8 @@ class Robot:
             return "Serious error, control must be restarted"
         if code == 2:
             return "CAN-Bridge (CRI, e.g. retrieve firmware parameters)"
+        else:
+            return ""
 
     # }}}
 
@@ -1201,24 +1235,69 @@ class Robot:
             self.set_and_move(round(x, 2), round(y, 2), z_val)
 
     def get_list_of_porgrams(self):
-        self.read_string(self.client.read_input_registers(333,32))
+        """
+        Get a list of available robot programs.
+
+        This method retrieves a list of robot programs from the robot controller.
+        It communicates with the robot controller to gather program names.
+
+        :return: A list of program names.
+        :rtype: list
+        """
+        if not self.is_connected:
+            return []
+        # Initialize an empty list to store program names
+        program_list = []
+
+        # Read the number of programs available on the robot controller
+        num_programs = self.client.read_input_registers(331)[0]
+
+        # Ensure that the list starts from the top by repeatedly navigating to the previous program
+        for _ in range(num_programs):
+            self.client.write_single_coil(131, False)
+            self.client.write_single_coil(131, True)
+
+        # Loop through the program indices
+        for i in range(num_programs):
+            # Read the program name as a string
+            program_name = self.read_string(self.client.read_input_registers(333, 32))
+
+            # Remove null characters from the program name
+            program_name = str(program_name).replace("\x00", "")
+
+            # Append the program name to the list
+            program_list.append(program_name)
+
+            # Trigger the robot controller to move to the next program
+            self.client.write_single_coil(130, False)
+            self.client.write_single_coil(130, True)
+
+        return program_list
         list = []
-        val =(self.client.read_input_registers(331)[0])
+        val = self.client.read_input_registers(331)[0]
         for i in range(val):
-            self.client.write_single_coil(131,False)
-            self.client.write_single_coil(131,True)
+            self.client.write_single_coil(131, False)
+            self.client.write_single_coil(131, True)
         for i in range(val):
-            list.append(self.read_string(self.client.read_input_registers(333,32)))
+            list.append(self.read_string(self.client.read_input_registers(333, 32)))
             list[i] = str(list[i]).replace("\x00", "")
-            self.client.write_single_coil(130,False)
-            self.client.write_single_coil(130,True)
+            self.client.write_single_coil(130, False)
+            self.client.write_single_coil(130, True)
         return list
 
     def print_list_of_programs(self):
+        """
+        Print a list of available robot programs.
+
+        This method retrieves a list of robot programs and prints them to the console.
+        If the robot is not connected, it will return without performing any action.
+
+        :return: None
+        """
         if not self.is_connected:
             return
         list = self.get_list_of_porgrams()
-        for count,i in enumerate(list):
+        for count, i in enumerate(list):
             print(count, i)
 
     def read_string(self, read):
@@ -1233,7 +1312,7 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return
+            return ""
         string = ""
         for i in read:
             if i:
@@ -1255,7 +1334,7 @@ class Robot:
         :type number: int
         """
         if not self.is_connected:
-            return
+            return ""
         string = iter(string)
         for count, i in enumerate(string):
             if count == number:
