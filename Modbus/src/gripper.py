@@ -65,7 +65,7 @@ class Gripper:
             self.orientation = orientation
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
-        sleep(0.2)
+        # sleep(0.05)
         return True
 
     def open(self) -> bool:
