@@ -30,11 +30,11 @@ class App(ttk.Frame):
         self.pos_list = []
         self.zero_torque_var = tk.BooleanVar(value=False)
         self.reset_var = tk.BooleanVar(value=False)
-        self.speed_var = tk.DoubleVar(value=2000)
-        self.global_speed_var = tk.DoubleVar(value=50)
+        self.speed_var = tk.IntVar(value=100)
+        self.global_speed_var = tk.IntVar(value=50)
         self.gripper_var = tk.IntVar(value=100)
         self.gripper_orient_var = tk.IntVar(value=90)
-        self.program_var = tk.StringVar()
+        self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=100)
         self.step_var = tk.IntVar(value=10)
@@ -56,6 +56,7 @@ class App(ttk.Frame):
         self.gripper_widgets(self.tab_3, 2, 0)
         self.teach_widgets()
 
+        self.dr.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         print(PATH)
 
@@ -210,10 +211,10 @@ class App(ttk.Frame):
         self.speed_scale = ttk.Scale(
             self.speed_frame,
             from_=0,
-            to=2000,
+            to=100,
             variable=self.speed_var,
             command=lambda _: (
-                self.dr.set_velocity(int(self.speed_scale.get())),
+                self.dr.set_velocity(int(self.speed_scale.get()*20)),
                 self.speed_var.set(self.speed_scale.get()),
                 self.speed_label.config(text=int(self.speed_var.get())),
             ),
@@ -554,33 +555,57 @@ class App(ttk.Frame):
         self.load_label = ttk.Label(
             self.load_frame, text="Available Programs:", font=("-size", fontsize)
         )
-        self.load_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
+        self.load_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew",columnspan=4)
 
-        self.load_p = ttk.Spinbox(
-            self.load_frame, from_=1, to=100, increment=1, textvariable=self.program_var
+        # self.load_p = ttk.Spinbox(
+        #     self.load_frame, from_=1, to=100, increment=1, textvariable=self.program_var
+        # )
+        # self.load_p.insert(0, "Program Number")
+        # self.load_p.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+
+        self.next_prog = ttk.Button(
+            self.load_frame,
+            text="Next",
+            command=lambda: self.program_var.set(self.program_var.get()+1),
         )
-        self.load_p.insert(0, "Program Number")
-        self.load_p.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
+        self.next_prog.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
+
+        self.previous_prog = ttk.Button(
+            self.load_frame,
+            text="Previous",
+            command=lambda: self.program_var.set(self.program_var.get()-1),
+        )
+        self.previous_prog.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+        self.prog_label = ttk.Label(self.load_frame, text="Program", font=("-size", fontsize))
+        self.prog_label.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
 
         self.load_button = ttk.Button(
             self.load_frame,
             text="Load",
             command=lambda: self.load_pragram(),
         )
-        self.load_button.grid(row=1, column=1, padx=5, pady=10, sticky="nw")
+        self.load_button.grid(row=1, column=0, padx=5, pady=10, sticky="nw")
 
     def teach_widgets(self):
+        self.show_frame = ttk.LabelFrame(
+            self.tab_3, text="Teach and Play", padding=(20, 10)
+        )
+        self.show_frame.grid(
+            row=0, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=10
+        )
+        self.teach_label = ttk.Label(
+            self.show_frame, text="Positions:", font=("-size", fontsize)
+        )
+        self.teach_label.grid(
+            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
+        )
+
         self.teach_frame = ttk.LabelFrame(
             self.tab_3, text="Teach and Play", padding=(20, 10)
         )
         self.teach_frame.grid(
-            row=0, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3
-        )
-        self.teach_label = ttk.Label(
-            self.teach_frame, text="Positions:", font=("-size", fontsize)
-        )
-        self.teach_label.grid(
-            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=3
+            row=3, column=0, padx=(20, 10), pady=(20, 10), sticky="nwewns"
         )
 
         self.add_button = ttk.Button(
@@ -621,7 +646,6 @@ class App(ttk.Frame):
             self.teach_frame, text="Sort", command=lambda: self.sort_list()
         )
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
-
     def update(self):
         if self.dr.is_connected:
             try:
@@ -660,6 +684,7 @@ class App(ttk.Frame):
                 pass
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
+        self.prog_label.config(text=int(self.program_var.get()))
         self.teach_label.config(
             text="Positions:\n" + self.show_positions(self.pos_list)
         )
@@ -698,7 +723,7 @@ class App(ttk.Frame):
                 string += str(count + 1) + "\t" + str(i[0]) + "\t" + str(i[1]) + "\n"
             return string
         else:
-            return "None"
+            return "Num\t|\tPos\t|\tGrip:\n"
 
     def split_list(self, list):
         if list:
