@@ -1253,7 +1253,7 @@ class Robot:
         num_programs = self.client.read_input_registers(331)[0]
 
         # Ensure that the list starts from the top by repeatedly navigating to the previous program
-        for _ in range(num_programs):
+        for i in range(num_programs):
             self.client.write_single_coil(131, False)
             self.client.write_single_coil(131, True)
 

@@ -708,6 +708,7 @@ class App(ttk.Frame):
             self.gripper_widgets(self.tab_3, 2, 0)
 
     def program_names(self, list):
+        # self.dr.print_list_of_programs()
         if list:
             string = ""
             for count, i in enumerate(list):
@@ -720,7 +721,7 @@ class App(ttk.Frame):
         if list:
             string = "Num:\tPos:\tGrip:\n"
             for count, i in enumerate(list):
-                string += str(count + 1) + "\t" + str(i[0]) + "\t" + str(i[1]) + "\n"
+                string += str(count + 1) + " " + str(i[0]) + " " + str(i[1]) + "\n"
             return string
         else:
             return "Num:\tPos:\tGrip:\n"
