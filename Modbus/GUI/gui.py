@@ -83,10 +83,14 @@ class App(ttk.Frame):
         self.info_frame = ttk.LabelFrame(self, text="About", padding=(20, 10))
         self.info_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nwewns")
 
-        self.reset = ttk.Button(
-            self.info_frame, text="Reset", command=lambda: self.dr.reset()
+        self.about_label = ttk.Label(
+            self.info_frame, text="Hochschule Emden/Leer\nTechnikum\nDelta-Roboter", font=("-size", fontsize)
         )
-        self.reset.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        # self.about_label.grid(row=5, column=0, padx=5, pady=10)
+        # self.reset = ttk.Button(
+        #     self.info_frame, text="Reset", command=lambda: self.dr.reset()
+        # )
 
     def setting_widgets(self):
         self.setting_frame = ttk.LabelFrame(self, text="Setting", padding=(20, 10))
