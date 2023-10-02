@@ -11,6 +11,7 @@ Usage:
     To use this module, create an instance of the 'Gripper' class with the appropriate serial port and settings.
 """
 
+from time import sleep
 import serial
 
 
@@ -64,6 +65,7 @@ class Gripper:
             self.orientation = orientation
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
+        sleep(0.2)
         return True
 
     def open(self) -> bool:
