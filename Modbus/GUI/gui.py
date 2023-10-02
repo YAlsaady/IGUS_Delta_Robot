@@ -723,7 +723,7 @@ class App(ttk.Frame):
                 string += str(count + 1) + "\t" + str(i[0]) + "\t" + str(i[1]) + "\n"
             return string
         else:
-            return "Num\t|\tPos\t|\tGrip:\n"
+            return "Num:\tPos:\tGrip:\n"
 
     def split_list(self, list):
         if list:
