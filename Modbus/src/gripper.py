@@ -17,6 +17,8 @@ import serial
 
 class Gripper:
     is_connected: bool = False
+    orientation = 0
+    opening = 0
 
     def __init__(
         self, port: str = "/dev/ttyUSB0", baudrate: int = 9600, timeout: int = 1
@@ -36,7 +38,6 @@ class Gripper:
             self.orientation = 90
             self.opening = 100
             self.is_connected = self.ser.is_open
-            self.ser.is_open
         except:
             pass
 

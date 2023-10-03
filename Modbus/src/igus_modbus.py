@@ -28,7 +28,7 @@ Example:
 # }}}
 
 # {{{ Import
-from time import sleep
+from time import sleep, time
 from pyModbusTCP.client import ModbusClient
 from ctypes import c_int32
 from math import sin, cos, radians
@@ -40,6 +40,7 @@ from numpy import arange
 # {{{ Init
 class Robot:
     is_connected = False
+    break_time = 5
 
     def __init__(self, address: str, port: int = 502):
         """
@@ -51,7 +52,7 @@ class Robot:
         :type port: int
         """
         self.address = address
-        self.client = ModbusClient(host=address, port=port)
+        self.client = ModbusClient(host=address, port=port,timeout=1)
         self.is_connected = self.client.open()
 
     def __del__(self):
@@ -88,6 +89,7 @@ class Robot:
         """
         if not self.is_connected:
             return
+        self.controll_programs("stop")
         self.client.write_single_coil(52, False)
         self.client.write_single_coil(52, True)
 
@@ -394,8 +396,12 @@ class Robot:
         """
         if not self.is_connected:
             return
+        timeout= time() + self.break_time
         if wait:
             while self.is_moving():
+                if time() > timeout:
+                    self.reset()
+                    break
                 if self.is_general_error():
                     break
                 if self.is_kinematics_error():
@@ -520,8 +526,12 @@ class Robot:
         """
         if not self.is_connected:
             return
+        timeout= time() + self.break_time
         if wait:
             while self.is_moving():
+                if time() > timeout:
+                    self.reset()
+                    break
                 if self.is_general_error():
                     break
                 if self.is_kinematics_error():
@@ -1221,7 +1231,11 @@ class Robot:
         """
         if not self.is_connected:
             return
+        timeout= time() + self.break_time
         while self.is_moving():
+            if time() > timeout:
+                self.reset()
+                break
             if self.is_general_error():
                 break
             if self.is_kinematics_error():

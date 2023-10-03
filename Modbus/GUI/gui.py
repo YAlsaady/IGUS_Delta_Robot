@@ -1,3 +1,4 @@
+from time import sleep
 import tkinter as tk
 from tkinter import ttk
 import os
@@ -9,6 +10,8 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 fontsize = 20
+
+
 class App(ttk.Frame):
     def __init__(self, _):
         ttk.Frame.__init__(self)
@@ -38,6 +41,7 @@ class App(ttk.Frame):
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=1000)
         self.step_var = tk.IntVar(value=10)
+        self.about_msg="Delta Robo\nUser Interface to contol the Robot\n\nCreated by: Yaman Alsaady\n ",
 
         self.logo_widgets()
         self.setting_widgets()
@@ -74,7 +78,7 @@ class App(ttk.Frame):
         self.tab_3 = ttk.Frame(self)
         self.tabs.add(self.tab_3, text="Teach and Play")
         self.tab_4 = ttk.Frame(self)
-        self.tabs.add(self.tab_4, text="Mehr")
+        self.tabs.add(self.tab_4, text="more")
 
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo = tk.PhotoImage(file=img)
@@ -85,7 +89,10 @@ class App(ttk.Frame):
         self.info_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nwewns")
 
         self.about_label = ttk.Label(
-            self.info_frame, text="Hochschule Emden/Leer\nTechnikum\nDelta-Roboter", font=("-size", fontsize)
+            self.info_frame,
+            # text="Hochschule Emden/Leer\nTechnikum\nDelta Robot",
+            text=self.about_msg[0],
+            font=("-size", fontsize),
         )
         self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
         # self.about_label.grid(row=5, column=0, padx=5, pady=10)
@@ -117,6 +124,7 @@ class App(ttk.Frame):
             command=lambda: (
                 self.reference_label.config(text="Reference: Robot is referencing"),
                 self.dr.reference(True),
+                sleep(0.1),
             ),
         )
         self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -137,20 +145,20 @@ class App(ttk.Frame):
         self.theme.grid(row=4, column=0, padx=5, pady=10, sticky="nsew")
         self.theme.bind("<<ComboboxSelected>>", self.update_theme)
 
-        self.update_label = ttk.Label(
-            self.setting_frame, text="Update delay:", font=("-size", fontsize)
-        )
-        self.update_label.grid(row=5, column=0, padx=5, pady=10)
-
-        self.update_box = ttk.Spinbox(
-            self.setting_frame,
-            from_=10,
-            to=1000,
-            increment=10,
-            textvariable=self.update_delay,
-            width=10,
-        )
-        self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
+        # self.update_label = ttk.Label(
+        #     self.setting_frame, text="Update delay:", font=("-size", fontsize)
+        # )
+        # self.update_label.grid(row=5, column=0, padx=5, pady=10)
+        #
+        # self.update_box = ttk.Spinbox(
+        #     self.setting_frame,
+        #     from_=10,
+        #     to=1000,
+        #     increment=10,
+        #     textvariable=self.update_delay,
+        #     width=10,
+        # )
+        # self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
@@ -195,7 +203,9 @@ class App(ttk.Frame):
         )
 
         self.global_speed_label = ttk.Label(
-            self.speed_frame, text=int(self.global_speed_var.get()), font=("-size", fontsize)
+            self.speed_frame,
+            text=int(self.global_speed_var.get()),
+            font=("-size", fontsize),
         )
         self.global_speed_label.grid(
             row=0, column=2, padx=(20, 10), pady=(20, 0), sticky="ew"
@@ -214,7 +224,7 @@ class App(ttk.Frame):
             to=100,
             variable=self.speed_var,
             command=lambda _: (
-                self.dr.set_velocity(int(self.speed_scale.get()*20)),
+                self.dr.set_velocity(int(self.speed_scale.get() * 20)),
                 self.speed_var.set(self.speed_scale.get()),
                 self.speed_label.config(text=int(self.speed_var.get())),
             ),
@@ -259,7 +269,9 @@ class App(ttk.Frame):
         )
 
         self.gripper_label = ttk.Label(
-            self.gripper_frame, text=int(self.gripper_var.get()), font=("-size", fontsize)
+            self.gripper_frame,
+            text=int(self.gripper_var.get()),
+            font=("-size", fontsize),
         )
         self.gripper_label.grid(
             row=1, column=2, padx=(20, 10), pady=(20, 0), sticky="ew"
@@ -555,7 +567,9 @@ class App(ttk.Frame):
         self.load_label = ttk.Label(
             self.load_frame, text="Available Programs:", font=("-size", fontsize)
         )
-        self.load_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew",columnspan=4)
+        self.load_label.grid(
+            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
+        )
 
         # self.load_p = ttk.Spinbox(
         #     self.load_frame, from_=1, to=100, increment=1, textvariable=self.program_var
@@ -566,18 +580,20 @@ class App(ttk.Frame):
         self.next_prog = ttk.Button(
             self.load_frame,
             text="Next",
-            command=lambda: self.program_var.set(self.program_var.get()+1),
+            command=lambda: self.program_var.set(self.program_var.get() + 1),
         )
         self.next_prog.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
 
         self.previous_prog = ttk.Button(
             self.load_frame,
             text="Previous",
-            command=lambda: self.program_var.set(self.program_var.get()-1),
+            command=lambda: self.program_var.set(self.program_var.get() - 1),
         )
         self.previous_prog.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
-        self.prog_label = ttk.Label(self.load_frame, text="Program", font=("-size", fontsize))
+        self.prog_label = ttk.Label(
+            self.load_frame, text="Program", font=("-size", fontsize)
+        )
         self.prog_label.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
 
         self.load_button = ttk.Button(
@@ -646,6 +662,7 @@ class App(ttk.Frame):
             self.teach_frame, text="Sort", command=lambda: self.sort_list()
         )
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
+
     def update(self):
         if self.dr.is_connected:
             try:
@@ -658,7 +675,9 @@ class App(ttk.Frame):
                 self.a2_label.config(text=axes_pos[1])
                 self.a3_label.config(text=axes_pos[2])
                 self.status_p.config(text="status: " + self.dr.get_program_runstate())
-                self.loaded_p.config(text="Loaded Program: " + self.dr.get_program_name())
+                self.loaded_p.config(
+                    text="Loaded Program: " + self.dr.get_program_name()
+                )
                 self.robot_label.config(
                     text="Robot:\n" + self.split_list(self.dr.get_robot_errors())
                 )
@@ -666,7 +685,8 @@ class App(ttk.Frame):
                     text="Kinematic:\n" + self.dr.get_kinematics_error()
                 )
                 self.load_label.config(
-                    text="Programs:\n" + self.program_names(self.dr.get_list_of_porgrams())
+                    text="Programs:\n"
+                    + self.program_names(self.dr.get_list_of_porgrams())
                 )
                 self.enalbe_var.set(self.dr.is_enabled())
 
@@ -678,7 +698,9 @@ class App(ttk.Frame):
                 if self.dr.is_referenced():
                     self.reference_label.config(text="Reference: Robot is referenced")
                 else:
-                    self.reference_label.config(text="Reference: Robot is not referenced")
+                    self.reference_label.config(
+                        text="Reference: Robot is not referenced"
+                    )
                 self.zero_torque_var.set(self.dr.is_zero_torque())
             except:
                 pass
@@ -686,7 +708,7 @@ class App(ttk.Frame):
             self.connect_label.config(text="Connection: Robot is not connected")
         self.prog_label.config(text=int(self.program_var.get()))
         self.teach_label.config(
-            text="Positions:\n" + self.show_positions(self.pos_list)
+            text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
         )
         self.after(self.update_delay.get(), self.update)
 
@@ -765,6 +787,7 @@ class App(ttk.Frame):
         self.pos_list.append(list)
 
     def run_list(self):
+        self.zero_torque_var.set(False)
         self.enalbe_var.set(True)
         self.dr.enable()
         if self.run_var.get():
@@ -773,12 +796,16 @@ class App(ttk.Frame):
                 for i in self.pos_list:
                     if i[0]:
                         self.dr.set_and_move(*i[0])
-                        print(k,*i[0],*i[1])
+                        print(k, *i[0], *i[1])
                         k += 1
                     if self.gripper.is_connected:
                         if i[1]:
-                            self.gripper.controll(*i[1])
-        self.zero_torque_var.set(False)
+                            if (
+                                i[1][0] != self.gripper.opening
+                                or i[1][0] != self.gripper.orientation
+                            ):
+                                self.gripper.controll(*i[1])
+                                sleep(0.5)
         self.run_var.set(False)
 
     def sort_list(self):
@@ -805,9 +832,9 @@ def main():
     root = tk.Tk()
     root.title("HS Emden/Leer: Delta Robot")
     # root.attributes("-fullscreen", True)
-    root.attributes('-zoomed', True)
+    root.attributes("-zoomed", True)
     # root.iconbitmap(PATH+"img/hsel_logo.ico")
-    root.iconphoto(False, tk.PhotoImage(file=PATH+"img/hsel_icon.png"))
+    root.iconphoto(False, tk.PhotoImage(file=PATH + "img/hsel_icon.png"))
     app = App(root)
     app.pack(fill="both", expand=True)
 
