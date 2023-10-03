@@ -11,9 +11,13 @@ Usage:
     To use this module, create an instance of the 'Gripper' class with the appropriate serial port and settings.
 """
 
+from time import sleep
 import serial
 
+
 class Gripper:
+    is_connected: bool = False
+
     def __init__(
         self, port: str = "/dev/ttyUSB0", baudrate: int = 9600, timeout: int = 1
     ):
@@ -27,9 +31,14 @@ class Gripper:
         :param timeout: The timeout for serial communication (default is 1 second).
         :type timeout: int or float
         """
-        self.ser = serial.Serial(port, baudrate, timeout = timeout)
-        self.orientation = 90
-        self.opening = 100
+        try:
+            self.ser = serial.Serial(port, baudrate, timeout=timeout)
+            self.orientation = 90
+            self.opening = 100
+            self.is_connected = self.ser.is_open
+            self.ser.is_open
+        except:
+            pass
 
     def controll(self, opening: int, orientation: int = None) -> bool:
         """
@@ -44,6 +53,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         if not (0 <= opening <= 100):
             return False  # Opening value out of range
         if orientation is not None and not (0 <= orientation <= 180):
@@ -54,6 +65,7 @@ class Gripper:
             self.orientation = orientation
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
+        # sleep(0.05)
         return True
 
     def open(self) -> bool:
@@ -65,6 +77,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         return self.controll(0)
 
     def close(self) -> bool:
@@ -76,6 +90,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         return self.controll(100)
 
     def rotate(self, orientation: int) -> bool:
@@ -89,6 +105,8 @@ class Gripper:
         :return: True if the operation was successful, False otherwise.
         :rtype: bool
         """
+        if not self.is_connected:
+            return
         if not (0 <= orientation <= 180):
             return False  # Orientation value out of range
 
