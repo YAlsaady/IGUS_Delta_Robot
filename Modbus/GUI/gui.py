@@ -11,7 +11,6 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 fontsize = 20
 
-
 class App(ttk.Frame):
     def __init__(self, _):
         ttk.Frame.__init__(self)
@@ -41,6 +40,7 @@ class App(ttk.Frame):
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=1000)
         self.step_var = tk.IntVar(value=10)
+
         self.about_msg="Delta Robo\nUser Interface to contol the Robot\n\nCreated by: Yaman Alsaady\n ",
 
         self.logo_widgets()
@@ -79,6 +79,7 @@ class App(ttk.Frame):
         self.tabs.add(self.tab_3, text="Teach and Play")
         self.tab_4 = ttk.Frame(self)
         self.tabs.add(self.tab_4, text="more")
+
 
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo = tk.PhotoImage(file=img)
@@ -125,6 +126,7 @@ class App(ttk.Frame):
                 self.reference_label.config(text="Reference: Robot is referencing"),
                 self.dr.reference(True),
                 sleep(0.1),
+
             ),
         )
         self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -159,6 +161,7 @@ class App(ttk.Frame):
         #     width=10,
         # )
         # self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
+
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
