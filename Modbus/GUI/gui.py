@@ -9,10 +9,9 @@ from src.gripper import Gripper
 PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
-fontsize = 20
-
 
 class App(ttk.Frame):
+    fontsize = 20
     def __init__(self, _):
         ttk.Frame.__init__(self)
 
@@ -41,7 +40,9 @@ class App(ttk.Frame):
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=1000)
         self.step_var = tk.IntVar(value=10)
-        self.about_msg="Delta Robo\nUser Interface to contol the Robot\n\nCreated by: Yaman Alsaady\n ",
+        self.about_msg = (
+                "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
+        )
 
         self.logo_widgets()
         self.setting_widgets()
@@ -78,7 +79,7 @@ class App(ttk.Frame):
         self.tab_3 = ttk.Frame(self)
         self.tabs.add(self.tab_3, text="Teach and Play")
         self.tab_4 = ttk.Frame(self)
-        self.tabs.add(self.tab_4, text="more")
+        self.tabs.add(self.tab_4, text="More")
 
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo = tk.PhotoImage(file=img)
@@ -92,7 +93,7 @@ class App(ttk.Frame):
             self.info_frame,
             # text="Hochschule Emden/Leer\nTechnikum\nDelta Robot",
             text=self.about_msg[0],
-            font=("-size", fontsize),
+            font=("-size", self.fontsize),
         )
         self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
         # self.about_label.grid(row=5, column=0, padx=5, pady=10)
@@ -169,13 +170,13 @@ class App(ttk.Frame):
         )
 
         self.connect_label = ttk.Label(
-            self.control_frame, text="Connection:", font=("-size", fontsize)
+            self.control_frame, text="Connection:", font=("-size", self.fontsize)
         )
         self.connect_label.grid(
             row=1, column=0, padx=5, pady=10, sticky="ew", columnspan=4
         )
         self.reference_label = ttk.Label(
-            self.control_frame, text="Reference:", font=("-size", fontsize)
+            self.control_frame, text="Reference:", font=("-size", self.fontsize)
         )
         self.reference_label.grid(
             row=2, column=0, padx=5, pady=10, sticky="ew", columnspan=4
@@ -205,14 +206,14 @@ class App(ttk.Frame):
         self.global_speed_label = ttk.Label(
             self.speed_frame,
             text=int(self.global_speed_var.get()),
-            font=("-size", fontsize),
+            font=("-size", self.fontsize),
         )
         self.global_speed_label.grid(
             row=0, column=2, padx=(20, 10), pady=(20, 0), sticky="ew"
         )
 
         self.global_speed_title_label = ttk.Label(
-            self.speed_frame, text="Global Speed", font=("-size", fontsize)
+            self.speed_frame, text="Global Speed", font=("-size", self.fontsize)
         )
         self.global_speed_title_label.grid(
             row=0, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
@@ -232,12 +233,12 @@ class App(ttk.Frame):
         self.speed_scale.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="ew")
 
         self.speed_label = ttk.Label(
-            self.speed_frame, text=int(self.speed_var.get()), font=("-size", fontsize)
+            self.speed_frame, text=int(self.speed_var.get()), font=("-size", self.fontsize)
         )
         self.speed_label.grid(row=1, column=2, padx=(20, 20), pady=(20, 0), sticky="ew")
 
         self.speed_title_label = ttk.Label(
-            self.speed_frame, text="Speed", font=("-size", fontsize)
+            self.speed_frame, text="Speed", font=("-size", self.fontsize)
         )
         self.speed_title_label.grid(
             row=1, column=0, padx=(5, 10), pady=(20, 20), sticky="ew"
@@ -271,14 +272,14 @@ class App(ttk.Frame):
         self.gripper_label = ttk.Label(
             self.gripper_frame,
             text=int(self.gripper_var.get()),
-            font=("-size", fontsize),
+            font=("-size", self.fontsize),
         )
         self.gripper_label.grid(
             row=1, column=2, padx=(20, 10), pady=(20, 0), sticky="ew"
         )
 
         self.gripper_title_label = ttk.Label(
-            self.gripper_frame, text="Gripper Opening", font=("-size", fontsize)
+            self.gripper_frame, text="Gripper Opening", font=("-size", self.fontsize)
         )
         self.gripper_title_label.grid(
             row=1, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
@@ -304,14 +305,14 @@ class App(ttk.Frame):
         self.gripper_orient_label = ttk.Label(
             self.gripper_frame,
             text=int(self.gripper_orient_var.get()),
-            font=("-size", fontsize),
+            font=("-size", self.fontsize),
         )
         self.gripper_orient_label.grid(
             row=2, column=2, padx=(20, 10), pady=(20, 20), sticky="ew"
         )
 
         self.gripper_orient_title_label = ttk.Label(
-            self.gripper_frame, text="Gripper Orientation", font=("-size", fontsize)
+            self.gripper_frame, text="Gripper Orientation", font=("-size", self.fontsize)
         )
         self.gripper_orient_title_label.grid(
             row=2, column=0, padx=(5, 10), pady=(20, 20), sticky="ew"
@@ -354,7 +355,7 @@ class App(ttk.Frame):
         )
         self.x_p.grid(row=0, column=2, padx=25, pady=5)
 
-        self.x_label = ttk.Label(self.move_tab, text="X", font=("-size", fontsize))
+        self.x_label = ttk.Label(self.move_tab, text="X", font=("-size", self.fontsize))
         self.x_label.grid(row=0, column=1, padx=5, pady=10)
 
         self.y_m = ttk.Button(
@@ -375,7 +376,7 @@ class App(ttk.Frame):
         )
         self.y_p.grid(row=1, column=2, padx=10, pady=5)
 
-        self.y_label = ttk.Label(self.move_tab, text="Y", font=("-size", fontsize))
+        self.y_label = ttk.Label(self.move_tab, text="Y", font=("-size", self.fontsize))
         self.y_label.grid(row=1, column=1, padx=5, pady=10)
 
         self.z_m = ttk.Button(
@@ -396,11 +397,11 @@ class App(ttk.Frame):
         )
         self.z_p.grid(row=2, column=2, padx=10, pady=5)
 
-        self.z_label = ttk.Label(self.move_tab, text="Z", font=("-size", fontsize))
+        self.z_label = ttk.Label(self.move_tab, text="Z", font=("-size", self.fontsize))
         self.z_label.grid(row=2, column=1, padx=5, pady=10)
 
         self.step_label = ttk.Label(
-            self.move_tab, text="Stops per Move:", font=("-size", fontsize)
+            self.move_tab, text="Stops per Move:", font=("-size", self.fontsize)
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
@@ -436,7 +437,7 @@ class App(ttk.Frame):
         )
         self.a1_p.grid(row=0, column=2, padx=25, pady=5)
 
-        self.a1_label = ttk.Label(self.axes_tab, text="A1", font=("-size", fontsize))
+        self.a1_label = ttk.Label(self.axes_tab, text="A1", font=("-size", self.fontsize))
         self.a1_label.grid(row=0, column=1, padx=5, pady=10)
 
         self.a2_m = ttk.Button(
@@ -457,7 +458,7 @@ class App(ttk.Frame):
         )
         self.a2_p.grid(row=1, column=2, padx=10, pady=5)
 
-        self.a2_label = ttk.Label(self.axes_tab, text="A2", font=("-size", fontsize))
+        self.a2_label = ttk.Label(self.axes_tab, text="A2", font=("-size", self.fontsize))
         self.a2_label.grid(row=1, column=1, padx=5, pady=10)
 
         self.a3_m = ttk.Button(
@@ -478,11 +479,11 @@ class App(ttk.Frame):
         )
         self.a3_p.grid(row=2, column=2, padx=10, pady=5)
 
-        self.a3_label = ttk.Label(self.axes_tab, text="A3", font=("-size", fontsize))
+        self.a3_label = ttk.Label(self.axes_tab, text="A3", font=("-size", self.fontsize))
         self.a3_label.grid(row=2, column=1, padx=5, pady=10)
 
         self.step_label = ttk.Label(
-            self.axes_tab, text="Stops per Move:", font=("-size", fontsize)
+            self.axes_tab, text="Stops per Move:", font=("-size", self.fontsize)
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
@@ -504,11 +505,11 @@ class App(ttk.Frame):
             row=3, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3
         )
         self.robot_label = ttk.Label(
-            self.error_frame, text="Robot:\n\n", font=("-size", fontsize)
+            self.error_frame, text="Robot:\n\n", font=("-size", self.fontsize)
         )
         self.robot_label.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
         self.kinematic_label = ttk.Label(
-            self.error_frame, text="Kinematic:", font=("-size", fontsize)
+            self.error_frame, text="Kinematic:", font=("-size", self.fontsize)
         )
         self.kinematic_label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
 
@@ -546,12 +547,12 @@ class App(ttk.Frame):
         self.continue_p.grid(row=0, column=3, padx=5, pady=10, sticky="nsew")
 
         self.status_p = ttk.Label(
-            self.programs_frame, text="Status", font=("-size", fontsize)
+            self.programs_frame, text="Status", font=("-size", self.fontsize)
         )
         self.status_p.grid(row=1, column=0, padx=5, pady=10, columnspan=4, sticky="ew")
 
         self.loaded_p = ttk.Label(
-            self.programs_frame, text="Loaded Program:", font=("-size", fontsize)
+            self.programs_frame, text="Loaded Program:", font=("-size", self.fontsize)
         )
         self.loaded_p.grid(row=2, column=0, padx=5, pady=10, columnspan=4, sticky="ew")
 
@@ -565,7 +566,7 @@ class App(ttk.Frame):
             row=3, column=0, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3
         )
         self.load_label = ttk.Label(
-            self.load_frame, text="Available Programs:", font=("-size", fontsize)
+            self.load_frame, text="Available Programs:", font=("-size", self.fontsize)
         )
         self.load_label.grid(
             row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
@@ -580,19 +581,25 @@ class App(ttk.Frame):
         self.next_prog = ttk.Button(
             self.load_frame,
             text="Next",
-            command=lambda: self.program_var.set(self.program_var.get() + 1),
+            command=lambda: (
+                self.program_var.set(self.program_var.get() + 1),
+                self.prog_label.config(text=int(self.program_var.get())),
+            ),
         )
         self.next_prog.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
 
         self.previous_prog = ttk.Button(
             self.load_frame,
             text="Previous",
-            command=lambda: self.program_var.set(self.program_var.get() - 1),
+            command=lambda: (
+                self.program_var.set(self.program_var.get() - 1),
+                self.prog_label.config(text=int(self.program_var.get())),
+            ),
         )
         self.previous_prog.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
         self.prog_label = ttk.Label(
-            self.load_frame, text="Program", font=("-size", fontsize)
+            self.load_frame, text="Program", font=("-size", self.fontsize)
         )
         self.prog_label.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
 
@@ -611,7 +618,7 @@ class App(ttk.Frame):
             row=0, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=10
         )
         self.teach_label = ttk.Label(
-            self.show_frame, text="Positions:", font=("-size", fontsize)
+            self.show_frame, text="Positions:", font=("-size", self.fontsize)
         )
         self.teach_label.grid(
             row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
@@ -826,7 +833,6 @@ class App(ttk.Frame):
             self.pos_list.pop(index)
         except:
             pass
-
 
 def main():
     root = tk.Tk()
