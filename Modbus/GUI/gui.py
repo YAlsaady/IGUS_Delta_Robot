@@ -16,7 +16,7 @@ class App(ttk.Frame):
 
         self.tk.call("source", PATH + "azure.tcl")
         self.tk.call("set_theme", "dark")
-        self.dr = Robot("192.168.3.11")
+        self.delta = Robot("192.168.3.11")
         self.gripper = Gripper()
         # Make the app responsive
         for index in [0, 1, 2]:
@@ -37,7 +37,7 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
-        self.update_delay = tk.IntVar(value=1000)
+        self.update_delay = tk.IntVar(value=10)
         self.step_var = tk.IntVar(value=10)
         self.about_msg = (
                 "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
@@ -59,7 +59,7 @@ class App(ttk.Frame):
         self.gripper_widgets(self.tab_3, 2, 0)
         self.teach_widgets()
 
-        self.dr.set_velocity(2000)
+        self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         print(PATH)
 
@@ -114,7 +114,7 @@ class App(ttk.Frame):
         self.enable.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 
         self.reset = ttk.Button(
-            self.setting_frame, text="Reset", command=lambda: self.dr.reset()
+            self.setting_frame, text="Reset", command=lambda: self.delta.reset()
         )
         self.reset.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
@@ -123,7 +123,7 @@ class App(ttk.Frame):
             text="Reference",
             command=lambda: (
                 self.reference_label.config(text="Reference: Robot is referencing"),
-                self.dr.reference(True),
+                self.delta.reference(True),
                 sleep(0.1),
 
             ),
@@ -135,7 +135,7 @@ class App(ttk.Frame):
             text="Zero Torque",
             style="Toggle.TButton",
             variable=self.zero_torque_var,
-            command=lambda: self.dr.set_zero_torque(self.zero_torque_var.get()),
+            command=lambda: self.delta.set_zero_torque(self.zero_torque_var.get()),
         )
         self.zero_torque.grid(row=3, column=0, padx=5, pady=10, sticky="nsew")
 
@@ -197,7 +197,7 @@ class App(ttk.Frame):
             command=lambda _: (
                 self.global_speed_var.set(self.global_speed_scale.get()),
                 self.global_speed_label.config(text=int(self.global_speed_var.get())),
-                self.dr.set_override_velocity(int(self.global_speed_var.get())),
+                self.delta.set_override_velocity(int(self.global_speed_var.get())),
             ),
         )
         self.global_speed_scale.grid(
@@ -226,7 +226,7 @@ class App(ttk.Frame):
             to=100,
             variable=self.speed_var,
             command=lambda _: (
-                self.dr.set_velocity(int(self.speed_scale.get() * 20)),
+                self.delta.set_velocity(int(self.speed_scale.get() * 20)),
                 self.speed_var.set(self.speed_scale.get()),
                 self.speed_label.config(text=int(self.speed_var.get())),
             ),
@@ -263,7 +263,7 @@ class App(ttk.Frame):
             command=lambda _: (
                 self.gripper_var.set(self.gripper_scale.get()),
                 self.gripper_label.config(text=int(self.gripper_var.get())),
-                self.gripper_mov(),
+                # self.gripper_mov(),
             ),
         )
         self.gripper_scale.grid(
@@ -296,7 +296,7 @@ class App(ttk.Frame):
                 self.gripper_orient_label.config(
                     text=int(self.gripper_orient_var.get())
                 ),
-                self.gripper_mov(),
+                # self.gripper_mov(),
             ),
         )
         self.gripper_orient_scale.grid(
@@ -341,7 +341,7 @@ class App(ttk.Frame):
         self.x_m = ttk.Button(
             self.move_tab,
             text="X-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 -1 * self.step_var.get(), 0, 0, relative="base"
             ),
         )
@@ -350,7 +350,7 @@ class App(ttk.Frame):
         self.x_p = ttk.Button(
             self.move_tab,
             text="X+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 self.step_var.get(), 0, 0, relative="base"
             ),
         )
@@ -362,7 +362,7 @@ class App(ttk.Frame):
         self.y_m = ttk.Button(
             self.move_tab,
             text="Y-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, -1 * self.step_var.get(), 0, relative="base"
             ),
         )
@@ -371,7 +371,7 @@ class App(ttk.Frame):
         self.y_p = ttk.Button(
             self.move_tab,
             text="Y+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, self.step_var.get(), 0, relative="base"
             ),
         )
@@ -383,7 +383,7 @@ class App(ttk.Frame):
         self.z_m = ttk.Button(
             self.move_tab,
             text="Z-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, 0, -1 * self.step_var.get(), relative="base"
             ),
         )
@@ -392,7 +392,7 @@ class App(ttk.Frame):
         self.z_p = ttk.Button(
             self.move_tab,
             text="Z+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, 0, self.step_var.get(), relative="base"
             ),
         )
@@ -423,7 +423,7 @@ class App(ttk.Frame):
         self.a1_m = ttk.Button(
             self.axes_tab,
             text="A1-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 -1 * self.step_var.get(), 0, 0, relative="base", movement="axes"
             ),
         )
@@ -432,7 +432,7 @@ class App(ttk.Frame):
         self.a1_p = ttk.Button(
             self.axes_tab,
             text="A1+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 self.step_var.get(), 0, 0, relative="base", movement="axes"
             ),
         )
@@ -444,7 +444,7 @@ class App(ttk.Frame):
         self.a2_m = ttk.Button(
             self.axes_tab,
             text="A2-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, -1 * self.step_var.get(), 0, relative="base", movement="axes"
             ),
         )
@@ -453,7 +453,7 @@ class App(ttk.Frame):
         self.a2_p = ttk.Button(
             self.axes_tab,
             text="A2+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, self.step_var.get(), 0, relative="base", movement="axes"
             ),
         )
@@ -465,7 +465,7 @@ class App(ttk.Frame):
         self.a3_m = ttk.Button(
             self.axes_tab,
             text="A3-",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, 0, -1 * self.step_var.get(), relative="base", movement="axes"
             ),
         )
@@ -474,7 +474,7 @@ class App(ttk.Frame):
         self.a3_p = ttk.Button(
             self.axes_tab,
             text="A3+",
-            command=lambda: self.dr.set_and_move(
+            command=lambda: self.delta.set_and_move(
                 0, 0, self.step_var.get(), relative="base", movement="axes"
             ),
         )
@@ -525,25 +525,25 @@ class App(ttk.Frame):
         self.play = ttk.Button(
             self.programs_frame,
             text="Start",
-            command=lambda: self.dr.controll_programs("start"),
+            command=lambda: self.delta.controll_programs("start"),
         )
         self.play.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
         self.stop = ttk.Button(
             self.programs_frame,
             text="Stop",
-            command=lambda: self.dr.controll_programs("stop"),
+            command=lambda: self.delta.controll_programs("stop"),
         )
         self.stop.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
         self.pause = ttk.Button(
             self.programs_frame,
             text="Pause",
-            command=lambda: self.dr.controll_programs("pause"),
+            command=lambda: self.delta.controll_programs("pause"),
         )
         self.pause.grid(row=0, column=2, padx=5, pady=10, sticky="nsew")
         self.continue_p = ttk.Button(
             self.programs_frame,
             text="Continue",
-            command=lambda: self.dr.controll_programs("continue"),
+            command=lambda: self.delta.controll_programs("continue"),
         )
         self.continue_p.grid(row=0, column=3, padx=5, pady=10, sticky="nsew")
 
@@ -672,48 +672,49 @@ class App(ttk.Frame):
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
 
     def update(self):
-        if self.dr.is_connected:
+        if self.delta.is_connected:
             try:
-                cart_pos = self.dr.get_position_endeffector()
-                axes_pos = self.dr.get_position_axes()
+                cart_pos = self.delta.get_position_endeffector()
+                axes_pos = self.delta.get_position_axes()
                 self.x_label.config(text=cart_pos[0])
                 self.y_label.config(text=cart_pos[1])
                 self.z_label.config(text=cart_pos[2])
                 self.a1_label.config(text=axes_pos[0])
                 self.a2_label.config(text=axes_pos[1])
                 self.a3_label.config(text=axes_pos[2])
-                self.status_p.config(text="status: " + self.dr.get_program_runstate())
+                self.status_p.config(text="status: " + self.delta.get_program_runstate())
                 self.loaded_p.config(
-                    text="Loaded Program: " + self.dr.get_program_name()
+                    text="Loaded Program: " + self.delta.get_program_name()
                 )
                 self.robot_label.config(
-                    text="Robot:\n" + self.split_list(self.dr.get_robot_errors())
+                    text="Robot:\n" + self.split_list(self.delta.get_robot_errors())
                 )
                 self.kinematic_label.config(
-                    text="Kinematic:\n" + self.dr.get_kinematics_error()
+                    text="Kinematic:\n" + self.delta.get_kinematics_error()
                 )
                 self.load_label.config(
                     text="Programs:\n"
-                    + self.program_names(self.dr.get_list_of_porgrams())
+                    + self.program_names(self.delta.get_list_of_porgrams())
                 )
-                self.enalbe_var.set(self.dr.is_enabled())
+                self.enalbe_var.set(self.delta.is_enabled())
 
-                if self.dr.is_connected:
+                if self.delta.is_connected:
                     self.connect_label.config(text="Connection: Robot is connected")
                 else:
                     self.connect_label.config(text="Connection: Robot is not connected")
 
-                if self.dr.is_referenced():
+                if self.delta.is_referenced():
                     self.reference_label.config(text="Reference: Robot is referenced")
                 else:
                     self.reference_label.config(
                         text="Reference: Robot is not referenced"
                     )
-                self.zero_torque_var.set(self.dr.is_zero_torque())
+                self.zero_torque_var.set(self.delta.is_zero_torque())
             except:
                 pass
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
+        self.gripper_mov(),
         self.prog_label.config(text=int(self.program_var.get()))
         self.teach_label.config(
             text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
@@ -766,29 +767,29 @@ class App(ttk.Frame):
             return "No Information available"
 
     def gripper_mov(self):
-        if self.dr.is_connected and not self.dr.get_globale_signal(6):
+        if self.delta.is_connected and not self.delta.get_globale_signal(6):
             self.gripper.controll(
                 int(self.gripper_scale.get()), int(self.gripper_orient_scale.get())
             ),
 
     def enable_robot(self):
         if self.enalbe_var.get():
-            self.dr.enable()
+            self.delta.enable()
         else:
-            self.dr.reset()
+            self.delta.reset()
 
     def load_pragram(self):
         try:
-            list = self.dr.get_list_of_porgrams()
+            list = self.delta.get_list_of_porgrams()
             num = int(self.program_var.get()) - 1
-            self.dr.set_program_name(list[num])
+            self.delta.set_program_name(list[num])
         except:
             pass
 
     def add(self):
         list = []
-        if self.dr.is_connected:
-            list.append(self.dr.get_position_endeffector())
+        if self.delta.is_connected:
+            list.append(self.delta.get_position_endeffector())
         else:
             list.append([0, 0, 0])
         list.append([self.gripper_var.get(), self.gripper_orient_var.get()])
@@ -797,13 +798,13 @@ class App(ttk.Frame):
     def run_list(self):
         self.zero_torque_var.set(False)
         self.enalbe_var.set(True)
-        self.dr.enable()
+        self.delta.enable()
         if self.run_var.get():
-            if self.dr.is_connected or True:
+            if self.delta.is_connected or True:
                 k = 1
                 for i in self.pos_list:
                     if i[0]:
-                        self.dr.set_and_move(*i[0])
+                        self.delta.set_and_move(*i[0])
                         print(k, *i[0], *i[1])
                         k += 1
                     if self.gripper.is_connected:
