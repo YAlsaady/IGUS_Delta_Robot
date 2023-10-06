@@ -9,7 +9,6 @@ from src.gripper import Gripper
 PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
-
 class App(ttk.Frame):
     fontsize = 20
     def __init__(self, _):
@@ -43,7 +42,6 @@ class App(ttk.Frame):
         self.about_msg = (
                 "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
         )
-
         self.logo_widgets()
         self.setting_widgets()
         self.tabs()
@@ -80,6 +78,7 @@ class App(ttk.Frame):
         self.tabs.add(self.tab_3, text="Teach and Play")
         self.tab_4 = ttk.Frame(self)
         self.tabs.add(self.tab_4, text="More")
+
 
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo = tk.PhotoImage(file=img)
@@ -126,6 +125,7 @@ class App(ttk.Frame):
                 self.reference_label.config(text="Reference: Robot is referencing"),
                 self.dr.reference(True),
                 sleep(0.1),
+
             ),
         )
         self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -160,6 +160,7 @@ class App(ttk.Frame):
         #     width=10,
         # )
         # self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
+
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
