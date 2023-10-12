@@ -39,7 +39,7 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
-        self.update_delay = tk.IntVar(value=10)
+        self.update_delay = tk.IntVar(value=100)
         self.step_var = tk.IntVar(value=10)
         self.about_msg = (
             "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
