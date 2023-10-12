@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modbus package &mdash; Delta-Robot 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=2709fde1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Delta-Robot’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Delta-Robot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modbus package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#igus-modbus-module">igus_modbus Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.igus_modbus.Robot"><code class="docutils literal notranslate"><span class="pre">Robot</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.break_time"><code class="docutils literal notranslate"><span class="pre">Robot.break_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.controll_programs"><code class="docutils literal notranslate"><span class="pre">Robot.controll_programs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.disable"><code class="docutils literal notranslate"><span class="pre">Robot.disable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.enable"><code class="docutils literal notranslate"><span class="pre">Robot.enable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_input"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.get_globale_signal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_info_message"><code class="docutils literal notranslate"><span class="pre">Robot.get_info_message()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.get_kinematics_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_list_of_porgrams"><code class="docutils literal notranslate"><span class="pre">Robot.get_list_of_porgrams()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_current_program"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_current_program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_loaded_programs"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_loaded_programs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_operation_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_operation_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_endeffector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_replay_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_runstate"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_runstate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_number_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_position_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_robot_errors"><code class="docutils literal notranslate"><span class="pre">Robot.get_robot_errors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_stop_reason_description"><code class="docutils literal notranslate"><span class="pre">Robot.get_stop_reason_description()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_number_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_position_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_connected"><code class="docutils literal notranslate"><span class="pre">Robot.is_connected</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_enabled"><code class="docutils literal notranslate"><span class="pre">Robot.is_enabled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_general_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_general_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_kinematics_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_moving"><code class="docutils literal notranslate"><span class="pre">Robot.is_moving()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_program_loaded"><code class="docutils literal notranslate"><span class="pre">Robot.is_program_loaded()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_referenced"><code class="docutils literal notranslate"><span class="pre">Robot.is_referenced()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.is_zero_torque()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_axes"><code class="docutils literal notranslate"><span class="pre">Robot.move_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_circular"><code class="docutils literal notranslate"><span class="pre">Robot.move_circular()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.move_endeffector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.print_list_of_programs"><code class="docutils literal notranslate"><span class="pre">Robot.print_list_of_programs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.read_string"><code class="docutils literal notranslate"><span class="pre">Robot.read_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.reference"><code class="docutils literal notranslate"><span class="pre">Robot.reference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.reset"><code class="docutils literal notranslate"><span class="pre">Robot.reset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_and_move"><code class="docutils literal notranslate"><span class="pre">Robot.set_and_move()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.set_digital_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.set_globale_signal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_number_variables"><code class="docutils literal notranslate"><span class="pre">Robot.set_number_variables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_override_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_override_velocity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_axes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_endeffector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_variable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_replay_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_velocity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.set_zero_torque()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.shutdown"><code class="docutils literal notranslate"><span class="pre">Robot.shutdown()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.write_string"><code class="docutils literal notranslate"><span class="pre">Robot.write_string()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#gripper-package">Gripper package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gripper-module">Gripper Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src.gripper.Gripper"><code class="docutils literal notranslate"><span class="pre">Gripper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.close"><code class="docutils literal notranslate"><span class="pre">Gripper.close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.controll"><code class="docutils literal notranslate"><span class="pre">Gripper.controll()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.is_connected"><code class="docutils literal notranslate"><span class="pre">Gripper.is_connected</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.open"><code class="docutils literal notranslate"><span class="pre">Gripper.open()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.opening"><code class="docutils literal notranslate"><span class="pre">Gripper.opening</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.orientation"><code class="docutils literal notranslate"><span class="pre">Gripper.orientation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.rotate"><code class="docutils literal notranslate"><span class="pre">Gripper.rotate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-GUI.gui">GUI package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.fontsize"><code class="docutils literal notranslate"><span class="pre">App.fontsize</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.gripper_mov"><code class="docutils literal notranslate"><span class="pre">App.gripper_mov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.speed_widgets"><code class="docutils literal notranslate"><span class="pre">App.speed_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.split_list"><code class="docutils literal notranslate"><span class="pre">App.split_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#GUI.gui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#example-package">Example package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.example">Example.example module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.example2">Example.example2 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.example2.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.example3">Example.example3 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.example3.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.example_gripper">Example.example_gripper module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Delta-Robot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modbus package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modbus-package">
+<h1>Modbus package<a class="headerlink" href="#modbus-package" title="Link to this heading"></a></h1>
+<section id="igus-modbus-module">
+<span id="module-src.igus_modbus"></span><h2>igus_modbus Module<a class="headerlink" href="#igus-modbus-module" title="Link to this heading"></a></h2>
+<p>This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>Robot: Represents the Robot and provides methods for controlling it.</p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p>To use this module, create an instance of the ‘Robot’ class with the IP address and the port of the Robot as a parameter.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>from igus_modbus import Robot</p>
+<p># Create a Delta Robot instance with the IP address ‘192.168.1.11’
+delta_robot = Robot(‘192.168.3.11’)</p>
+<p># Perform actions with the Delta Robot
+delta_robot.enable()</p>
+<p>delta_robot.reference()</p>
+<p>delta_robot.set_position_endeffector(0, 0, 250)</p>
+<p>delta_robot.set_velocity(120)</p>
+<p>delta_robot.move_endeffector_absolute()</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.igus_modbus.</span></span><span class="sig-name descname"><span class="pre">Robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">502</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.break_time">
+<span class="sig-name descname"><span class="pre">break_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.igus_modbus.Robot.break_time" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.controll_programs">
+<span class="sig-name descname"><span class="pre">controll_programs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.controll_programs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.controll_programs" title="Link to this definition"></a></dt>
+<dd><p>Control robot programs.</p>
+<p>This method allows you to control robot programs by sending specific commands.
+Supported actions are: ‘start’, ‘continue’, ‘pause’, and ‘stop’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>str</em>) – The action to perform (‘start’, ‘continue’, ‘pause’, or ‘stop’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.disable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.disable" title="Link to this definition"></a></dt>
+<dd><p>Disable the motors of the Robot.</p>
+<p>This method disables the motors of the robot by writing 0 to the coil 53.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.enable" title="Link to this definition"></a></dt>
+<dd><p>Enable the motors of the Robot.</p>
+<p>This method enables the motors of the robot by writing 1 the coil 53.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_digital_input">
+<span class="sig-name descname"><span class="pre">get_digital_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_digital_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_digital_input" title="Link to this definition"></a></dt>
+<dd><p>Get the state of a digital input.</p>
+<p>This method allows you to get the state of a digital input by specifying its number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the digital input (1 to 64).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The state of the digital input (True for ON, False for OFF).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_digital_output">
+<span class="sig-name descname"><span class="pre">get_digital_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_digital_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_digital_output" title="Link to this definition"></a></dt>
+<dd><p>Get the state of a digital output.</p>
+<p>This method allows you to get the state of a digital output by specifying its number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the digital output (1 to 64).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The state of the digital output (True for ON, False for OFF).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_globale_signal">
+<span class="sig-name descname"><span class="pre">get_globale_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_globale_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_globale_signal" title="Link to this definition"></a></dt>
+<dd><p>Get the state of a global signal.</p>
+<p>This method allows you to get the state of a global signal by specifying its number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the global signal (1 to 100).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The state of the global signal (True for ON, False for OFF).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_info_message">
+<span class="sig-name descname"><span class="pre">get_info_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_info_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_info_message" title="Link to this definition"></a></dt>
+<dd><p>Get the information or error message from the Delta Robot.</p>
+<p>This method reads the information or error message from the Delta Robot’s control unit.
+The message is typically a short text, similar to what is displayed on a manual control unit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The information or error message as a string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_kinematics_error">
+<span class="sig-name descname"><span class="pre">get_kinematics_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_kinematics_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_kinematics_error" title="Link to this definition"></a></dt>
+<dd><p>Get the kinematics error description.</p>
+<p>This method reads the kinematics error code from the robot controller and returns a human-readable description of the error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string describing the kinematics error.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_list_of_porgrams">
+<span class="sig-name descname"><span class="pre">get_list_of_porgrams</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_list_of_porgrams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_list_of_porgrams" title="Link to this definition"></a></dt>
+<dd><p>Get a list of available robot programs.</p>
+<p>This method retrieves a list of robot programs from the robot controller.
+It communicates with the robot controller to gather program names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of program names.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_number_of_current_program">
+<span class="sig-name descname"><span class="pre">get_number_of_current_program</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_number_of_current_program"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_number_of_current_program" title="Link to this definition"></a></dt>
+<dd><p>Get the number of currently active programs on the Delta Robot.</p>
+<p>This method reads the number of currently active programs on the Delta Robot and returns the count.
+Note: The main program is typically represented as program number 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of currently active programs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_number_of_loaded_programs">
+<span class="sig-name descname"><span class="pre">get_number_of_loaded_programs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_number_of_loaded_programs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_number_of_loaded_programs" title="Link to this definition"></a></dt>
+<dd><p>Get the number of loaded programs on the Delta Robot.</p>
+<p>This method reads the number of loaded programs on the Delta Robot and returns the count.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of loaded programs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_operation_mode">
+<span class="sig-name descname"><span class="pre">get_operation_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_operation_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_operation_mode" title="Link to this definition"></a></dt>
+<dd><p>Get the operation mode description.</p>
+<p>This method reads the operation mode code from the robot controller and returns a human-readable description of the mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string describing the operation mode.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_orientation_endeffector">
+<span class="sig-name descname"><span class="pre">get_orientation_endeffector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_orientation_endeffector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_orientation_endeffector" title="Link to this definition"></a></dt>
+<dd><p>Get the orientation of the Delta Robot’s end effector.</p>
+<p>This method reads the orientation values from input registers and returns them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list (a, b, c) representing the orientation values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_position_axes">
+<span class="sig-name descname"><span class="pre">get_position_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_position_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_position_axes" title="Link to this definition"></a></dt>
+<dd><p>Get the positions of the Delta Robot’s axes.</p>
+<p>This method reads the positions of the robot’s axes (A1, A2, and A3) from input registers
+and returns them as a tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list (a1_pos, a2_pos, a3_pos) representing the positions of the robot’s axes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_position_endeffector">
+<span class="sig-name descname"><span class="pre">get_position_endeffector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_position_endeffector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_position_endeffector" title="Link to this definition"></a></dt>
+<dd><p>Get the Cartesian position of the Delta Robot’s end effector.
+This method reads the X, Y, and Z positions of the end effector from input registers and returns them in millimeters as a tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list (x_pos, y_pos, z_pos) representing the Cartesian position of the end effector in millimeters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_program_name">
+<span class="sig-name descname"><span class="pre">get_program_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_program_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_program_name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of the robot program.</p>
+<p>This method reads the name of the robot program.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of the robot program.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_program_replay_mode">
+<span class="sig-name descname"><span class="pre">get_program_replay_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_program_replay_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_program_replay_mode" title="Link to this definition"></a></dt>
+<dd><p>Get the current replay mode of the robot program.</p>
+<p>This method reads the replay mode of the robot program and returns a descriptive string.
+The possible replay modes are:
+- “Run program once”: The robot program will run once and stop.
+- “Repeat program”: The robot program will continuously repeat.
+- “Execute instructions step by step”: The robot program will execute instructions one at a time.
+- “Fast” (Not used): A mode that is not currently used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A descriptive string representing the current replay mode.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_program_runstate">
+<span class="sig-name descname"><span class="pre">get_program_runstate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_program_runstate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_program_runstate" title="Link to this definition"></a></dt>
+<dd><p>Get the current run state of the robot program.</p>
+<p>This method reads the run state of the robot program and returns a descriptive string.
+The possible run states are:
+- “Program is not running”: The robot program is not currently executing.
+- “Program is running”: The robot program is actively running.
+- “Program is paused”: The robot program is paused but can be resumed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A descriptive string representing the current run state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_readable_number_variable">
+<span class="sig-name descname"><span class="pre">get_readable_number_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_readable_number_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_readable_number_variable" title="Link to this definition"></a></dt>
+<dd><p>Get the value of a readable Modbus variable.</p>
+<p>This method allows you to retrieve the value of a Modbus variable for reading. Please ensure that
+the variable name in your program follows the naming convention: mb_num_r1 - mb_num_r16.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the Modbus variable, or False if the number is out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_readable_position_variable">
+<span class="sig-name descname"><span class="pre">get_readable_position_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_readable_position_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_readable_position_variable" title="Link to this definition"></a></dt>
+<dd><p>Get the value of a readable position Modbus variable.</p>
+<p>This method allows you to retrieve the value of a readable position Modbus variable.
+Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_r1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing axis, cartesian, orientation values, and conversion type,
+or False if the number is out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_robot_errors">
+<span class="sig-name descname"><span class="pre">get_robot_errors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_robot_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_robot_errors" title="Link to this definition"></a></dt>
+<dd><p>Get a list of error descriptions indicating the robot’s current error states.</p>
+<p>This method reads the status of various error-related coils on the robot controller
+and returns a list of error descriptions if any errors are detected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of error descriptions or “No error” if there are no errors.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_stop_reason_description">
+<span class="sig-name descname"><span class="pre">get_stop_reason_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_stop_reason_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_stop_reason_description" title="Link to this definition"></a></dt>
+<dd><p>Get a description of the reason for the robot’s current stop condition.</p>
+<p>This method reads the stop reason code from the robot controller and returns a human-readable description of the reason for the stop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string describing the reason for the stop.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_writable_number_variable">
+<span class="sig-name descname"><span class="pre">get_writable_number_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_writable_number_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_writable_number_variable" title="Link to this definition"></a></dt>
+<dd><p>Get the value of a writable Modbus variable.</p>
+<p>This method allows you to retrieve the value of a Modbus variable for writing. Ensure that the
+variable name in your program adheres to the naming convention: mb_num_w1 - mb_num_w16.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the Modbus variable, or False if the number is out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.get_writable_position_variable">
+<span class="sig-name descname"><span class="pre">get_writable_position_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.get_writable_position_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.get_writable_position_variable" title="Link to this definition"></a></dt>
+<dd><p>Get the value of a writable position Modbus variable.</p>
+<p>This method allows you to retrieve the value of a writable position Modbus variable.
+Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_w1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing axis, cartesian, orientation values, and conversion type,
+or False if the number is out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_connected">
+<span class="sig-name descname"><span class="pre">is_connected</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#src.igus_modbus.Robot.is_connected" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_enabled">
+<span class="sig-name descname"><span class="pre">is_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_enabled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_enabled" title="Link to this definition"></a></dt>
+<dd><p>Check if the Robot is enabled.</p>
+<p>This method checks the state of the Robot’s motors by reading coil 53.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the motors are enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_general_error">
+<span class="sig-name descname"><span class="pre">is_general_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_general_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_general_error" title="Link to this definition"></a></dt>
+<dd><p>Check if the robot has general errors.</p>
+<p>This method checks the state of the robot’s error status coil
+and returns True if the robot has general errors, or False if
+there are no errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the robot has general errors, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_kinematics_error">
+<span class="sig-name descname"><span class="pre">is_kinematics_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_kinematics_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_kinematics_error" title="Link to this definition"></a></dt>
+<dd><p>Check if the robot has kinematics-related errors.</p>
+<p>This method checks the state of the robot’s kinematics error status coil
+and returns True if the robot has kinematics-related errors, or False if
+there are no kinematics errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the robot has kinematics-related errors, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_moving">
+<span class="sig-name descname"><span class="pre">is_moving</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_moving"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_moving" title="Link to this definition"></a></dt>
+<dd><p>Check if the Robot is moving.</p>
+<p>This method checks the state of the Robot’s motion by reading coil 112.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the Robot is currently moving, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_program_loaded">
+<span class="sig-name descname"><span class="pre">is_program_loaded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_program_loaded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_program_loaded" title="Link to this definition"></a></dt>
+<dd><p>Check if a program is loaded.</p>
+<p>This method checks if a program is loaded on the robot controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if a program is loaded, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_referenced">
+<span class="sig-name descname"><span class="pre">is_referenced</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_referenced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_referenced" title="Link to this definition"></a></dt>
+<dd><p>Check if the Robot is referenced.</p>
+<p>This method checks if the Robot has been referenced by reading coil 60.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the Robot is referenced, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.is_zero_torque">
+<span class="sig-name descname"><span class="pre">is_zero_torque</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.is_zero_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.is_zero_torque" title="Link to this definition"></a></dt>
+<dd><p>Check if the robot is in a zero torque state.</p>
+<p>This method reads a Modbus coil to determine if the robot is currently in a state
+where it applies zero torque. It returns True if zero torque is detected, False otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the robot is in a zero torque state, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.move_axes">
+<span class="sig-name descname"><span class="pre">move_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.move_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.move_axes" title="Link to this definition"></a></dt>
+<dd><p>Move the end effector to the target position.</p>
+<p>This method moves the end effector to the specified axes position by controlling the appropriate coil.
+The movement can be relative or absolute ‘relative’ parameter.
+To specify the position, use the method set_position_axes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wait</strong> (<em>bool</em>) – If True (default), wait until the movement is complete before returning.</p></li>
+<li><p><strong>relative</strong> (<em>bool</em>) – If False (default), the movement will be absolute, otherwise will be relative to the current position</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.move_circular">
+<span class="sig-name descname"><span class="pre">move_circular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">360</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.move_circular"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.move_circular" title="Link to this definition"></a></dt>
+<dd><p>Move the robot’s end effector in a circular path.</p>
+<p>This method moves the robot’s end effector in a circular path in the X-Y plane.
+The circular path is defined by a radius, and you can specify the step size, start angle, and stop angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the circular path in millimeters.</p></li>
+<li><p><strong>step</strong> (<em>float</em>) – The step size in degrees for moving along the circular path (default is 0.5 degrees).</p></li>
+<li><p><strong>start_angle</strong> (<em>float</em>) – The starting angle of the circular path in degrees (default is 0 degrees).</p></li>
+<li><p><strong>stop_angle</strong> (<em>float</em>) – The stopping angle of the circular path in degrees (default is 360 degrees).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.move_endeffector">
+<span class="sig-name descname"><span class="pre">move_endeffector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.move_endeffector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.move_endeffector" title="Link to this definition"></a></dt>
+<dd><p>Move the end effector to the target position.</p>
+<p>This method moves the end effector to the specified Cartesian position by controlling the appropriate coil.
+The movement can be relative to different reference frames (base, tool) based on the ‘relative’ parameter.
+To specify the position, use the method set_position_endeffector(x, y, z).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wait</strong> (<em>bool</em>) – If True (default), wait until the movement is complete before returning.</p></li>
+<li><p><strong>relative</strong> (<em>str</em><em> or </em><em>None</em>) – Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.print_list_of_programs">
+<span class="sig-name descname"><span class="pre">print_list_of_programs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.print_list_of_programs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.print_list_of_programs" title="Link to this definition"></a></dt>
+<dd><p>Print a list of available robot programs.</p>
+<p>This method retrieves a list of robot programs and prints them to the console.
+If the robot is not connected, it will return without performing any action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.read_string">
+<span class="sig-name descname"><span class="pre">read_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.read_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.read_string" title="Link to this definition"></a></dt>
+<dd><p>Read a string from a sequence of registers.</p>
+<p>This method reads a string from a sequence of registers and returns the decoded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>read</strong> (<em>list</em>) – The sequence of registers containing the string data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The decoded string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.reference">
+<span class="sig-name descname"><span class="pre">reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.reference" title="Link to this definition"></a></dt>
+<dd><p>Reference the Robot.</p>
+<p>This method references the robot by writing a rising edge to the coil 60.
+If ‘only_once’ is set to True (default), it will only reference the robot if it’s not already referenced.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>bool</em>) – If False, the robot will only be referenced if not already referenced,
+otherwise, it will be referenced each time this method is called (default is False).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset the Delta Robot.</p>
+<p>This method resets the robot by writing a rising edge to the coil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_and_move">
+<span class="sig-name descname"><span class="pre">set_and_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">movement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cartesian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_and_move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_and_move" title="Link to this definition"></a></dt>
+<dd><p>Set the target position and move the end effector.</p>
+<p>This method sets the target position of the end effector using the ‘set_position_endeffector’ method,
+adjusts the velocity if specified, and then moves the end effector to the target position using the ‘move_endeffector’ method.
+The movement can be relative to different reference frames (base, tool) based on the ‘relative’ parameter.
+You can choose to wait until the movement is complete before returning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_1</strong> (<em>float</em>) – The target position value (X, A1, or other axis, depending on the ‘movement’ parameter).</p></li>
+<li><p><strong>val_2</strong> (<em>float</em>) – The target position value (Y, A2, or other axis, depending on the ‘movement’ parameter).</p></li>
+<li><p><strong>val_3</strong> (<em>float</em>) – The target position value (Z, A3, or other axis, depending on the ‘movement’ parameter).</p></li>
+<li><p><strong>movement</strong> (<em>str</em>) – Specifies the type of movement (‘cartesian’ or ‘axes’).</p></li>
+<li><p><strong>relative</strong> (<em>str</em><em> or </em><em>None</em>) – Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).</p></li>
+<li><p><strong>wait</strong> (<em>bool</em>) – If True (default), wait until the movement is complete before returning.</p></li>
+<li><p><strong>velocity</strong> (<em>float</em><em> or </em><em>None</em>) – Optional velocity setting in millimeters per second.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_digital_output">
+<span class="sig-name descname"><span class="pre">set_digital_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_digital_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_digital_output" title="Link to this definition"></a></dt>
+<dd><p>Set the state of a digital output.</p>
+<p>This method allows you to set the state of a digital output by specifying its number and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>int</em>) – The number of the digital output (1 to 64).</p></li>
+<li><p><strong>state</strong> (<em>bool</em>) – The state to set (True for ON, False for OFF).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_globale_signal">
+<span class="sig-name descname"><span class="pre">set_globale_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_globale_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_globale_signal" title="Link to this definition"></a></dt>
+<dd><p>Set the state of a global signal.</p>
+<p>This method allows you to set the state of a global signal by specifying its number and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>int</em>) – The number of the global signal (1 to 100).</p></li>
+<li><p><strong>state</strong> (<em>bool</em>) – The state to set (True for ON, False for OFF).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_number_variables">
+<span class="sig-name descname"><span class="pre">set_number_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_number_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_number_variables" title="Link to this definition"></a></dt>
+<dd><p>Set the value of a writable Modbus variable.</p>
+<p>This method allows you to set the value of a Modbus variable for program use. Please note that
+the variable name in your program should follow the naming convention: mb_num_w1 - mb_num_w16.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p></li>
+<li><p><strong>value</strong> (<em>int</em>) – The value to set for the Modbus variable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the operation was successful, False if the number is out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_orientation_endeffector">
+<span class="sig-name descname"><span class="pre">set_orientation_endeffector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_orientation_endeffector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_orientation_endeffector" title="Link to this definition"></a></dt>
+<dd><p>Set the orientation of the end effector.</p>
+<p>This method allows you to set the orientation of the robot’s end effector by specifying the angles
+‘a_val’, ‘b_val’, and ‘c_val’ for orientation around the X, Y, and Z axes, respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a_val</strong> (<em>float</em>) – The orientation angle around the X-axis in degrees.</p></li>
+<li><p><strong>b_val</strong> (<em>float</em>) – The orientation angle around the Y-axis in degrees.</p></li>
+<li><p><strong>c_val</strong> (<em>float</em>) – The orientation angle around the Z-axis in degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_override_velocity">
+<span class="sig-name descname"><span class="pre">set_override_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_override_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_override_velocity" title="Link to this definition"></a></dt>
+<dd><p>Set the override velocity for robot movements.</p>
+<p>This method allows you to adjust the velocity override for robot movements.
+The <cite>velocity</cite> parameter specifies the desired velocity as a percentage (0-100),
+with 100 being the maximum velocity. The default is 20%.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>velocity</strong> (<em>float</em>) – The desired velocity override as a percentage (0-100).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_position_axes">
+<span class="sig-name descname"><span class="pre">set_position_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a1_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a3_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_position_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_position_axes" title="Link to this definition"></a></dt>
+<dd><p>Set the target position of the endeffector</p>
+<p>This method allows you to set the target positions of the robot’s axes.
+The input values ‘a1_val’, ‘a2_val’, and ‘a3_val’ represent the target positions for each axis.
+The positions are converted to the appropriate format and written to the respective registers.</p>
+<p>The position can be absolute or relative.
+To make the robot move, use the method move_axes().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a1_val</strong> (<em>float</em>) – The target position for axis A1.</p></li>
+<li><p><strong>a2_val</strong> (<em>float</em>) – The target position for axis A2.</p></li>
+<li><p><strong>a3_val</strong> (<em>float</em>) – The target position for axis A3.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_position_endeffector">
+<span class="sig-name descname"><span class="pre">set_position_endeffector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_position_endeffector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_position_endeffector" title="Link to this definition"></a></dt>
+<dd><p>Set the target position of the end effector in millimeters.</p>
+<p>This method sets the target position of the end effector in millimeters. The position can be absolute or relative
+to the base or to itself. To make the robot move to the specified position, use the ‘move_endeffector’ method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_val</strong> (<em>float</em>) – The target X position in millimeters.</p></li>
+<li><p><strong>y_val</strong> (<em>float</em>) – The target Y position in millimeters.</p></li>
+<li><p><strong>z_val</strong> (<em>float</em>) – The target Z position in millimeters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_position_variable">
+<span class="sig-name descname"><span class="pre">set_position_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">movement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cartesian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a3</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">180</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_position_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_position_variable" title="Link to this definition"></a></dt>
+<dd><p>Set the target position for robot movement in a robot program.</p>
+<p>This method allows you to set the target position for robot movement in a program. You can specify
+the target position either in Cartesian or axis values. Ensure the variable name in your program
+follows the naming convention, e.g., mb_pos_w1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>int</em>) – The number of the Modbus variable (1 to 16).</p></li>
+<li><p><strong>movement</strong> (<em>str</em>) – The type of movement (either “cartesian” or “axes”).</p></li>
+<li><p><strong>a1</strong> (<em>int</em>) – The value of axis A1 (if movement is “axes”).</p></li>
+<li><p><strong>a2</strong> (<em>int</em>) – The value of axis A2 (if movement is “axes”).</p></li>
+<li><p><strong>a3</strong> (<em>int</em>) – The value of axis A3 (if movement is “axes”).</p></li>
+<li><p><strong>x</strong> (<em>int</em>) – The X-coordinate value (if movement is “cartesian”).</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The Y-coordinate value (if movement is “cartesian”).</p></li>
+<li><p><strong>z</strong> (<em>int</em>) – The Z-coordinate value (if movement is “cartesian”).</p></li>
+<li><p><strong>a</strong> (<em>int</em>) – The orientation A value (if movement is “cartesian”).</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – The orientation B value (if movement is “cartesian”).</p></li>
+<li><p><strong>c</strong> (<em>int</em>) – The orientation C value (if movement is “cartesian”).</p></li>
+<li><p><strong>conversion</strong> (<em>int</em>) – The conversion type (useful for converting between joint and cartesian positions).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the operation was successful, False if the number is out of range or invalid parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_program_name">
+<span class="sig-name descname"><span class="pre">set_program_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_program_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_program_name" title="Link to this definition"></a></dt>
+<dd><p>Set the name of the robot program.</p>
+<p>This method allows you to set the name of the robot program.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the robot program.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_program_replay_mode">
+<span class="sig-name descname"><span class="pre">set_program_replay_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'once'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_program_replay_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_program_replay_mode" title="Link to this definition"></a></dt>
+<dd><p>Set the program replay mode for the robot.</p>
+<p>This method allows you to configure the program replay mode for the robot.
+The <cite>mode</cite> parameter specifies the desired mode and can take one of the following values:
+- “once” (Default): Play the program once.
+- “repeat”: Repeat the program continuously.
+- “step”: Step through the program one instruction at a time.
+- “fast”: Not used (for future expansion).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em>) – The desired program replay mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the mode was successfully set, False if an invalid mode is provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_velocity">
+<span class="sig-name descname"><span class="pre">set_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_velocity" title="Link to this definition"></a></dt>
+<dd><p>Set the velocity of the Robot.</p>
+<p>This method sets the velocity of the robot in millimeters per second.
+For cartesian motions the value is set as a multiple of 1mm/s,
+for joint motions it is a multiple of 1% (relative to the maximum velocity)
+The actual motion speed also depends on the global override value (holding register 187).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>velocity</strong> (<em>float</em>) – The desired velocity in millimeters per second (or in percent).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.set_zero_torque">
+<span class="sig-name descname"><span class="pre">set_zero_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.set_zero_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.set_zero_torque" title="Link to this definition"></a></dt>
+<dd><p>Set the zero torque state for manual movement.</p>
+<p>This method allows you to enable or disable the zero torque state, which allows manual movement of the robot by hand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enable</strong> (<em>bool</em>) – True to enable zero torque (for manual movement), False to disable.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.shutdown" title="Link to this definition"></a></dt>
+<dd><p>Reset the Delta Robot.</p>
+<p>This method shut the robot down by writing a rising edge to the coil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.write_string">
+<span class="sig-name descname"><span class="pre">write_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.write_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.write_string" title="Link to this definition"></a></dt>
+<dd><p>Write a string to a sequence of registers.</p>
+<p>This method allows you to write a string to a sequence of registers, starting from a specified address.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>str</em>) – The string to write.</p></li>
+<li><p><strong>ad</strong> (<em>int</em>) – The starting address to write the string.</p></li>
+<li><p><strong>number</strong> (<em>int</em>) – The maximum number of characters to write (default is 32).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="gripper-package">
+<h1>Gripper package<a class="headerlink" href="#gripper-package" title="Link to this heading"></a></h1>
+<section id="gripper-module">
+<span id="module-src.gripper"></span><h2>Gripper Module<a class="headerlink" href="#gripper-module" title="Link to this heading"></a></h2>
+<p>This module provides a Python interface for controlling a gripper device through serial communication.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>Gripper: Represents the gripper and provides methods for controlling its opening and orientation.</p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p>To use this module, create an instance of the ‘Gripper’ class with the appropriate serial port and settings.</p>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.gripper.Gripper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.gripper.</span></span><span class="sig-name descname"><span class="pre">Gripper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/dev/ttyUSB0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/gripper.html#Gripper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.gripper.Gripper.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/gripper.html#Gripper.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper.close" title="Link to this definition"></a></dt>
+<dd><p>Close the gripper fully.</p>
+<p>This method sets the gripper opening to 100 percent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the operation was successful, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.gripper.Gripper.controll">
+<span class="sig-name descname"><span class="pre">controll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/gripper.html#Gripper.controll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper.controll" title="Link to this definition"></a></dt>
+<dd><p>Control the gripper’s opening and orientation.</p>
+<p>This method allows you to control the gripper’s opening (0 to 100 percent) and, optionally, its orientation in degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening</strong> (<em>int</em>) – The desired gripper opening in percent (0 to 100).</p></li>
+<li><p><strong>orientation</strong> (<em>int</em><em> or </em><em>None</em>) – The desired gripper orientation in degrees (optional).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the operation was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.gripper.Gripper.is_connected">
+<span class="sig-name descname"><span class="pre">is_connected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#src.gripper.Gripper.is_connected" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.gripper.Gripper.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/gripper.html#Gripper.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper.open" title="Link to this definition"></a></dt>
+<dd><p>Open the gripper fully.</p>
+<p>This method sets the gripper opening to 0 percent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the operation was successful, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.gripper.Gripper.opening">
+<span class="sig-name descname"><span class="pre">opening</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#src.gripper.Gripper.opening" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.gripper.Gripper.orientation">
+<span class="sig-name descname"><span class="pre">orientation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#src.gripper.Gripper.orientation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.gripper.Gripper.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/src/gripper.html#Gripper.rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper.rotate" title="Link to this definition"></a></dt>
+<dd><p>Rotate the gripper to a specific orientation.</p>
+<p>This method sets the gripper orientation to the specified degree value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>orientation</strong> (<em>int</em>) – The desired gripper orientation in degrees.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the operation was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-GUI.gui">
+<span id="gui-package"></span><h1>GUI package<a class="headerlink" href="#module-GUI.gui" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="GUI.gui.App">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GUI.gui.</span></span><span class="sig-name descname"><span class="pre">App</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.add" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.clear_list">
+<span class="sig-name descname"><span class="pre">clear_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.clear_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.clear_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.control_widgets">
+<span class="sig-name descname"><span class="pre">control_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.control_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.control_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.enable_robot">
+<span class="sig-name descname"><span class="pre">enable_robot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.enable_robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.enable_robot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.error_widgets">
+<span class="sig-name descname"><span class="pre">error_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.error_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.error_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="GUI.gui.App.fontsize">
+<span class="sig-name descname"><span class="pre">fontsize</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#GUI.gui.App.fontsize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.gripper_mov">
+<span class="sig-name descname"><span class="pre">gripper_mov</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.gripper_mov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.gripper_mov" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.gripper_widgets">
+<span class="sig-name descname"><span class="pre">gripper_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.gripper_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.gripper_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.load_pragram">
+<span class="sig-name descname"><span class="pre">load_pragram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.load_pragram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.load_pragram" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.load_widgets">
+<span class="sig-name descname"><span class="pre">load_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.load_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.load_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.logo_widgets">
+<span class="sig-name descname"><span class="pre">logo_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/yaman/Git/IGUS_Delta_Robot/Modbus/GUI/img/hsel_logo_dark.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.logo_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.logo_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.move_widgets">
+<span class="sig-name descname"><span class="pre">move_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tab_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.move_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.move_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.program_names">
+<span class="sig-name descname"><span class="pre">program_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.program_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.program_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.programs_widgets">
+<span class="sig-name descname"><span class="pre">programs_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.programs_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.programs_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.remove_list_element">
+<span class="sig-name descname"><span class="pre">remove_list_element</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.remove_list_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.remove_list_element" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.run_list">
+<span class="sig-name descname"><span class="pre">run_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.run_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.run_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.setting_widgets">
+<span class="sig-name descname"><span class="pre">setting_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.setting_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.setting_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.show_positions">
+<span class="sig-name descname"><span class="pre">show_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.show_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.show_positions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.sort_list">
+<span class="sig-name descname"><span class="pre">sort_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.sort_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.sort_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.speed_widgets">
+<span class="sig-name descname"><span class="pre">speed_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.speed_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.speed_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.split_list">
+<span class="sig-name descname"><span class="pre">split_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.split_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.split_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.tabs">
+<span class="sig-name descname"><span class="pre">tabs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.tabs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.teach_widgets">
+<span class="sig-name descname"><span class="pre">teach_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.teach_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.teach_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update" title="Link to this definition"></a></dt>
+<dd><p>Enter event loop until all pending events have been processed by Tcl.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_tabs">
+<span class="sig-name descname"><span class="pre">update_tabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_tabs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_theme">
+<span class="sig-name descname"><span class="pre">update_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GUI.gui.main">
+<span class="sig-prename descclassname"><span class="pre">GUI.gui.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="example-package">
+<h1>Example package<a class="headerlink" href="#example-package" title="Link to this heading"></a></h1>
+<section id="module-Example.example">
+<span id="example-example-module"></span><h2>Example.example module<a class="headerlink" href="#module-Example.example" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="Example.example.main">
+<span class="sig-prename descclassname"><span class="pre">Example.example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-Example.example2">
+<span id="example-example2-module"></span><h2>Example.example2 module<a class="headerlink" href="#module-Example.example2" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="Example.example2.main">
+<span class="sig-prename descclassname"><span class="pre">Example.example2.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example2.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example2.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-Example.example3">
+<span id="example-example3-module"></span><h2>Example.example3 module<a class="headerlink" href="#module-Example.example3" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="Example.example3.main">
+<span class="sig-prename descclassname"><span class="pre">Example.example3.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example3.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example3.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-Example.example_gripper">
+<span id="example-example-gripper-module"></span><h2>Example.example_gripper module<a class="headerlink" href="#module-Example.example_gripper" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Delta-Robot’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Yaman Alsaady.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

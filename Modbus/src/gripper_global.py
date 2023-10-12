@@ -1,6 +1,6 @@
 from time import sleep
-from gripper import Gripper
-from igus_modbus import Robot
+from .gripper import Gripper
+from .igus_modbus import Robot
 
 
 delta = Robot("192.168.3.11")

@@ -2,6 +2,7 @@ from time import sleep
 import tkinter as tk
 from tkinter import ttk
 import os
+import webbrowser
 
 from src.igus_modbus import Robot
 from src.gripper import Gripper
@@ -11,6 +12,7 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 class App(ttk.Frame):
     fontsize = 20
+
     def __init__(self, _):
         ttk.Frame.__init__(self)
 
@@ -37,10 +39,10 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
-        self.update_delay = tk.IntVar(value=10)
+        self.update_delay = tk.IntVar(value=2000)
         self.step_var = tk.IntVar(value=10)
         self.about_msg = (
-                "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
+            "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
         )
         self.logo_widgets()
         self.setting_widgets()
@@ -61,6 +63,7 @@ class App(ttk.Frame):
 
         self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
+        self.update_list()
         print(PATH)
 
     def tabs(self):
@@ -79,7 +82,6 @@ class App(ttk.Frame):
         self.tab_4 = ttk.Frame(self)
         self.tabs.add(self.tab_4, text="More")
 
-
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo = tk.PhotoImage(file=img)
         self.logo_label = ttk.Label(self, image=self.logo)
@@ -95,6 +97,12 @@ class App(ttk.Frame):
             font=("-size", self.fontsize),
         )
         self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.doc_button = ttk.Button(
+            self.info_frame,
+            text="Documention",
+            command=lambda: webbrowser.open(PATH.replace("GUI/", "docs/_build/html/index.html"))
+        )
+        self.doc_button.grid(row=2, column=0, padx=5, pady=10, sticky="nw")
         # self.about_label.grid(row=5, column=0, padx=5, pady=10)
         # self.reset = ttk.Button(
         #     self.info_frame, text="Reset", command=lambda: self.dr.reset()
@@ -122,10 +130,8 @@ class App(ttk.Frame):
             self.setting_frame,
             text="Reference",
             command=lambda: (
-                self.reference_label.config(text="Reference: Robot is referencing"),
+                self.reference_label.config(text="Reference: Robot is referencing ..."),
                 self.delta.reference(True),
-                sleep(0.1),
-
             ),
         )
         self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -160,7 +166,6 @@ class App(ttk.Frame):
         #     width=10,
         # )
         # self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
-
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
@@ -234,7 +239,9 @@ class App(ttk.Frame):
         self.speed_scale.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="ew")
 
         self.speed_label = ttk.Label(
-            self.speed_frame, text=int(self.speed_var.get()), font=("-size", self.fontsize)
+            self.speed_frame,
+            text=int(self.speed_var.get()),
+            font=("-size", self.fontsize),
         )
         self.speed_label.grid(row=1, column=2, padx=(20, 20), pady=(20, 0), sticky="ew")
 
@@ -313,7 +320,9 @@ class App(ttk.Frame):
         )
 
         self.gripper_orient_title_label = ttk.Label(
-            self.gripper_frame, text="Gripper Orientation", font=("-size", self.fontsize)
+            self.gripper_frame,
+            text="Gripper Orientation",
+            font=("-size", self.fontsize),
         )
         self.gripper_orient_title_label.grid(
             row=2, column=0, padx=(5, 10), pady=(20, 20), sticky="ew"
@@ -438,7 +447,9 @@ class App(ttk.Frame):
         )
         self.a1_p.grid(row=0, column=2, padx=25, pady=5)
 
-        self.a1_label = ttk.Label(self.axes_tab, text="A1", font=("-size", self.fontsize))
+        self.a1_label = ttk.Label(
+            self.axes_tab, text="A1", font=("-size", self.fontsize)
+        )
         self.a1_label.grid(row=0, column=1, padx=5, pady=10)
 
         self.a2_m = ttk.Button(
@@ -459,7 +470,9 @@ class App(ttk.Frame):
         )
         self.a2_p.grid(row=1, column=2, padx=10, pady=5)
 
-        self.a2_label = ttk.Label(self.axes_tab, text="A2", font=("-size", self.fontsize))
+        self.a2_label = ttk.Label(
+            self.axes_tab, text="A2", font=("-size", self.fontsize)
+        )
         self.a2_label.grid(row=1, column=1, padx=5, pady=10)
 
         self.a3_m = ttk.Button(
@@ -480,7 +493,9 @@ class App(ttk.Frame):
         )
         self.a3_p.grid(row=2, column=2, padx=10, pady=5)
 
-        self.a3_label = ttk.Label(self.axes_tab, text="A3", font=("-size", self.fontsize))
+        self.a3_label = ttk.Label(
+            self.axes_tab, text="A3", font=("-size", self.fontsize)
+        )
         self.a3_label.grid(row=2, column=1, padx=5, pady=10)
 
         self.step_label = ttk.Label(
@@ -611,6 +626,13 @@ class App(ttk.Frame):
         )
         self.load_button.grid(row=1, column=0, padx=5, pady=10, sticky="nw")
 
+        self.update_button = ttk.Button(
+            self.load_frame,
+            text="Update List",
+            command=lambda: self.update_list(),
+        )
+        self.update_button.grid(row=1, column=4, padx=5, pady=10, sticky="nw")
+
     def teach_widgets(self):
         self.show_frame = ttk.LabelFrame(
             self.tab_3, text="Teach and Play", padding=(20, 10)
@@ -682,7 +704,9 @@ class App(ttk.Frame):
                 self.a1_label.config(text=axes_pos[0])
                 self.a2_label.config(text=axes_pos[1])
                 self.a3_label.config(text=axes_pos[2])
-                self.status_p.config(text="status: " + self.delta.get_program_runstate())
+                self.status_p.config(
+                    text="status: " + self.delta.get_program_runstate()
+                )
                 self.loaded_p.config(
                     text="Loaded Program: " + self.delta.get_program_name()
                 )
@@ -691,10 +715,6 @@ class App(ttk.Frame):
                 )
                 self.kinematic_label.config(
                     text="Kinematic:\n" + self.delta.get_kinematics_error()
-                )
-                self.load_label.config(
-                    text="Programs:\n"
-                    + self.program_names(self.delta.get_list_of_porgrams())
                 )
                 self.enalbe_var.set(self.delta.is_enabled())
 
@@ -800,21 +820,21 @@ class App(ttk.Frame):
         self.enalbe_var.set(True)
         self.delta.enable()
         if self.run_var.get():
-            if self.delta.is_connected or True:
+            if self.delta.is_connected:
                 k = 1
                 for i in self.pos_list:
                     if i[0]:
                         self.delta.set_and_move(*i[0])
                         print(k, *i[0], *i[1])
                         k += 1
-                    if self.gripper.is_connected:
-                        if i[1]:
-                            if (
-                                i[1][0] != self.gripper.opening
-                                or i[1][0] != self.gripper.orientation
-                            ):
-                                self.gripper.controll(*i[1])
-                                sleep(0.5)
+            if self.gripper.is_connected:
+                if i[1]:
+                    if (
+                        i[1][0] != self.gripper.opening
+                        or i[1][0] != self.gripper.orientation
+                    ):
+                        self.gripper.controll(*i[1])
+                        sleep(2.5)
         self.run_var.set(False)
 
     def sort_list(self):
@@ -826,6 +846,12 @@ class App(ttk.Frame):
         self.pos_list = list
         self.sort_var.set("")
 
+    def update_list(self):
+        self.load_label.config(
+            text="Programs:\n"
+            + self.program_names(self.delta.get_list_of_porgrams())
+        )
+
     def clear_list(self):
         self.pos_list = []
 
@@ -835,6 +861,7 @@ class App(ttk.Frame):
             self.pos_list.pop(index)
         except:
             pass
+
 
 def main():
     root = tk.Tk()

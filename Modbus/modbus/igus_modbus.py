@@ -18,11 +18,11 @@ Example:
     delta_robot = Robot('192.168.3.11')
     
     # Perform actions with the Delta Robot
-    delta_robot.enable()\n
-    delta_robot.reference()\n
-    delta_robot.set_position_endeffector(0, 0, 250)\n
-    delta_robot.set_velocity(120)\n
-    delta_robot.move_endeffector_absolute()\n
+    delta_robot.enable()
+    delta_robot.reference()
+    delta_robot.set_position_endeffector(0, 0, 250)
+    delta_robot.set_velocity(120)
+    delta_robot.move_endeffector_absolute()
 
 """
 # }}}
