@@ -1363,7 +1363,7 @@ class Robot:
 
     # }}}
     def control_gripper(self, val1: int, val2: int, signal: int = 6):
-        if not self.delta.is_connected:
+        if not self.is_connected:
             return False
         self.set_globale_signal(signal, True)
         self.set_number_variables(15, val1)

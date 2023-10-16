@@ -129,6 +129,6 @@ class Gripper:
             return False
         if not self.delta.get_globale_signal(signal):
             return False
-        opening = Robot.get_writable_number_variable(var1)
-        orientation = Robot.get_writable_number_variable(var2)
+        opening = self.delta.get_writable_number_variable(var1)
+        orientation = self.delta.get_writable_number_variable(var2)
         return self.controll(opening, orientation)
