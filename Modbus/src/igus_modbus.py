@@ -64,6 +64,7 @@ class Robot:
 
         :return: None
         """
+        self.set_globale_signal(6, False)
         self.client.close()
 
     # }}}

@@ -106,7 +106,7 @@ class App(ttk.Frame):
         self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
         self.doc_button = ttk.Button(
             self.info_frame,
-            text="Documention",
+            text="Documentation",
             command=lambda: webbrowser.open(
                 PATH.replace("GUI/", "docs/_build/html/index.html")
             ),
@@ -360,7 +360,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="X-",
             command=lambda: self.delta.set_and_move(
-                -1 * self.step_var.get(), 0, 0, relative="base", wait= False
+                -1 * self.step_var.get(), 0, 0, relative="base", wait=False
             ),
         )
         self.x_m.grid(row=0, column=0, padx=25, pady=10)
@@ -369,7 +369,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="X+",
             command=lambda: self.delta.set_and_move(
-                self.step_var.get(), 0, 0, relative="base", wait= False
+                self.step_var.get(), 0, 0, relative="base", wait=False
             ),
         )
         self.x_p.grid(row=0, column=2, padx=25, pady=5)
@@ -381,7 +381,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Y-",
             command=lambda: self.delta.set_and_move(
-                0, -1 * self.step_var.get(), 0, relative="base", wait= False
+                0, -1 * self.step_var.get(), 0, relative="base", wait=False
             ),
         )
         self.y_m.grid(row=1, column=0, padx=5, pady=10)
@@ -390,7 +390,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Y+",
             command=lambda: self.delta.set_and_move(
-                0, self.step_var.get(), 0, relative="base", wait= False
+                0, self.step_var.get(), 0, relative="base", wait=False
             ),
         )
         self.y_p.grid(row=1, column=2, padx=10, pady=5)
@@ -402,7 +402,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Z-",
             command=lambda: self.delta.set_and_move(
-                0, 0, -1 * self.step_var.get(), relative="base", wait= False
+                0, 0, -1 * self.step_var.get(), relative="base", wait=False
             ),
         )
         self.z_m.grid(row=2, column=0, padx=5, pady=10)
@@ -411,7 +411,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Z+",
             command=lambda: self.delta.set_and_move(
-                0, 0, self.step_var.get(), relative="base", wait= False
+                0, 0, self.step_var.get(), relative="base", wait=False
             ),
         )
         self.z_p.grid(row=2, column=2, padx=10, pady=5)
@@ -761,13 +761,17 @@ class App(ttk.Frame):
 
     def update_error(self):
         new = self.delta.get_kinematics_error()
-        if (self.count_error == 5):
+        if self.count_error == 5:
             self.kinematic_error = "Kinematic:\n"
             self.last_error = ""
             self.count_error = 0
         if self.last_error is not new:
             self.kinematic_error = (
-                    self.kinematic_error +strftime("%H:%M:%S",localtime())+ ": "+ self.delta.get_kinematics_error() + "\n"
+                self.kinematic_error
+                + strftime("%H:%M:%S", localtime())
+                + ": "
+                + self.delta.get_kinematics_error()
+                + "\n"
             )
             self.count_error += 1
         # if (
@@ -821,9 +825,13 @@ class App(ttk.Frame):
             return "No Information available"
 
     def gripper_mov(self):
-        if int(self.gripper_scale.get()) != self.gripper_opening or self.gripper_orient_scale.get() != self.gripper_orientation:
+        if (
+            int(self.gripper_scale.get()) != self.gripper_opening
+            or int(self.gripper_orient_scale.get()) != self.gripper_orientation
+            # or True
+        ):
             self.gripper_opening = int(self.gripper_scale.get())
-            self.gripper_orientation = self.gripper_orient_scale.get()
+            self.gripper_orientation = int(self.gripper_orient_scale.get())
             self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
         # self.gripper.modbus()
         # if self.delta.is_connected:
