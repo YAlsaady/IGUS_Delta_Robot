@@ -52,8 +52,11 @@ class Robot:
         :type port: int
         """
         self.address = address
-        self.client = ModbusClient(host=address, port=port,timeout=1)
+        self.client = ModbusClient(host=address, port=port, timeout=1)
         self.is_connected = self.client.open()
+        if self.is_connected:
+            self.client.write_single_coil(134, False)
+            self.client.write_single_coil(134, True)
 
     def __del__(self):
         """
@@ -396,7 +399,7 @@ class Robot:
         """
         if not self.is_connected:
             return
-        timeout= time() + self.break_time
+        timeout = time() + self.break_time
         if wait:
             while self.is_moving():
                 if time() > timeout:
@@ -526,7 +529,7 @@ class Robot:
         """
         if not self.is_connected:
             return
-        timeout= time() + self.break_time
+        timeout = time() + self.break_time
         if wait:
             while self.is_moving():
                 if time() > timeout:
@@ -1075,8 +1078,6 @@ class Robot:
         if not self.is_connected:
             return ""
         message = self.client.read_holding_registers(400, 32)
-        if message:
-            print(hex(message[0]))
         return self.read_string(message)
 
     def get_robot_errors(self):
@@ -1231,7 +1232,7 @@ class Robot:
         """
         if not self.is_connected:
             return
-        timeout= time() + self.break_time
+        timeout = time() + self.break_time
         while self.is_moving():
             if time() > timeout:
                 self.reset()
@@ -1361,6 +1362,14 @@ class Robot:
             self.client.write_single_register(count + ad, val)
 
     # }}}
+    def control_gripper(self, val1: int, val2: int, signal: int = 6):
+        if not self.delta.is_connected:
+            return False
+        self.set_globale_signal(signal, True)
+        self.set_number_variables(15, val1)
+        self.set_number_variables(16, val2)
+        self.set_globale_signal(signal, False)
+        return True
 
 
 # vim:foldmethod=marker

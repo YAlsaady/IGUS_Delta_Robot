@@ -1,8 +1,9 @@
-from src.igus_modbus import Robot
+from ..src.igus_modbus import Robot
 from time import sleep
 
 
-def main():
+# def main():
+if __name__ == "__main__":
     delta = Robot("192.168.3.11")
 
     if delta.is_connected:

@@ -12,6 +12,7 @@ Usage:
 """
 
 from time import sleep
+from src.igus_modbus import Robot
 import serial
 
 
@@ -55,7 +56,7 @@ class Gripper:
         :rtype: bool
         """
         if not self.is_connected:
-            return
+            return False
         if not (0 <= opening <= 100):
             return False  # Opening value out of range
         if orientation is not None and not (0 <= orientation <= 180):
@@ -115,3 +116,14 @@ class Gripper:
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
         return True
+
+    def modbus(self, signal:int=6 ,var1:int=15, var2:int =16):
+        if not Robot.is_connected :
+            return False
+        if not Robot.get_globale_signal(signal):
+            return False
+        opening = Robot.get_writable_number_variable(var1)
+        orientation = Robot.get_writable_number_variable(var2)
+        return self.controll(opening, orientation)
+
+

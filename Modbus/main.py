@@ -1,5 +1,5 @@
 import GUI.gui as gui
-from Example import example3 as example
+# from Example import example3 as example
 from src.igus_modbus import Robot
 
 if __name__ == "__main__":

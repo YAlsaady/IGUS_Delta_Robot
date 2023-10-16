@@ -13,6 +13,8 @@ Usage:
 
 from time import sleep
 import serial
+# from .igus_modbus import Robot
+from src.igus_modbus import Robot
 
 
 class Gripper:
@@ -38,6 +40,7 @@ class Gripper:
             self.orientation = 90
             self.opening = 100
             self.is_connected = self.ser.is_open
+            self.delta = Robot("192.168.3.11")
         except:
             pass
 
@@ -115,3 +118,16 @@ class Gripper:
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
         return True
+
+    def modbus(self, signal:int=6 ,var1:int=15, var2:int =16):
+        if not self.is_connected:
+            return False
+        if not self.delta.is_connected:
+            self.delta = Robot("192.168.3.11")
+        if not self.delta.is_connected:
+            return False
+        if not Robot.get_globale_signal(signal):
+            return False
+        opening = Robot.get_writable_number_variable(var1)
+        orientation = Robot.get_writable_number_variable(var2)
+        return self.controll(opening, orientation)

@@ -1,4 +1,4 @@
-from time import sleep
+from time import localtime, sleep, strftime
 import tkinter as tk
 from tkinter import ttk
 import os
@@ -26,6 +26,7 @@ class App(ttk.Frame):
             self.rowconfigure(index=index, weight=1)
 
         # Create control variables
+
         self.theme = ["dark", "light"]
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
@@ -41,6 +42,12 @@ class App(ttk.Frame):
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=100)
         self.step_var = tk.IntVar(value=10)
+        self.gripper_opening = 0
+        self.gripper_orientation = 0
+        self.last_error = ""
+        self.count_error = 0
+        self.robot_error = "Robot:\n"
+        self.kinematic_error = "Kinematic:\n"
         self.about_msg = (
             "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
         )
@@ -100,7 +107,9 @@ class App(ttk.Frame):
         self.doc_button = ttk.Button(
             self.info_frame,
             text="Documention",
-            command=lambda: webbrowser.open(PATH.replace("GUI/", "docs/_build/html/index.html"))
+            command=lambda: webbrowser.open(
+                PATH.replace("GUI/", "docs/_build/html/index.html")
+            ),
         )
         self.doc_button.grid(row=2, column=0, padx=5, pady=10, sticky="nw")
         # self.about_label.grid(row=5, column=0, padx=5, pady=10)
@@ -351,7 +360,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="X-",
             command=lambda: self.delta.set_and_move(
-                -1 * self.step_var.get(), 0, 0, relative="base"
+                -1 * self.step_var.get(), 0, 0, relative="base", wait= False
             ),
         )
         self.x_m.grid(row=0, column=0, padx=25, pady=10)
@@ -360,7 +369,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="X+",
             command=lambda: self.delta.set_and_move(
-                self.step_var.get(), 0, 0, relative="base"
+                self.step_var.get(), 0, 0, relative="base", wait= False
             ),
         )
         self.x_p.grid(row=0, column=2, padx=25, pady=5)
@@ -372,7 +381,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Y-",
             command=lambda: self.delta.set_and_move(
-                0, -1 * self.step_var.get(), 0, relative="base"
+                0, -1 * self.step_var.get(), 0, relative="base", wait= False
             ),
         )
         self.y_m.grid(row=1, column=0, padx=5, pady=10)
@@ -381,7 +390,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Y+",
             command=lambda: self.delta.set_and_move(
-                0, self.step_var.get(), 0, relative="base"
+                0, self.step_var.get(), 0, relative="base", wait= False
             ),
         )
         self.y_p.grid(row=1, column=2, padx=10, pady=5)
@@ -393,7 +402,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Z-",
             command=lambda: self.delta.set_and_move(
-                0, 0, -1 * self.step_var.get(), relative="base"
+                0, 0, -1 * self.step_var.get(), relative="base", wait= False
             ),
         )
         self.z_m.grid(row=2, column=0, padx=5, pady=10)
@@ -402,7 +411,7 @@ class App(ttk.Frame):
             self.move_tab,
             text="Z+",
             command=lambda: self.delta.set_and_move(
-                0, 0, self.step_var.get(), relative="base"
+                0, 0, self.step_var.get(), relative="base", wait= False
             ),
         )
         self.z_p.grid(row=2, column=2, padx=10, pady=5)
@@ -710,18 +719,9 @@ class App(ttk.Frame):
                 self.loaded_p.config(
                     text="Loaded Program: " + self.delta.get_program_name()
                 )
-                self.robot_label.config(
-                    text="Robot:\n" + self.split_list(self.delta.get_robot_errors())
-                )
-                self.kinematic_label.config(
-                    text="Kinematic:\n" + self.delta.get_kinematics_error()
-                )
                 self.enalbe_var.set(self.delta.is_enabled())
 
-                if self.delta.is_connected:
-                    self.connect_label.config(text="Connection: Robot is connected")
-                else:
-                    self.connect_label.config(text="Connection: Robot is not connected")
+                self.connect_label.config(text="Connection: Robot is connected")
 
                 if self.delta.is_referenced():
                     self.reference_label.config(text="Reference: Robot is referenced")
@@ -730,6 +730,7 @@ class App(ttk.Frame):
                         text="Reference: Robot is not referenced"
                     )
                 self.zero_torque_var.set(self.delta.is_zero_torque())
+                self.update_error()
             except:
                 pass
         else:
@@ -757,6 +758,39 @@ class App(ttk.Frame):
         elif current == 2:
             self.move_widgets(self.tab_3, 0, 0)
             self.gripper_widgets(self.tab_3, 2, 0)
+
+    def update_error(self):
+        new = self.delta.get_kinematics_error()
+        if (self.count_error == 5):
+            self.kinematic_error = "Kinematic:\n"
+            self.last_error = ""
+            self.count_error = 0
+        if self.last_error is not new:
+            self.kinematic_error = (
+                    self.kinematic_error +strftime("%H:%M:%S",localtime())+ ": "+ self.delta.get_kinematics_error() + "\n"
+            )
+            self.count_error += 1
+        # if (
+        #     self.delta.get_kinematics_error() != ""
+        #     # and self.robot.get_kinematics_error() != "no error"
+        #     and self.delta.get_kinematics_error() != last
+        # ):
+        #     self.kinematic_error = self.kinematic_error + "\n"+self.delta.get_kinematics_error()
+
+        # self.robot_error = self.robot_error + (
+        #     self.split_list(self.delta.get_robot_errors())
+        # )
+
+        self.robot_label.config(
+            # text=self.robot_error
+            text="Robot:\n"
+            + self.split_list(self.delta.get_robot_errors())
+        )
+        self.kinematic_label.config(
+            text=self.kinematic_error
+            # text="Kinematic:\n" + self.delta.get_kinematics_error()
+        )
+        self.last_error = self.delta.get_kinematics_error()
 
     def program_names(self, list):
         # self.dr.print_list_of_programs()
@@ -787,10 +821,20 @@ class App(ttk.Frame):
             return "No Information available"
 
     def gripper_mov(self):
-        if self.delta.is_connected and not self.delta.get_globale_signal(6):
-            self.gripper.controll(
-                int(self.gripper_scale.get()), int(self.gripper_orient_scale.get())
-            ),
+        if int(self.gripper_scale.get()) != self.gripper_opening or self.gripper_orient_scale.get() != self.gripper_orientation:
+            self.gripper_opening = int(self.gripper_scale.get())
+            self.gripper_orientation = self.gripper_orient_scale.get()
+            self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
+        # self.gripper.modbus()
+        # if self.delta.is_connected:
+        #     self.delta.set_globale_signal(6,True)
+        #     self.delta.set_number_variables(15,int(self.gripper_scale.get()))
+        #     self.delta.set_number_variables(16,int(self.gripper_orient_scale.get()))
+        #     self.delta.set_globale_signal(6,False)
+        # if self.delta.is_connected and not self.delta.get_globale_signal(6):
+        #     self.gripper.controll(
+        #         int(self.gripper_scale.get()), int(self.gripper_orient_scale.get())
+        #     ),
 
     def enable_robot(self):
         if self.enalbe_var.get():
@@ -848,8 +892,7 @@ class App(ttk.Frame):
 
     def update_list(self):
         self.load_label.config(
-            text="Programs:\n"
-            + self.program_names(self.delta.get_list_of_porgrams())
+            text="Programs:\n" + self.program_names(self.delta.get_list_of_porgrams())
         )
 
     def clear_list(self):
