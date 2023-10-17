@@ -40,7 +40,7 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
-        self.update_delay = tk.IntVar(value=100)
+        self.update_delay = tk.IntVar(value=10)
         self.step_var = tk.IntVar(value=10)
         self.gripper_opening = 0
         self.gripper_orientation = 0
@@ -828,7 +828,7 @@ class App(ttk.Frame):
         if (
             int(self.gripper_scale.get()) != self.gripper_opening
             or int(self.gripper_orient_scale.get()) != self.gripper_orientation
-            # or True
+            or True
         ):
             self.gripper_opening = int(self.gripper_scale.get())
             self.gripper_orientation = int(self.gripper_orient_scale.get())

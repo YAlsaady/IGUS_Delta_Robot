@@ -111,6 +111,7 @@ class Robot:
             self.client.write_single_coil(53, False)
         self.client.write_single_coil(53, True)
         sleep(0.1)
+        return self.is_enabled()
 
     def disable(self):
         """
@@ -141,6 +142,7 @@ class Robot:
         """
         if not self.is_connected:
             return
+        self.enable()
         if force:
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
@@ -315,9 +317,11 @@ class Robot:
         :return: None
         """
         if not self.is_connected:
-            return
+            return False
         if 0 < velocity <= 100:
             self.client.write_single_register(187, 100 * velocity)
+            return True
+        return False
 
     def set_velocity(self, velocity: bool):
         """
@@ -399,7 +403,7 @@ class Robot:
         :type relative: str or None
         """
         if not self.is_connected:
-            return
+            return False
         timeout = time() + self.break_time
         if wait:
             while self.is_moving():
@@ -419,7 +423,7 @@ class Robot:
         if relative == "tool":
             self.client.write_single_coil(102, False)
             self.client.write_single_coil(102, True)
-        return
+        return True
 
     def set_position_endeffector(self, x_val: float, y_val: float, z_val: float):
         """
@@ -618,21 +622,27 @@ class Robot:
         :type action: str
         """
         if not self.is_connected:
-            return
+            return False
         if action == "start":
             # self.client.write_single_coil(124, False)
             # self.client.write_single_coil(124, True)
             self.client.write_single_coil(122, False)
             self.client.write_single_coil(122, True)
+            return self.get_program_runstate()
         elif action == "continue":
             self.client.write_single_coil(122, False)
             self.client.write_single_coil(122, True)
+            return self.get_program_runstate()
         elif action == "pause":
             self.client.write_single_coil(123, False)
             self.client.write_single_coil(123, True)
+            return self.get_program_runstate()
         elif action == "stop":
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
+            return self.get_program_runstate()
+        else:
+         return False
 
     def set_program_replay_mode(self, mode: str = "once"):
         """
@@ -647,13 +657,14 @@ class Robot:
 
         :param mode: The desired program replay mode.
         :type mode: str
-        :return: True if the mode was successfully set, False if an invalid mode is provided.
-        :rtype: bool
+        :return: 0 if 
+        :rtype: int
         """
         if not self.is_connected:
-            return False
+            return -1
         if mode == "once":
-            return self.client.write_single_register(261, 0)
+            self.client.write_single_register(261, 0)
+            return 0
         elif mode == "repeat":
             return self.client.write_single_register(261, 1)
         elif mode == "step":
@@ -661,7 +672,7 @@ class Robot:
         elif mode == "fast":
             return self.client.write_single_register(261, 3)
         else:
-            return False
+            return -2
 
     def set_program_name(self, name):
         """
@@ -673,7 +684,7 @@ class Robot:
         :type name: str
         """
         if not self.is_connected:
-            return
+            return False
         self.write_string(name, 267, 31)
 
     def get_program_name(self):

@@ -24,7 +24,7 @@ class Gripper:
     opening = 0
 
     def __init__(
-        self, port: str = "/dev/ttyUSB0", baudrate: int = 9600, timeout: int = 1
+        self, port: str = "/dev/ttyUSB0", baudrate: int = 2000000, timeout: int = 1
     ):
         """
         Initialize the Gripper instance.
