@@ -10,7 +10,7 @@ Servo gripper;
 Servo rotation;
 
 void setup() {
-  Serial.begin(2000000);
+  Serial.begin(115200);
 
   pinMode(SERVO, OUTPUT);
   pinMode(SERVO_ROT, OUTPUT);
@@ -47,9 +47,11 @@ void loop() {
   }
 
   val1 = map(val1, 0, 100, OPEN, CLOSE);
-
+  Serial.print(val1);
+  Serial.print(" ");
+  Serial.println(val2);
   gripper.write(val1);
-  rotation.write(180 - val2);
+  rotation.write(180-val2);
 
   i = 0;
 
