@@ -28,6 +28,7 @@ class App(ttk.Frame):
         # Create control variables
 
         self.theme = ["dark", "light"]
+        self.theme_var=tk.StringVar()
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
         self.sort_var = tk.StringVar()
@@ -46,10 +47,12 @@ class App(ttk.Frame):
         self.gripper_orientation = 0
         self.last_error = ""
         self.count_error = 0
+        self.last_kin_error = ""
+        self.count_kin_error = 0
         self.robot_error = "Robot:\n"
         self.kinematic_error = "Kinematic:\n"
         self.about_msg = (
-            "Delta Robot\nUser Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
+            "User Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
         )
         self.logo_widgets()
         self.setting_widgets()
@@ -90,20 +93,27 @@ class App(ttk.Frame):
         self.tabs.add(self.tab_4, text="More")
 
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
+        self.logo_frame = tk.Frame(self)
+        self.logo_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
         self.logo = tk.PhotoImage(file=img)
-        self.logo_label = ttk.Label(self, image=self.logo)
-        self.logo_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.logo_label = ttk.Label(self.logo_frame, image=self.logo)
+        self.logo_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew", rowspan=3)
 
         self.info_frame = ttk.LabelFrame(self, text="About", padding=(20, 10))
         self.info_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nwewns")
 
+        self.delta_label = ttk.Label(
+            self.info_frame,
+            text="Delta Robto",
+            font=("-size", self.fontsize),
+        )
+        self.delta_label.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
         self.about_label = ttk.Label(
             self.info_frame,
-            # text="Hochschule Emden/Leer\nTechnikum\nDelta Robot",
             text=self.about_msg[0],
             font=("-size", self.fontsize),
         )
-        self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
         self.doc_button = ttk.Button(
             self.info_frame,
             text="Documentation",
@@ -121,6 +131,13 @@ class App(ttk.Frame):
         self.setting_frame = ttk.LabelFrame(self, text="Setting", padding=(20, 10))
         self.setting_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nwewns")
 
+        self.connect_button = ttk.Button(
+            self.setting_frame,
+            text="Connect",
+            command=lambda: self.connect()
+        )
+        self.connect_button.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
+
         self.enable = ttk.Checkbutton(
             self.setting_frame,
             text="Enable",
@@ -128,12 +145,12 @@ class App(ttk.Frame):
             variable=self.enalbe_var,
             command=lambda: self.enable_robot(),
         )
-        self.enable.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+        self.enable.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
 
         self.reset = ttk.Button(
             self.setting_frame, text="Reset", command=lambda: self.delta.reset()
         )
-        self.reset.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.reset.grid(row=1, column=1, padx=5, pady=10, sticky="nsew")
 
         self.reference = ttk.Button(
             self.setting_frame,
@@ -143,7 +160,7 @@ class App(ttk.Frame):
                 self.delta.reference(True),
             ),
         )
-        self.reference.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+        self.reference.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
         self.zero_torque = ttk.Checkbutton(
             self.setting_frame,
@@ -152,14 +169,18 @@ class App(ttk.Frame):
             variable=self.zero_torque_var,
             command=lambda: self.delta.set_zero_torque(self.zero_torque_var.get()),
         )
-        self.zero_torque.grid(row=3, column=0, padx=5, pady=10, sticky="nsew")
+        self.zero_torque.grid(row=2, column=0, padx=5, pady=10, sticky="nsew",columnspan=2)
 
-        self.theme = ttk.Combobox(
-            self.setting_frame, state="readonly", values=self.theme
+        # self.theme = ttk.Combobox(
+        #     self.setting_frame, state="readonly", values=self.theme
+        # )
+        self.theme = ttk.OptionMenu(
+            self.setting_frame, self.theme_var,self.theme[0], *self.theme,
+            command=lambda _: self.update_theme(), direction='above'
         )
-        self.theme.current(0)
-        self.theme.grid(row=4, column=0, padx=5, pady=10, sticky="nsew")
-        self.theme.bind("<<ComboboxSelected>>", self.update_theme)
+        self.theme.grid(row=3, column=0, padx=5, pady=10, sticky="nsew",columnspan=2)
+        # self.theme.current(0)
+        # self.theme.bind("<<ComboboxSelected>>", self.update_theme)
 
         # self.update_label = ttk.Label(
         #     self.setting_frame, text="Update delay:", font=("-size", fontsize)
@@ -650,7 +671,7 @@ class App(ttk.Frame):
             row=0, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=10
         )
         self.teach_label = ttk.Label(
-            self.show_frame, text="Positions:", font=("-size", self.fontsize)
+            self.show_frame, text="Positions:\t\t\t\t\n", font=("-size", self.fontsize)
         )
         self.teach_label.grid(
             row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
@@ -702,48 +723,9 @@ class App(ttk.Frame):
         )
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
 
-    def update(self):
-        if self.delta.is_connected:
-            try:
-                cart_pos = self.delta.get_position_endeffector()
-                axes_pos = self.delta.get_position_axes()
-                self.x_label.config(text=cart_pos[0])
-                self.y_label.config(text=cart_pos[1])
-                self.z_label.config(text=cart_pos[2])
-                self.a1_label.config(text=axes_pos[0])
-                self.a2_label.config(text=axes_pos[1])
-                self.a3_label.config(text=axes_pos[2])
-                self.status_p.config(
-                    text="status: " + self.delta.get_program_runstate()
-                )
-                self.loaded_p.config(
-                    text="Loaded Program: " + self.delta.get_program_name()
-                )
-                self.enalbe_var.set(self.delta.is_enabled())
-
-                self.connect_label.config(text="Connection: Robot is connected")
-
-                if self.delta.is_referenced():
-                    self.reference_label.config(text="Reference: Robot is referenced")
-                else:
-                    self.reference_label.config(
-                        text="Reference: Robot is not referenced"
-                    )
-                self.zero_torque_var.set(self.delta.is_zero_torque())
-                self.update_error()
-            except:
-                pass
-        else:
-            self.connect_label.config(text="Connection: Robot is not connected")
-        self.gripper_mov(),
-        self.prog_label.config(text=int(self.program_var.get()))
-        self.teach_label.config(
-            text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
-        )
-        self.after(self.update_delay.get(), self.update)
-
-    def update_theme(self, _):
-        theme = self.theme.get()
+    def update_theme(self):
+        # theme = self.theme.get()
+        theme = self.theme_var.get()
         self.tk.call("set_theme", theme)
         if theme == "dark":
             self.logo_widgets(PATH + "img/hsel_logo_dark.png")
@@ -760,12 +742,36 @@ class App(ttk.Frame):
             self.gripper_widgets(self.tab_3, 2, 0)
 
     def update_error(self):
-        new = self.delta.get_kinematics_error()
+        new_error = self.delta.get_robot_errors()
+        new_kin_error = self.delta.get_kinematics_error()
+        #
+        # Robot Errors
         if self.count_error == 5:
-            self.kinematic_error = "Kinematic:\n"
+            self.robot_error = "Robot:\n"
             self.last_error = ""
             self.count_error = 0
-        if self.last_error is not new:
+        if self.last_error is not new_error:
+            self.robot_error = (
+                self.robot_error
+                + strftime("%H:%M:%S", localtime())
+                + ": "
+                + self.split_list(self.delta.get_robot_errors())
+                + "\n"
+            )
+            self.count_error += 1
+        self.robot_label.config(
+            text=self.robot_error
+            # text="Robot:\n"
+            # + self.split_list(self.delta.get_robot_errors())
+        )
+        self.last_error = self.delta.get_robot_errors()
+        #
+        # Kinematic Errors
+        if self.count_kin_error == 5:
+            self.kinematic_error = "Kinematic:\n"
+            self.last_kin_error = ""
+            self.count_kin_error = 0
+        if self.last_kin_error is not new_kin_error:
             self.kinematic_error = (
                 self.kinematic_error
                 + strftime("%H:%M:%S", localtime())
@@ -773,7 +779,12 @@ class App(ttk.Frame):
                 + self.delta.get_kinematics_error()
                 + "\n"
             )
-            self.count_error += 1
+            self.count_kin_error += 1
+        self.kinematic_label.config(
+            text=self.kinematic_error
+            # text="Kinematic:\n" + self.delta.get_kinematics_error()
+        )
+        self.last_kin_error = self.delta.get_kinematics_error()
         # if (
         #     self.delta.get_kinematics_error() != ""
         #     # and self.robot.get_kinematics_error() != "no error"
@@ -784,17 +795,6 @@ class App(ttk.Frame):
         # self.robot_error = self.robot_error + (
         #     self.split_list(self.delta.get_robot_errors())
         # )
-
-        self.robot_label.config(
-            # text=self.robot_error
-            text="Robot:\n"
-            + self.split_list(self.delta.get_robot_errors())
-        )
-        self.kinematic_label.config(
-            text=self.kinematic_error
-            # text="Kinematic:\n" + self.delta.get_kinematics_error()
-        )
-        self.last_error = self.delta.get_kinematics_error()
 
     def program_names(self, list):
         # self.dr.print_list_of_programs()
@@ -885,8 +885,23 @@ class App(ttk.Frame):
                         i[1][0] != self.gripper.opening
                         or i[1][0] != self.gripper.orientation
                     ):
+                        self.gripper.opening = i[1][0]
+                        self.gripper.orientation = i[1][0]
                         self.gripper.controll(*i[1])
                         sleep(2.5)
+            else:
+                if i[1]:
+                    if (
+                        i[1][0] != self.gripper.opening
+                        or i[1][0] != self.gripper.orientation
+                    ):
+                        self.gripper_scale = i[1][0]
+                        self.gripper_orient_scale = i[1][0]
+                        self.gripper_var = i[1][0]
+                        self.gripper_orient_var = i[1][0]
+                        self.gripper_mov()
+                        sleep(2.5)
+                    pass
         self.run_var.set(False)
 
     def sort_list(self):
@@ -912,6 +927,50 @@ class App(ttk.Frame):
             self.pos_list.pop(index)
         except:
             pass
+
+    def connect(self):
+        self.delta = Robot("192.168.3.11")
+
+    def update(self):
+        if self.delta.is_connected:
+            try:
+                cart_pos = self.delta.get_position_endeffector()
+                axes_pos = self.delta.get_position_axes()
+                self.x_label.config(text=cart_pos[0])
+                self.y_label.config(text=cart_pos[1])
+                self.z_label.config(text=cart_pos[2])
+                self.a1_label.config(text=axes_pos[0])
+                self.a2_label.config(text=axes_pos[1])
+                self.a3_label.config(text=axes_pos[2])
+                self.status_p.config(
+                    text="status: " + self.delta.get_program_runstate()
+                )
+                self.loaded_p.config(
+                    text="Loaded Program: " + self.delta.get_program_name()
+                )
+                self.enalbe_var.set(self.delta.is_enabled())
+
+                self.connect_label.config(text="Connection: Robot is connected")
+
+                if self.delta.is_referenced():
+                    self.reference_label.config(text="Reference: Robot is referenced")
+                else:
+                    self.reference_label.config(
+                        text="Reference: Robot is not referenced"
+                    )
+                self.zero_torque_var.set(self.delta.is_zero_torque())
+                self.update_error()
+                self.gripper_mov()
+                self.prog_label.config(text=int(self.program_var.get()))
+                self.teach_label.config(
+                    text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
+                )
+            except:
+                pass
+        else:
+            self.connect_label.config(text="Connection: Robot is not connected")
+            # self.delta = Robot("192.168.3.11")
+        self.after(self.update_delay.get(), self.update)
 
 
 def main():

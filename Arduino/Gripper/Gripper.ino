@@ -47,9 +47,6 @@ void loop() {
   }
 
   val1 = map(val1, 0, 100, OPEN, CLOSE);
-  Serial.print(val1);
-  Serial.print(" ");
-  Serial.println(val2);
   gripper.write(val1);
   rotation.write(180-val2);
 

@@ -5,3 +5,5 @@ if __name__ == "__main__":
     while True:
         if gripper.is_connected:
             gripper.modbus()
+        else:
+            gripper = Gripper()

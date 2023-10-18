@@ -79,7 +79,7 @@ class Robot:
         :return: None
         """
         if not self.is_connected:
-            return
+            return -1
         self.client.write_single_coil(51, False)
         self.client.write_single_coil(51, True)
 
@@ -142,13 +142,15 @@ class Robot:
         """
         if not self.is_connected:
             return
+        timeout = time() + self.break_time
         self.enable()
         if force:
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
             sleep(0.3)
             while not self.is_referenced():
-                pass
+                if time() > timeout:
+                    break
             return
         else:
             if not self.is_referenced():
@@ -156,7 +158,8 @@ class Robot:
                 self.client.write_single_coil(60, True)
                 sleep(0.3)
                 while not self.is_referenced():
-                    pass
+                    if time() > timeout:
+                        break
             else:
                 return
 
@@ -1142,26 +1145,29 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return ""
+            return "Not connected"
         # code = self.client.read_input_registers(95)[0]
-        if self.client.read_coils(37)[0]:
+        if not self.is_kinematics_error():
             return "No error"
-        if self.client.read_coils(38)[0]:
-            return "Axis limit Min"
-        if self.client.read_coils(39)[0]:
-            return "Axis limit Max"
-        if self.client.read_coils(40)[0]:
-            return "Central axis singularity"
-        if self.client.read_coils(41)[0]:
-            return "Out of range"
-        if self.client.read_coils(42)[0]:
-            return "Wrist singularity"
-        if self.client.read_coils(43)[0]:
-            return "Virtual box reached"
-        if self.client.read_coils(44)[0]:
-            return "Motion not allowed"
         else:
-            return ""
+            if self.client.read_coils(37)[0]:
+                return "No error"
+            if self.client.read_coils(38)[0]:
+                return "Axis limit Min"
+            if self.client.read_coils(39)[0]:
+                return "Axis limit Max"
+            if self.client.read_coils(40)[0]:
+                return "Central axis singularity"
+            if self.client.read_coils(41)[0]:
+                return "Out of range"
+            if self.client.read_coils(42)[0]:
+                return "Wrist singularity"
+            if self.client.read_coils(43)[0]:
+                return "Virtual box reached"
+            if self.client.read_coils(44)[0]:
+                return "Motion not allowed"
+            else:
+                return "Out of range"
 
     def get_stop_reason_description(self):
         """
@@ -1250,8 +1256,10 @@ class Robot:
                 self.reset()
                 break
             if self.is_general_error():
+                self.reset()
                 break
             if self.is_kinematics_error():
+                self.reset()
                 break
         x_val, y_val, z_val = self.get_cartesian_position()
         for angle in arange(start_angle, stop_angle, step):
@@ -1373,7 +1381,6 @@ class Robot:
                 val = ord(i)
             self.client.write_single_register(count + ad, val)
 
-    # }}}
     def control_gripper(self, val1: int, val2: int, signal: int = 6):
         if not self.is_connected:
             return False
@@ -1382,6 +1389,7 @@ class Robot:
         self.set_number_variables(16, val2)
         self.set_globale_signal(signal, False)
         return True
+    # }}}
 
 
 # vim:foldmethod=marker
