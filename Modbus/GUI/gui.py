@@ -28,7 +28,7 @@ class App(ttk.Frame):
         # Create control variables
 
         self.theme = ["dark", "light"]
-        self.theme_var=tk.StringVar()
+        self.theme_var = tk.StringVar()
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
         self.sort_var = tk.StringVar()
@@ -41,7 +41,7 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
-        self.update_delay = tk.IntVar(value=10)
+        self.update_delay = tk.IntVar(value=1)
         self.step_var = tk.IntVar(value=10)
         self.gripper_opening = 0
         self.gripper_orientation = 0
@@ -74,7 +74,7 @@ class App(ttk.Frame):
         self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         self.update_list()
-        print(PATH)
+        # print(PATH)
 
     def tabs(self):
         self.tabs = ttk.Notebook(self)
@@ -113,7 +113,9 @@ class App(ttk.Frame):
             text=self.about_msg[0],
             font=("-size", self.fontsize),
         )
-        self.about_label.grid(row=1, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
+        self.about_label.grid(
+            row=1, column=0, padx=5, pady=10, sticky="nsew", columnspan=2
+        )
         self.doc_button = ttk.Button(
             self.info_frame,
             text="Documentation",
@@ -132,9 +134,7 @@ class App(ttk.Frame):
         self.setting_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nwewns")
 
         self.connect_button = ttk.Button(
-            self.setting_frame,
-            text="Connect",
-            command=lambda: self.connect()
+            self.setting_frame, text="Connect", command=lambda: self.connect()
         )
         self.connect_button.grid(row=0, column=0, padx=5, pady=10, sticky="ew")
 
@@ -169,16 +169,22 @@ class App(ttk.Frame):
             variable=self.zero_torque_var,
             command=lambda: self.delta.set_zero_torque(self.zero_torque_var.get()),
         )
-        self.zero_torque.grid(row=2, column=0, padx=5, pady=10, sticky="nsew",columnspan=2)
+        self.zero_torque.grid(
+            row=2, column=0, padx=5, pady=10, sticky="nsew", columnspan=2
+        )
 
         # self.theme = ttk.Combobox(
         #     self.setting_frame, state="readonly", values=self.theme
         # )
         self.theme = ttk.OptionMenu(
-            self.setting_frame, self.theme_var,self.theme[0], *self.theme,
-            command=lambda _: self.update_theme(), direction='above'
+            self.setting_frame,
+            self.theme_var,
+            self.theme[0],
+            *self.theme,
+            command=lambda _: self.update_theme(),
+            direction="above"
         )
-        self.theme.grid(row=3, column=0, padx=5, pady=10, sticky="nsew",columnspan=2)
+        self.theme.grid(row=3, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
         # self.theme.current(0)
         # self.theme.bind("<<ComboboxSelected>>", self.update_theme)
 
@@ -742,29 +748,8 @@ class App(ttk.Frame):
             self.gripper_widgets(self.tab_3, 2, 0)
 
     def update_error(self):
-        new_error = self.delta.get_robot_errors()
+        new_error = self.delta.get_robot_errors()[0]
         new_kin_error = self.delta.get_kinematics_error()
-        #
-        # Robot Errors
-        if self.count_error == 5:
-            self.robot_error = "Robot:\n"
-            self.last_error = ""
-            self.count_error = 0
-        if self.last_error is not new_error:
-            self.robot_error = (
-                self.robot_error
-                + strftime("%H:%M:%S", localtime())
-                + ": "
-                + self.split_list(self.delta.get_robot_errors())
-                + "\n"
-            )
-            self.count_error += 1
-        self.robot_label.config(
-            text=self.robot_error
-            # text="Robot:\n"
-            # + self.split_list(self.delta.get_robot_errors())
-        )
-        self.last_error = self.delta.get_robot_errors()
         #
         # Kinematic Errors
         if self.count_kin_error == 5:
@@ -785,6 +770,27 @@ class App(ttk.Frame):
             # text="Kinematic:\n" + self.delta.get_kinematics_error()
         )
         self.last_kin_error = self.delta.get_kinematics_error()
+        #
+        # Robot Errors
+        if self.count_error == 5:
+            self.robot_error = "Robot:\n"
+            self.last_error = ""
+            self.count_error = 0
+        if self.last_error is not new_error:
+            self.robot_error = (
+                self.robot_error
+                + strftime("%H:%M:%S", localtime())
+                + ": "
+                + self.split_list(self.delta.get_robot_errors())
+                # + "\n"
+            )
+            self.count_error += 1
+        self.robot_label.config(
+            text=self.robot_error
+            # text="Robot:\n"
+            # + self.split_list(self.delta.get_robot_errors())
+        )
+        self.last_error = self.delta.get_robot_errors()[0]
         # if (
         #     self.delta.get_kinematics_error() != ""
         #     # and self.robot.get_kinematics_error() != "no error"
@@ -877,31 +883,32 @@ class App(ttk.Frame):
                 for i in self.pos_list:
                     if i[0]:
                         self.delta.set_and_move(*i[0])
-                        print(k, *i[0], *i[1])
+                        # print(k, *i[0], *i[1])
                         k += 1
-            if self.gripper.is_connected:
-                if i[1]:
-                    if (
-                        i[1][0] != self.gripper.opening
-                        or i[1][0] != self.gripper.orientation
-                    ):
-                        self.gripper.opening = i[1][0]
-                        self.gripper.orientation = i[1][0]
-                        self.gripper.controll(*i[1])
-                        sleep(2.5)
-            else:
-                if i[1]:
-                    if (
-                        i[1][0] != self.gripper.opening
-                        or i[1][0] != self.gripper.orientation
-                    ):
-                        self.gripper_scale = i[1][0]
-                        self.gripper_orient_scale = i[1][0]
-                        self.gripper_var = i[1][0]
-                        self.gripper_orient_var = i[1][0]
-                        self.gripper_mov()
-                        sleep(2.5)
-                    pass
+                    if self.gripper.is_connected and False:
+                        if i[1]:
+                            if (
+                                i[1][0] != self.gripper.opening
+                                or i[1][0] != self.gripper.orientation
+                            ):
+                                self.gripper.opening = i[1][0]
+                                self.gripper.orientation = i[1][0]
+                                self.gripper.controll(*i[1])
+                                sleep(2.5)
+                    else:
+                        if i[1] or True:
+                            if (
+                                i[1][0] != self.gripper_var.get()
+                                or i[1][1] != self.gripper_orient_var.get()
+                                # or True
+                            ):
+                                self.gripper_scale.set(i[1][0])
+                                self.gripper_orient_scale.set(i[1][1])
+                                self.gripper_var.set(i[1][0])
+                                self.gripper_orient_var.set(i[1][1])
+                                self.delta.control_gripper(*i[1])
+                                # self.gripper_mov()
+                                sleep(1.5)
         self.run_var.set(False)
 
     def sort_list(self):
