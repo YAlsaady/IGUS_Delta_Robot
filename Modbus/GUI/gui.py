@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import os
 import webbrowser
+import threading
 
 from src.igus_modbus import Robot
 from src.gripper import Gripper
@@ -28,6 +29,8 @@ class App(ttk.Frame):
         # Create control variables
 
         self.theme = ["dark", "light"]
+        self.steps = [0.5,1,2,4,6,8,10]
+        self.steps.reverse()
         self.theme_var = tk.StringVar()
         self.enalbe_var = tk.BooleanVar(value=True)
         self.run_var = tk.BooleanVar(value=False)
@@ -43,6 +46,7 @@ class App(ttk.Frame):
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=1)
         self.step_var = tk.IntVar(value=10)
+        self.reference_var = tk.BooleanVar(value=False)
         self.gripper_opening = 0
         self.gripper_orientation = 0
         self.last_error = ""
@@ -74,7 +78,7 @@ class App(ttk.Frame):
         self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         self.update_list()
-        # print(PATH)
+        # threading.Thread(target=self.thread_reference)
 
     def tabs(self):
         self.tabs = ttk.Notebook(self)
@@ -157,6 +161,8 @@ class App(ttk.Frame):
             text="Reference",
             command=lambda: (
                 self.reference_label.config(text="Reference: Robot is referencing ..."),
+                self.reference_var.set(True),
+                # threading.Thread(target=self.thread_reference).start(),
                 self.delta.reference(True),
             ),
         )
@@ -255,7 +261,7 @@ class App(ttk.Frame):
         )
 
         self.global_speed_title_label = ttk.Label(
-            self.speed_frame, text="Global Speed", font=("-size", self.fontsize)
+            self.speed_frame, text="Globale Speed", font=("-size", self.fontsize)
         )
         self.global_speed_title_label.grid(
             row=0, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
@@ -279,13 +285,13 @@ class App(ttk.Frame):
             text=int(self.speed_var.get()),
             font=("-size", self.fontsize),
         )
-        self.speed_label.grid(row=1, column=2, padx=(20, 20), pady=(20, 0), sticky="ew")
+        self.speed_label.grid(row=1, column=2, padx=(20, 10), pady=(20, 0), sticky="ew")
 
         self.speed_title_label = ttk.Label(
-            self.speed_frame, text="Speed", font=("-size", self.fontsize)
+            self.speed_frame, text="Speed        ", font=("-size", self.fontsize)
         )
         self.speed_title_label.grid(
-            row=1, column=0, padx=(5, 10), pady=(20, 20), sticky="ew"
+            row=1, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
         )
 
     def gripper_widgets(self, tab_name, row, column):
@@ -447,20 +453,29 @@ class App(ttk.Frame):
         self.z_label.grid(row=2, column=1, padx=5, pady=10)
 
         self.step_label = ttk.Label(
-            self.move_tab, text="Stops per Move:", font=("-size", self.fontsize)
+            self.move_tab, text="Stops:", font=("-size", self.fontsize)
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
-        self.step = ttk.Spinbox(
-            self.move_tab,
-            from_=1,
-            to=100,
-            increment=1,
-            textvariable=self.step_var,
-            width=10,
-        )
-        self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
+        # self.step = ttk.Spinbox(
+        #     self.move_tab,
+        #     from_=1,
+        #     to=100,
+        #     increment=1,
+        #     textvariable=self.step_var,
+        #     width=10,
+        # )
+        # self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
+        self.step = ttk.OptionMenu(
+            self.move_tab,
+            self.step_var,
+            self.steps[0],
+            *self.steps,
+            # command=lambda _: self.update_theme(),
+            direction="below",
+        )
+        self.step.grid(row=3, column=1, padx=5, pady=10, sticky="ew",columnspan=2)
         # Tab #2
         self.axes_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.axes_tab, text="Joints")
@@ -869,7 +884,7 @@ class App(ttk.Frame):
         if self.delta.is_connected:
             list.append(self.delta.get_position_endeffector())
         else:
-            list.append([0, 0, 0])
+            list.append([10, 10, 200])
         list.append([self.gripper_var.get(), self.gripper_orient_var.get()])
         self.pos_list.append(list)
 
@@ -877,38 +892,39 @@ class App(ttk.Frame):
         self.zero_torque_var.set(False)
         self.enalbe_var.set(True)
         self.delta.enable()
-        if self.run_var.get():
-            if self.delta.is_connected:
-                k = 1
-                for i in self.pos_list:
-                    if i[0]:
-                        self.delta.set_and_move(*i[0])
-                        # print(k, *i[0], *i[1])
-                        k += 1
-                    if self.gripper.is_connected and False:
-                        if i[1]:
-                            if (
-                                i[1][0] != self.gripper.opening
-                                or i[1][0] != self.gripper.orientation
-                            ):
-                                self.gripper.opening = i[1][0]
-                                self.gripper.orientation = i[1][0]
-                                self.gripper.controll(*i[1])
-                                sleep(2.5)
-                    else:
-                        if i[1] or True:
-                            if (
-                                i[1][0] != self.gripper_var.get()
-                                or i[1][1] != self.gripper_orient_var.get()
-                                # or True
-                            ):
-                                self.gripper_scale.set(i[1][0])
-                                self.gripper_orient_scale.set(i[1][1])
-                                self.gripper_var.set(i[1][0])
-                                self.gripper_orient_var.set(i[1][1])
-                                self.delta.control_gripper(*i[1])
-                                # self.gripper_mov()
-                                sleep(1.5)
+        if not self.run_var.get():
+            self.run_var.set(False)
+            return
+        if not self.delta.is_connected:
+            self.run_var.set(False)
+            return
+        for i in self.pos_list:
+            if i[0] and i[0][2] != 0:
+                self.delta.set_and_move(*i[0])
+            if i[1]:
+                if (
+                    i[1][0] != self.gripper_var.get()
+                    or i[1][1] != self.gripper_orient_var.get()
+                    # or True
+                ):
+                    self.gripper_scale.set(i[1][0])
+                    self.gripper_orient_scale.set(i[1][1])
+                    self.gripper_var.set(i[1][0])
+                    self.gripper_orient_var.set(i[1][1])
+                    self.delta.control_gripper(*i[1])
+                    # self.gripper_mov()
+                    sleep(1.5)
+            # if self.gripper.is_connected and False:
+            #     if i[1]:
+            #         if (
+            #             i[1][0] != self.gripper.opening
+            #             or i[1][0] != self.gripper.orientation
+            #         ):
+            #             self.gripper.opening = i[1][0]
+            #             self.gripper.orientation = i[1][0]
+            #             self.gripper.controll(*i[1])
+            #             sleep(2.5)
+            # else:
         self.run_var.set(False)
 
     def sort_list(self):
@@ -959,25 +975,33 @@ class App(ttk.Frame):
 
                 self.connect_label.config(text="Connection: Robot is connected")
 
-                if self.delta.is_referenced():
-                    self.reference_label.config(text="Reference: Robot is referenced")
-                else:
-                    self.reference_label.config(
-                        text="Reference: Robot is not referenced"
-                    )
+                if not self.reference_var:
+                    if self.delta.is_referenced():
+                        self.reference_label.config(
+                            text="Reference: Robot is referenced"
+                        )
+                    else:
+                        self.reference_label.config(
+                            text="Reference: Robot is not referenced"
+                        )
                 self.zero_torque_var.set(self.delta.is_zero_torque())
                 self.update_error()
                 self.gripper_mov()
                 self.prog_label.config(text=int(self.program_var.get()))
-                self.teach_label.config(
-                    text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
-                )
             except:
                 pass
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
-            # self.delta = Robot("192.168.3.11")
+        self.teach_label.config(
+            text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
+        )
         self.after(self.update_delay.get(), self.update)
+
+    def thread_reference(self):
+        self.delta.reference(True)
+        # if self.reference_var.get():
+        #     self.reference_var.set(True)
+        # thread = Thread(target=self.test)
 
 
 def main():

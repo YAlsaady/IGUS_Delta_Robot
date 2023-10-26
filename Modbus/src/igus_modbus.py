@@ -1147,8 +1147,6 @@ class Robot:
         if not self.is_connected:
             return "Not connected"
         # code = self.client.read_input_registers(95)[0]
-        if self.is_kinematics_error():
-            return "Out of range"
         else:
             if self.client.read_coils(37)[0]:
                 return "no error"
