@@ -933,6 +933,7 @@ class App(ttk.Frame):
                     or i[1][1] != self.gripper_orient_var.get()
                     # or True
                 ):
+                    sleep(1.5)
                     self.gripper_scale.set(i[1][0])
                     self.gripper_orient_scale.set(i[1][1])
                     self.gripper_var.set(i[1][0])
