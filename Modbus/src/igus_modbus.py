@@ -18,11 +18,11 @@ Example:
     delta_robot = Robot('192.168.3.11')
     
     # Perform actions with the Delta Robot
-    delta_robot.enable()
-    delta_robot.reference()
-    delta_robot.set_position_endeffector(0, 0, 250)
-    delta_robot.set_velocity(120)
-    delta_robot.move_endeffector_absolute()
+    delta_robot.enable()\n
+    delta_robot.reference()\n
+    delta_robot.set_position_endeffector(0, 0, 250)\n
+    delta_robot.set_velocity(120)\n
+    delta_robot.move_endeffector_absolute()\n
 
 """
 # }}}
@@ -52,8 +52,11 @@ class Robot:
         :type port: int
         """
         self.address = address
-        self.client = ModbusClient(host=address, port=port,timeout=1)
+        self.client = ModbusClient(host=address, port=port, timeout=1)
         self.is_connected = self.client.open()
+        if self.is_connected:
+            self.client.write_single_coil(134, False)
+            self.client.write_single_coil(134, True)
 
     def __del__(self):
         """
@@ -61,6 +64,7 @@ class Robot:
 
         :return: None
         """
+        self.set_globale_signal(6, False)
         self.client.close()
 
     # }}}
@@ -75,7 +79,7 @@ class Robot:
         :return: None
         """
         if not self.is_connected:
-            return
+            return -1
         self.client.write_single_coil(51, False)
         self.client.write_single_coil(51, True)
 
@@ -107,6 +111,7 @@ class Robot:
             self.client.write_single_coil(53, False)
         self.client.write_single_coil(53, True)
         sleep(0.1)
+        return self.is_enabled()
 
     def disable(self):
         """
@@ -137,12 +142,15 @@ class Robot:
         """
         if not self.is_connected:
             return
+        timeout = time() + self.break_time
+        self.enable()
         if force:
             self.client.write_single_coil(60, False)
             self.client.write_single_coil(60, True)
             sleep(0.3)
             while not self.is_referenced():
-                pass
+                if time() > timeout:
+                    break
             return
         else:
             if not self.is_referenced():
@@ -150,7 +158,8 @@ class Robot:
                 self.client.write_single_coil(60, True)
                 sleep(0.3)
                 while not self.is_referenced():
-                    pass
+                    if time() > timeout:
+                        break
             else:
                 return
 
@@ -311,9 +320,11 @@ class Robot:
         :return: None
         """
         if not self.is_connected:
-            return
+            return False
         if 0 < velocity <= 100:
             self.client.write_single_register(187, 100 * velocity)
+            return True
+        return False
 
     def set_velocity(self, velocity: bool):
         """
@@ -395,8 +406,8 @@ class Robot:
         :type relative: str or None
         """
         if not self.is_connected:
-            return
-        timeout= time() + self.break_time
+            return False
+        timeout = time() + self.break_time
         if wait:
             while self.is_moving():
                 if time() > timeout:
@@ -415,7 +426,7 @@ class Robot:
         if relative == "tool":
             self.client.write_single_coil(102, False)
             self.client.write_single_coil(102, True)
-        return
+        return True
 
     def set_position_endeffector(self, x_val: float, y_val: float, z_val: float):
         """
@@ -526,7 +537,7 @@ class Robot:
         """
         if not self.is_connected:
             return
-        timeout= time() + self.break_time
+        timeout = time() + self.break_time
         if wait:
             while self.is_moving():
                 if time() > timeout:
@@ -614,21 +625,27 @@ class Robot:
         :type action: str
         """
         if not self.is_connected:
-            return
+            return False
         if action == "start":
             # self.client.write_single_coil(124, False)
             # self.client.write_single_coil(124, True)
             self.client.write_single_coil(122, False)
             self.client.write_single_coil(122, True)
+            return self.get_program_runstate()
         elif action == "continue":
             self.client.write_single_coil(122, False)
             self.client.write_single_coil(122, True)
+            return self.get_program_runstate()
         elif action == "pause":
             self.client.write_single_coil(123, False)
             self.client.write_single_coil(123, True)
+            return self.get_program_runstate()
         elif action == "stop":
             self.client.write_single_coil(124, False)
             self.client.write_single_coil(124, True)
+            return self.get_program_runstate()
+        else:
+         return False
 
     def set_program_replay_mode(self, mode: str = "once"):
         """
@@ -643,13 +660,14 @@ class Robot:
 
         :param mode: The desired program replay mode.
         :type mode: str
-        :return: True if the mode was successfully set, False if an invalid mode is provided.
-        :rtype: bool
+        :return: 0 if 
+        :rtype: int
         """
         if not self.is_connected:
-            return False
+            return -1
         if mode == "once":
-            return self.client.write_single_register(261, 0)
+            self.client.write_single_register(261, 0)
+            return 0
         elif mode == "repeat":
             return self.client.write_single_register(261, 1)
         elif mode == "step":
@@ -657,7 +675,7 @@ class Robot:
         elif mode == "fast":
             return self.client.write_single_register(261, 3)
         else:
-            return False
+            return -2
 
     def set_program_name(self, name):
         """
@@ -669,7 +687,7 @@ class Robot:
         :type name: str
         """
         if not self.is_connected:
-            return
+            return False
         self.write_string(name, 267, 31)
 
     def get_program_name(self):
@@ -1075,8 +1093,6 @@ class Robot:
         if not self.is_connected:
             return ""
         message = self.client.read_holding_registers(400, 32)
-        if message:
-            print(hex(message[0]))
         return self.read_string(message)
 
     def get_robot_errors(self):
@@ -1129,26 +1145,27 @@ class Robot:
         :rtype: str
         """
         if not self.is_connected:
-            return ""
+            return "Not connected"
         # code = self.client.read_input_registers(95)[0]
-        if self.client.read_coils(37)[0]:
-            return "No error"
-        if self.client.read_coils(38)[0]:
-            return "Axis limit Min"
-        if self.client.read_coils(39)[0]:
-            return "Axis limit Max"
-        if self.client.read_coils(40)[0]:
-            return "Central axis singularity"
-        if self.client.read_coils(41)[0]:
-            return "Out of range"
-        if self.client.read_coils(42)[0]:
-            return "Wrist singularity"
-        if self.client.read_coils(43)[0]:
-            return "Virtual box reached"
-        if self.client.read_coils(44)[0]:
-            return "Motion not allowed"
         else:
-            return ""
+            if self.client.read_coils(37)[0]:
+                return "no error"
+            if self.client.read_coils(38)[0]:
+                return "Axis limit Min"
+            if self.client.read_coils(39)[0]:
+                return "Axis limit Max"
+            if self.client.read_coils(40)[0]:
+                return "Central axis singularity"
+            if self.client.read_coils(41)[0]:
+                return "Out of range"
+            if self.client.read_coils(42)[0]:
+                return "Wrist singularity"
+            if self.client.read_coils(43)[0]:
+                return "Virtual box reached"
+            if self.client.read_coils(44)[0]:
+                return "Motion not allowed"
+            else:
+                return "Out of range"
 
     def get_stop_reason_description(self):
         """
@@ -1231,14 +1248,16 @@ class Robot:
         """
         if not self.is_connected:
             return
-        timeout= time() + self.break_time
+        timeout = time() + self.break_time
         while self.is_moving():
             if time() > timeout:
                 self.reset()
                 break
             if self.is_general_error():
+                self.reset()
                 break
             if self.is_kinematics_error():
+                self.reset()
                 break
         x_val, y_val, z_val = self.get_cartesian_position()
         for angle in arange(start_angle, stop_angle, step):
@@ -1360,6 +1379,27 @@ class Robot:
                 val = ord(i)
             self.client.write_single_register(count + ad, val)
 
+    def control_gripper(self, opening: int, orientation: int, signal: int = 6):
+        """
+        Control the gripper using specified values and a Modbus signal.
+
+        :param opening: The value for the gripper opening.
+        :type opening: int
+        :param orientation: The value for the gripper orientation.
+        :type orientation: int
+        :param signal: The Modbus signal number to enable/disable gripper control.
+                       Default is 6.
+        :type signal: int
+        :return: True if the gripper control was successful, False otherwise.
+        :rtype: bool
+        """
+        if not self.is_connected:
+            return False
+        self.set_globale_signal(signal, True)
+        self.set_number_variables(15, opening)
+        self.set_number_variables(16, orientation)
+        self.set_globale_signal(signal, False)
+        return True
     # }}}
 
 

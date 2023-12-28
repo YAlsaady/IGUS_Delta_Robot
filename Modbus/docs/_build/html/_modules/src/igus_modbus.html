@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.igus_modbus &mdash; Delta-Robot 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Delta-Robot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#gripper-package">Gripper package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#module-GUI.gui">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#example-package">Example package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Delta-Robot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.igus_modbus</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.igus_modbus</h1><div class="highlight"><pre>
+<span></span><span class="c1"># {{{ Description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">igus_modbus Module</span>
+<span class="sd">==================</span>
+
+<span class="sd">This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    - Robot: Represents the Robot and provides methods for controlling it.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    To use this module, create an instance of the &#39;Robot&#39; class with the IP address and the port of the Robot as a parameter.</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    from igus_modbus import Robot</span>
+<span class="sd">    </span>
+<span class="sd">    # Create a Delta Robot instance with the IP address &#39;192.168.1.11&#39;</span>
+<span class="sd">    delta_robot = Robot(&#39;192.168.3.11&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">    # Perform actions with the Delta Robot</span>
+<span class="sd">    delta_robot.enable()\n</span>
+<span class="sd">    delta_robot.reference()\n</span>
+<span class="sd">    delta_robot.set_position_endeffector(0, 0, 250)\n</span>
+<span class="sd">    delta_robot.set_velocity(120)\n</span>
+<span class="sd">    delta_robot.move_endeffector_absolute()\n</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># }}}</span>
+
+<span class="c1"># {{{ Import</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">pyModbusTCP.client</span> <span class="kn">import</span> <span class="n">ModbusClient</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="n">c_int32</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">radians</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">arange</span>
+
+<span class="c1"># }}}</span>
+
+
+<span class="c1"># {{{ Init</span>
+<div class="viewcode-block" id="Robot">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot">[docs]</a>
+<span class="k">class</span> <span class="nc">Robot</span><span class="p">:</span>
+    <span class="n">is_connected</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">break_time</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">502</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Robot instance and establish the communication</span>
+
+<span class="sd">        :param address: The IP address of the Robot.</span>
+<span class="sd">        :type address: str</span>
+<span class="sd">        :param port: The port for Modbus TCP communication (default is 502).</span>
+<span class="sd">        :type port: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">ModbusClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close current TCP connection.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Robot Control</span>
+<div class="viewcode-block" id="Robot.shutdown">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.shutdown">[docs]</a>
+    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the Delta Robot.</span>
+
+<span class="sd">        This method shut the robot down by writing a rising edge to the coil.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.reset">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the Delta Robot.</span>
+
+<span class="sd">        This method resets the robot by writing a rising edge to the coil.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controll_programs</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">52</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">52</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.enable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.enable">[docs]</a>
+    <span class="k">def</span> <span class="nf">enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enable the motors of the Robot.</span>
+
+<span class="sd">        This method enables the motors of the robot by writing 1 the coil 53.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.disable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.disable">[docs]</a>
+    <span class="k">def</span> <span class="nf">disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disable the motors of the Robot.</span>
+
+<span class="sd">        This method disables the motors of the robot by writing 0 to the coil 53.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.reference">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.reference">[docs]</a>
+    <span class="k">def</span> <span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reference the Robot.</span>
+
+<span class="sd">        This method references the robot by writing a rising edge to the coil 60.</span>
+<span class="sd">        If &#39;only_once&#39; is set to True (default), it will only reference the robot if it&#39;s not already referenced.</span>
+
+<span class="sd">        :param force: If False, the robot will only be referenced if not already referenced,</span>
+<span class="sd">                         otherwise, it will be referenced each time this method is called (default is False).</span>
+<span class="sd">        :type force: bool</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_referenced</span><span class="p">():</span>
+                <span class="k">pass</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_referenced</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">sleep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+                <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_referenced</span><span class="p">():</span>
+                    <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Info</span>
+<div class="viewcode-block" id="Robot.is_enabled">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_enabled">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the Robot is enabled.</span>
+
+<span class="sd">        This method checks the state of the Robot&#39;s motors by reading coil 53.</span>
+
+<span class="sd">        :return: True if the motors are enabled, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">53</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_referenced">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_referenced">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_referenced</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the Robot is referenced.</span>
+
+<span class="sd">        This method checks if the Robot has been referenced by reading coil 60.</span>
+
+<span class="sd">        :return: True if the Robot is referenced, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">60</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_moving">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_moving">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_moving</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the Robot is moving.</span>
+
+<span class="sd">        This method checks the state of the Robot&#39;s motion by reading coil 112.</span>
+
+<span class="sd">        :return: True if the Robot is currently moving, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">112</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_general_error">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_general_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_general_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the robot has general errors.</span>
+
+<span class="sd">        This method checks the state of the robot&#39;s error status coil</span>
+<span class="sd">        and returns True if the robot has general errors, or False if</span>
+<span class="sd">        there are no errors.</span>
+
+<span class="sd">        :return: True if the robot has general errors, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">20</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_kinematics_error">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_kinematics_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_kinematics_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the robot has kinematics-related errors.</span>
+
+<span class="sd">        This method checks the state of the robot&#39;s kinematics error status coil</span>
+<span class="sd">        and returns True if the robot has kinematics-related errors, or False if</span>
+<span class="sd">        there are no kinematics errors.</span>
+
+<span class="sd">        :return: True if the robot has kinematics-related errors, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">37</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_program_loaded">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_program_loaded">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_program_loaded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a program is loaded.</span>
+
+<span class="sd">        This method checks if a program is loaded on the robot controller.</span>
+
+<span class="sd">        :return: True if a program is loaded, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">120</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.is_zero_torque">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.is_zero_torque">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_zero_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the robot is in a zero torque state.</span>
+
+<span class="sd">        This method reads a Modbus coil to determine if the robot is currently in a state</span>
+<span class="sd">        where it applies zero torque. It returns True if zero torque is detected, False otherwise.</span>
+
+<span class="sd">        :return: True if the robot is in a zero torque state, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">111</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ General</span>
+<div class="viewcode-block" id="Robot.set_zero_torque">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_zero_torque">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_zero_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the zero torque state for manual movement.</span>
+
+<span class="sd">        This method allows you to enable or disable the zero torque state, which allows manual movement of the robot by hand.</span>
+
+<span class="sd">        :param enable: True to enable zero torque (for manual movement), False to disable.</span>
+<span class="sd">        :type enable: bool</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">enable</span> <span class="o">&amp;</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_zero_torque</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">enable</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_zero_torque</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_override_velocity">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_override_velocity">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_override_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the override velocity for robot movements.</span>
+
+<span class="sd">        This method allows you to adjust the velocity override for robot movements.</span>
+<span class="sd">        The `velocity` parameter specifies the desired velocity as a percentage (0-100),</span>
+<span class="sd">        with 100 being the maximum velocity. The default is 20%.</span>
+
+<span class="sd">        :param velocity: The desired velocity override as a percentage (0-100).</span>
+<span class="sd">        :type velocity: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">velocity</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">187</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">velocity</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_velocity">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_velocity">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">velocity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the velocity of the Robot.</span>
+
+<span class="sd">        This method sets the velocity of the robot in millimeters per second.</span>
+<span class="sd">        For cartesian motions the value is set as a multiple of 1mm/s,</span>
+<span class="sd">        for joint motions it is a multiple of 1% (relative to the maximum velocity)</span>
+<span class="sd">        The actual motion speed also depends on the global override value (holding register 187).</span>
+
+<span class="sd">        :param velocity: The desired velocity in millimeters per second (or in percent).</span>
+<span class="sd">        :type velocity: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="n">velocity</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_and_move">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_and_move">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_and_move</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">val_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">val_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">val_3</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">movement</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">&quot;cartesian&quot;</span><span class="p">,</span>
+        <span class="n">relative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the target position and move the end effector.</span>
+
+<span class="sd">        This method sets the target position of the end effector using the &#39;set_position_endeffector&#39; method,</span>
+<span class="sd">        adjusts the velocity if specified, and then moves the end effector to the target position using the &#39;move_endeffector&#39; method.</span>
+<span class="sd">        The movement can be relative to different reference frames (base, tool) based on the &#39;relative&#39; parameter.</span>
+<span class="sd">        You can choose to wait until the movement is complete before returning.</span>
+
+<span class="sd">        :param val_1: The target position value (X, A1, or other axis, depending on the &#39;movement&#39; parameter).</span>
+<span class="sd">        :type val_1: float</span>
+<span class="sd">        :param val_2: The target position value (Y, A2, or other axis, depending on the &#39;movement&#39; parameter).</span>
+<span class="sd">        :type val_2: float</span>
+<span class="sd">        :param val_3: The target position value (Z, A3, or other axis, depending on the &#39;movement&#39; parameter).</span>
+<span class="sd">        :type val_3: float</span>
+<span class="sd">        :param movement: Specifies the type of movement (&#39;cartesian&#39; or &#39;axes&#39;).</span>
+<span class="sd">        :type movement: str</span>
+<span class="sd">        :param relative: Specifies the reference frame for the movement (None for absolute, &#39;base&#39;, or &#39;tool&#39;).</span>
+<span class="sd">        :type relative: str or None</span>
+<span class="sd">        :param wait: If True (default), wait until the movement is complete before returning.</span>
+<span class="sd">        :type wait: bool</span>
+<span class="sd">        :param velocity: Optional velocity setting in millimeters per second.</span>
+<span class="sd">        :type velocity: float or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">velocity</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_velocity</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">movement</span> <span class="o">==</span> <span class="s2">&quot;cartesian&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_position_endeffector</span><span class="p">(</span><span class="n">val_1</span><span class="p">,</span> <span class="n">val_2</span><span class="p">,</span> <span class="n">val_3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move_endeffector</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="n">wait</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="n">relative</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">movement</span> <span class="o">==</span> <span class="s2">&quot;axes&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_position_axes</span><span class="p">(</span><span class="n">val_1</span><span class="p">,</span> <span class="n">val_2</span><span class="p">,</span> <span class="n">val_3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move_axes</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="n">wait</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="n">relative</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ End effector</span>
+<div class="viewcode-block" id="Robot.move_endeffector">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.move_endeffector">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_endeffector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">relative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the end effector to the target position.</span>
+
+<span class="sd">        This method moves the end effector to the specified Cartesian position by controlling the appropriate coil.</span>
+<span class="sd">        The movement can be relative to different reference frames (base, tool) based on the &#39;relative&#39; parameter.</span>
+<span class="sd">        To specify the position, use the method set_position_endeffector(x, y, z).</span>
+
+<span class="sd">        :param wait: If True (default), wait until the movement is complete before returning.</span>
+<span class="sd">        :type wait: bool</span>
+<span class="sd">        :param relative: Specifies the reference frame for the movement (None for absolute, &#39;base&#39;, or &#39;tool&#39;).</span>
+<span class="sd">        :type relative: str or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">timeout</span><span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">break_time</span>
+        <span class="k">if</span> <span class="n">wait</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_moving</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_general_error</span><span class="p">():</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_kinematics_error</span><span class="p">():</span>
+                    <span class="k">break</span>
+        <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="s2">&quot;tool&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_position_endeffector">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_position_endeffector">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_position_endeffector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the target position of the end effector in millimeters.</span>
+
+<span class="sd">        This method sets the target position of the end effector in millimeters. The position can be absolute or relative</span>
+<span class="sd">        to the base or to itself. To make the robot move to the specified position, use the &#39;move_endeffector&#39; method.</span>
+
+<span class="sd">        :param x_val: The target X position in millimeters.</span>
+<span class="sd">        :type x_val: float</span>
+<span class="sd">        :param y_val: The target Y position in millimeters.</span>
+<span class="sd">        :type y_val: float</span>
+<span class="sd">        :param z_val: The target Z position in millimeters.</span>
+<span class="sd">        :type z_val: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">x_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_val</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">y_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_val</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">z_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_val</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="p">(</span><span class="n">x_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="p">(</span><span class="n">x_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">132</span><span class="p">,</span> <span class="p">(</span><span class="n">y_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">133</span><span class="p">,</span> <span class="p">(</span><span class="n">y_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">134</span><span class="p">,</span> <span class="p">(</span><span class="n">z_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="p">(</span><span class="n">z_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_orientation_endeffector">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_orientation_endeffector">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_orientation_endeffector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the orientation of the end effector.</span>
+
+<span class="sd">        This method allows you to set the orientation of the robot&#39;s end effector by specifying the angles</span>
+<span class="sd">        &#39;a_val&#39;, &#39;b_val&#39;, and &#39;c_val&#39; for orientation around the X, Y, and Z axes, respectively.</span>
+
+<span class="sd">        :param a_val: The orientation angle around the X-axis in degrees.</span>
+<span class="sd">        :type a_val: float</span>
+<span class="sd">        :param b_val: The orientation angle around the Y-axis in degrees.</span>
+<span class="sd">        :type b_val: float</span>
+<span class="sd">        :param c_val: The orientation angle around the Z-axis in degrees.</span>
+<span class="sd">        :type c_val: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">a_val</span> <span class="o">*=</span> <span class="mi">100</span>
+        <span class="n">b_val</span> <span class="o">*=</span> <span class="mi">100</span>
+        <span class="n">c_val</span> <span class="o">*=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="n">a_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">132</span><span class="p">,</span> <span class="n">b_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">134</span><span class="p">,</span> <span class="n">c_val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_position_endeffector">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_position_endeffector">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_position_endeffector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Cartesian position of the Delta Robot&#39;s end effector.</span>
+<span class="sd">        This method reads the X, Y, and Z positions of the end effector from input registers and returns them in millimeters as a tuple.</span>
+
+<span class="sd">        :return: A list (x_pos, y_pos, z_pos) representing the Cartesian position of the end effector in millimeters.</span>
+<span class="sd">        :rtype: list[float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="c1"># Read the X, Y, and Z positions from input registers</span>
+        <span class="n">x_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">130</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">131</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">132</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">133</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">z_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">134</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">z_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">135</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Combine the two 16-bit values into a 32-bit integer for each position</span>
+        <span class="n">x_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">x_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">x_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">y_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">y_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">y_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">z_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">z_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">z_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">z_pos</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_orientation_endeffector">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_orientation_endeffector">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_orientation_endeffector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the orientation of the Delta Robot&#39;s end effector.</span>
+
+<span class="sd">        This method reads the orientation values from input registers and returns them.</span>
+
+<span class="sd">        :return: A list (a, b, c) representing the orientation values.</span>
+<span class="sd">        :rtype: list[float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">136</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">138</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">140</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Axes</span>
+<div class="viewcode-block" id="Robot.move_axes">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.move_axes">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">relative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the end effector to the target position.</span>
+
+<span class="sd">        This method moves the end effector to the specified axes position by controlling the appropriate coil.</span>
+<span class="sd">        The movement can be relative or absolute &#39;relative&#39; parameter.</span>
+<span class="sd">        To specify the position, use the method set_position_axes.</span>
+
+<span class="sd">        :param wait: If True (default), wait until the movement is complete before returning.</span>
+<span class="sd">        :type wait: bool</span>
+<span class="sd">        :param relative: If False (default), the movement will be absolute, otherwise will be relative to the current position</span>
+<span class="sd">        :type relative: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">timeout</span><span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">break_time</span>
+        <span class="k">if</span> <span class="n">wait</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_moving</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_general_error</span><span class="p">():</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_kinematics_error</span><span class="p">():</span>
+                    <span class="k">break</span>
+        <span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">104</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">104</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_position_axes">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_position_axes">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_position_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a2_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a3_val</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the target position of the endeffector</span>
+
+<span class="sd">        This method allows you to set the target positions of the robot&#39;s axes.</span>
+<span class="sd">        The input values &#39;a1_val&#39;, &#39;a2_val&#39;, and &#39;a3_val&#39; represent the target positions for each axis.</span>
+<span class="sd">        The positions are converted to the appropriate format and written to the respective registers.</span>
+
+<span class="sd">        The position can be absolute or relative.</span>
+<span class="sd">        To make the robot move, use the method move_axes().</span>
+
+<span class="sd">        :param a1_val: The target position for axis A1.</span>
+<span class="sd">        :type a1_val: float</span>
+<span class="sd">        :param a2_val: The target position for axis A2.</span>
+<span class="sd">        :type a2_val: float</span>
+<span class="sd">        :param a3_val: The target position for axis A3.</span>
+<span class="sd">        :type a3_val: float</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">a1_val</span> <span class="o">*=</span> <span class="mi">100</span>
+        <span class="n">a2_val</span> <span class="o">*=</span> <span class="mi">100</span>
+        <span class="n">a3_val</span> <span class="o">*=</span> <span class="mi">100</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">142</span><span class="p">,</span> <span class="p">(</span><span class="n">a1_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">143</span><span class="p">,</span> <span class="p">(</span><span class="n">a1_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">144</span><span class="p">,</span> <span class="p">(</span><span class="n">a2_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">145</span><span class="p">,</span> <span class="p">(</span><span class="n">a2_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">146</span><span class="p">,</span> <span class="p">(</span><span class="n">a3_val</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">147</span><span class="p">,</span> <span class="p">(</span><span class="n">a3_val</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FFFF</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_position_axes">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_position_axes">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_position_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the positions of the Delta Robot&#39;s axes.</span>
+
+<span class="sd">        This method reads the positions of the robot&#39;s axes (A1, A2, and A3) from input registers</span>
+<span class="sd">        and returns them as a tuple.</span>
+
+<span class="sd">        :return: A list (a1_pos, a2_pos, a3_pos) representing the positions of the robot&#39;s axes.</span>
+<span class="sd">        :rtype: list[float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">a1_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">142</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a1_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">143</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a2_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">144</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a2_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">145</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a3_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">146</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">a3_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">147</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Combine the two 16-bit values into a 32-bit integer for each axis</span>
+        <span class="n">a1_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">a1_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">a1_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">a2_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">a2_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">a2_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">a3_pos</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="n">a3_pos</span> <span class="o">|</span> <span class="p">(</span><span class="n">a3_pos2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">a1_pos</span><span class="p">,</span> <span class="n">a2_pos</span><span class="p">,</span> <span class="n">a3_pos</span><span class="p">]</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Programs</span>
+<div class="viewcode-block" id="Robot.controll_programs">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.controll_programs">[docs]</a>
+    <span class="k">def</span> <span class="nf">controll_programs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Control robot programs.</span>
+
+<span class="sd">        This method allows you to control robot programs by sending specific commands.</span>
+<span class="sd">        Supported actions are: &#39;start&#39;, &#39;continue&#39;, &#39;pause&#39;, and &#39;stop&#39;.</span>
+
+<span class="sd">        :param action: The action to perform (&#39;start&#39;, &#39;continue&#39;, &#39;pause&#39;, or &#39;stop&#39;).</span>
+<span class="sd">        :type action: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span>
+            <span class="c1"># self.client.write_single_coil(124, False)</span>
+            <span class="c1"># self.client.write_single_coil(124, True)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;continue&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;pause&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">124</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">124</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_program_replay_mode">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_program_replay_mode">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_program_replay_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;once&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the program replay mode for the robot.</span>
+
+<span class="sd">        This method allows you to configure the program replay mode for the robot.</span>
+<span class="sd">        The `mode` parameter specifies the desired mode and can take one of the following values:</span>
+<span class="sd">        - &quot;once&quot; (Default): Play the program once.</span>
+<span class="sd">        - &quot;repeat&quot;: Repeat the program continuously.</span>
+<span class="sd">        - &quot;step&quot;: Step through the program one instruction at a time.</span>
+<span class="sd">        - &quot;fast&quot;: Not used (for future expansion).</span>
+
+<span class="sd">        :param mode: The desired program replay mode.</span>
+<span class="sd">        :type mode: str</span>
+<span class="sd">        :return: True if the mode was successfully set, False if an invalid mode is provided.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;once&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">261</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;repeat&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">261</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;step&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">261</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;fast&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">261</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_program_name">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_program_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_program_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the name of the robot program.</span>
+
+<span class="sd">        This method allows you to set the name of the robot program.</span>
+
+<span class="sd">        :param name: The name of the robot program.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_string</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">267</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_program_name">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_program_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_program_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the name of the robot program.</span>
+
+<span class="sd">        This method reads the name of the robot program.</span>
+
+<span class="sd">        :return: The name of the robot program.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">read</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="mi">267</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="n">read</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_program_runstate">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_program_runstate">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_program_runstate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current run state of the robot program.</span>
+
+<span class="sd">        This method reads the run state of the robot program and returns a descriptive string.</span>
+<span class="sd">        The possible run states are:</span>
+<span class="sd">        - &quot;Program is not running&quot;: The robot program is not currently executing.</span>
+<span class="sd">        - &quot;Program is running&quot;: The robot program is actively running.</span>
+<span class="sd">        - &quot;Program is paused&quot;: The robot program is paused but can be resumed.</span>
+
+<span class="sd">        :return: A descriptive string representing the current run state.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="mi">260</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Programm is not running&quot;</span>
+        <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Program is running&quot;</span>
+        <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Program is paused&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_program_replay_mode">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_program_replay_mode">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_program_replay_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current replay mode of the robot program.</span>
+
+<span class="sd">        This method reads the replay mode of the robot program and returns a descriptive string.</span>
+<span class="sd">        The possible replay modes are:</span>
+<span class="sd">        - &quot;Run program once&quot;: The robot program will run once and stop.</span>
+<span class="sd">        - &quot;Repeat program&quot;: The robot program will continuously repeat.</span>
+<span class="sd">        - &quot;Execute instructions step by step&quot;: The robot program will execute instructions one at a time.</span>
+<span class="sd">        - &quot;Fast&quot; (Not used): A mode that is not currently used.</span>
+
+<span class="sd">        :return: A descriptive string representing the current replay mode.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="mi">260</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Run program once&quot;</span>
+        <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Repeat program&quot;</span>
+        <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Execute instructions step by step&quot;</span>
+        <span class="k">elif</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Fast&quot;</span>  <span class="c1"># Not used</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_number_of_loaded_programs">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_number_of_loaded_programs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_loaded_programs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of loaded programs on the Delta Robot.</span>
+
+<span class="sd">        This method reads the number of loaded programs on the Delta Robot and returns the count.</span>
+
+<span class="sd">        :return: The number of loaded programs.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">262</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_number_of_current_program">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_number_of_current_program">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_current_program</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of currently active programs on the Delta Robot.</span>
+
+<span class="sd">        This method reads the number of currently active programs on the Delta Robot and returns the count.</span>
+<span class="sd">        Note: The main program is typically represented as program number 0.</span>
+
+<span class="sd">        :return: The number of currently active programs.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">263</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Signals</span>
+<div class="viewcode-block" id="Robot.set_globale_signal">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_globale_signal">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_globale_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of a global signal.</span>
+
+<span class="sd">        This method allows you to set the state of a global signal by specifying its number and state.</span>
+
+<span class="sd">        :param number: The number of the global signal (1 to 100).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :param state: The state to set (True for ON, False for OFF).</span>
+<span class="sd">        :type state: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">199</span> <span class="o">+</span> <span class="n">number</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_digital_output">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_digital_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_digital_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of a digital output.</span>
+
+<span class="sd">        This method allows you to set the state of a digital output by specifying its number and state.</span>
+
+<span class="sd">        :param number: The number of the digital output (1 to 64).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :param state: The state to set (True for ON, False for OFF).</span>
+<span class="sd">        :type state: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">number</span> <span class="o">+=</span> <span class="mi">20</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">64</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">299</span> <span class="o">+</span> <span class="n">number</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_globale_signal">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_globale_signal">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_globale_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the state of a global signal.</span>
+
+<span class="sd">        This method allows you to get the state of a global signal by specifying its number.</span>
+
+<span class="sd">        :param number: The number of the global signal (1 to 100).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: The state of the global signal (True for ON, False for OFF).</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">199</span> <span class="o">+</span> <span class="n">number</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_digital_output">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_digital_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_digital_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the state of a digital output.</span>
+
+<span class="sd">        This method allows you to get the state of a digital output by specifying its number.</span>
+
+<span class="sd">        :param number: The number of the digital output (1 to 64).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: The state of the digital output (True for ON, False for OFF).</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">number</span> <span class="o">+=</span> <span class="mi">20</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">64</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">299</span> <span class="o">+</span> <span class="n">number</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_digital_input">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_digital_input">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_digital_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the state of a digital input.</span>
+
+<span class="sd">        This method allows you to get the state of a digital input by specifying its number.</span>
+
+<span class="sd">        :param number: The number of the digital input (1 to 64).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: The state of the digital input (True for ON, False for OFF).</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">number</span> <span class="o">+=</span> <span class="mi">20</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">64</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">263</span> <span class="o">+</span> <span class="n">number</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+        <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Variables</span>
+<div class="viewcode-block" id="Robot.set_number_variables">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_number_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_number_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the value of a writable Modbus variable.</span>
+
+<span class="sd">        This method allows you to set the value of a Modbus variable for program use. Please note that</span>
+<span class="sd">        the variable name in your program should follow the naming convention: mb_num_w1 - mb_num_w16.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :param value: The value to set for the Modbus variable.</span>
+<span class="sd">        :type value: int</span>
+<span class="sd">        :return: True if the operation was successful, False if the number is out of range.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="mi">439</span> <span class="o">+</span> <span class="n">number</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.set_position_variable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.set_position_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_position_variable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">movement</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cartesian&quot;</span><span class="p">,</span>
+        <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">a3</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">z</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">c</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span>
+        <span class="n">conversion</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the target position for robot movement in a robot program.</span>
+
+<span class="sd">        This method allows you to set the target position for robot movement in a program. You can specify</span>
+<span class="sd">        the target position either in Cartesian or axis values. Ensure the variable name in your program</span>
+<span class="sd">        follows the naming convention, e.g., mb_pos_w1.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :param movement: The type of movement (either &quot;cartesian&quot; or &quot;axes&quot;).</span>
+<span class="sd">        :type movement: str</span>
+<span class="sd">        :param a1: The value of axis A1 (if movement is &quot;axes&quot;).</span>
+<span class="sd">        :type a1: int</span>
+<span class="sd">        :param a2: The value of axis A2 (if movement is &quot;axes&quot;).</span>
+<span class="sd">        :type a2: int</span>
+<span class="sd">        :param a3: The value of axis A3 (if movement is &quot;axes&quot;).</span>
+<span class="sd">        :type a3: int</span>
+<span class="sd">        :param x: The X-coordinate value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type x: int</span>
+<span class="sd">        :param y: The Y-coordinate value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type y: int</span>
+<span class="sd">        :param z: The Z-coordinate value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type z: int</span>
+<span class="sd">        :param a: The orientation A value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type a: int</span>
+<span class="sd">        :param b: The orientation B value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type b: int</span>
+<span class="sd">        :param c: The orientation C value (if movement is &quot;cartesian&quot;).</span>
+<span class="sd">        :type c: int</span>
+<span class="sd">        :param conversion: The conversion type (useful for converting between joint and cartesian positions).</span>
+<span class="sd">        :type conversion: int</span>
+<span class="sd">        :return: True if the operation was successful, False if the number is out of range or invalid parameters.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="mi">456</span> <span class="o">+</span> <span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">movement</span> <span class="o">==</span> <span class="s2">&quot;cartesian&quot;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">y</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">z</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">a</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">b</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">c</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_multiple_registers</span><span class="p">(</span>
+                <span class="n">number</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">conversion</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">movement</span> <span class="o">==</span> <span class="s2">&quot;axes&quot;</span><span class="p">:</span>
+            <span class="n">a1</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">a2</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="n">a3</span> <span class="o">*=</span> <span class="mi">10</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_multiple_registers</span><span class="p">(</span>
+                <span class="n">number</span><span class="p">,</span> <span class="p">[</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">a3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">conversion</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_readable_number_variable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_readable_number_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_readable_number_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of a readable Modbus variable.</span>
+
+<span class="sd">        This method allows you to retrieve the value of a Modbus variable for reading. Please ensure that</span>
+<span class="sd">        the variable name in your program follows the naming convention: mb_num_r1 - mb_num_r16.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: The value of the Modbus variable, or False if the number is out of range.</span>
+<span class="sd">        :rtype: int or bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">439</span> <span class="o">+</span> <span class="n">number</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_writable_number_variable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_writable_number_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_writable_number_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of a writable Modbus variable.</span>
+
+<span class="sd">        This method allows you to retrieve the value of a Modbus variable for writing. Ensure that the</span>
+<span class="sd">        variable name in your program adheres to the naming convention: mb_num_w1 - mb_num_w16.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: The value of the Modbus variable, or False if the number is out of range.</span>
+<span class="sd">        :rtype: int or bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="mi">439</span> <span class="o">+</span> <span class="n">number</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_readable_position_variable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_readable_position_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_readable_position_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of a readable position Modbus variable.</span>
+
+<span class="sd">        This method allows you to retrieve the value of a readable position Modbus variable.</span>
+<span class="sd">        Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_r1.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: A list containing axis, cartesian, orientation values, and conversion type,</span>
+<span class="sd">                 or False if the number is out of range.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="mi">456</span> <span class="o">+</span> <span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">postion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">postion</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a1&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;a2&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;a3&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">2</span><span class="p">]}</span>
+        <span class="n">cartesian</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;x_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
+            <span class="s2">&quot;y_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+            <span class="s2">&quot;z_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">14</span><span class="p">]}</span>
+        <span class="n">conversion</span> <span class="o">=</span> <span class="n">postion</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">axes</span><span class="p">,</span> <span class="n">cartesian</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">conversion</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_writable_position_variable">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_writable_position_variable">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_writable_position_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of a writable position Modbus variable.</span>
+
+<span class="sd">        This method allows you to retrieve the value of a writable position Modbus variable.</span>
+<span class="sd">        Ensure that the variable name in your program follows the naming convention, e.g., mb_pos_w1.</span>
+
+<span class="sd">        :param number: The number of the Modbus variable (1 to 16).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        :return: A list containing axis, cartesian, orientation values, and conversion type,</span>
+<span class="sd">                 or False if the number is out of range.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="mi">456</span> <span class="o">+</span> <span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="p">(</span><span class="n">number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">postion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">postion</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a1&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;a2&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;a3&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">}</span>
+        <span class="n">cartesian</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;x_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;y_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;z_val&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">postion</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">conversion</span> <span class="o">=</span> <span class="n">postion</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">axes</span><span class="p">,</span> <span class="n">cartesian</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">conversion</span><span class="p">]</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Messages</span>
+<div class="viewcode-block" id="Robot.get_info_message">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_info_message">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_info_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the information or error message from the Delta Robot.</span>
+
+<span class="sd">        This method reads the information or error message from the Delta Robot&#39;s control unit.</span>
+<span class="sd">        The message is typically a short text, similar to what is displayed on a manual control unit.</span>
+
+<span class="sd">        :return: The information or error message as a string.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_robot_errors">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_robot_errors">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_robot_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a list of error descriptions indicating the robot&#39;s current error states.</span>
+
+<span class="sd">        This method reads the status of various error-related coils on the robot controller</span>
+<span class="sd">        and returns a list of error descriptions if any errors are detected.</span>
+
+<span class="sd">        :return: A list of error descriptions or &quot;No error&quot; if there are no errors.</span>
+<span class="sd">        :rtype: list[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">errors_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_general_error</span><span class="p">():</span>
+            <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;No error&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">21</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Temperature&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">22</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Emergency stop&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">23</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Motor not activated&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">24</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Communication&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">25</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Contouring error&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">26</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Encoder error&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">27</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Overcurrent&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">28</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Driver error&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">29</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Bus dead&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">30</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">errors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Module dead&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">errors_list</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_kinematics_error">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_kinematics_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_kinematics_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the kinematics error description.</span>
+
+<span class="sd">        This method reads the kinematics error code from the robot controller and returns a human-readable description of the error.</span>
+
+<span class="sd">        :return: A string describing the kinematics error.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># code = self.client.read_input_registers(95)[0]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">37</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;No error&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">38</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Axis limit Min&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">39</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Axis limit Max&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">40</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Central axis singularity&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">41</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Out of range&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">42</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Wrist singularity&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">43</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Virtual box reached&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_coils</span><span class="p">(</span><span class="mi">44</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="s2">&quot;Motion not allowed&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_stop_reason_description">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_stop_reason_description">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_stop_reason_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a description of the reason for the robot&#39;s current stop condition.</span>
+
+<span class="sd">        This method reads the stop reason code from the robot controller and returns a human-readable description of the reason for the stop.</span>
+
+<span class="sd">        :return: A string describing the reason for the stop.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">266</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;User (Teach pendant, CRI, Modbus, etc.)&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;PLC&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Program (stop/pause instruction)&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Replay Step (step operation)&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Shoutdown (system shuts down)&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">101</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Path generator error 1&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">102</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Path generator error 2&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">103</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error in state machine&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_operation_mode">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_operation_mode">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_operation_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the operation mode description.</span>
+
+<span class="sd">        This method reads the operation mode code from the robot controller and returns a human-readable description of the mode.</span>
+
+<span class="sd">        :return: A string describing the operation mode.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">96</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Standerd - normal operation&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Serious error, control must be restarted&quot;</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;CAN-Bridge (CRI, e.g. retrieve firmware parameters)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+    <span class="c1"># }}}</span>
+
+    <span class="c1"># {{{ Misc</span>
+<div class="viewcode-block" id="Robot.move_circular">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.move_circular">[docs]</a>
+    <span class="k">def</span> <span class="nf">move_circular</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">start_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">stop_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the robot&#39;s end effector in a circular path.</span>
+
+<span class="sd">        This method moves the robot&#39;s end effector in a circular path in the X-Y plane.</span>
+<span class="sd">        The circular path is defined by a radius, and you can specify the step size, start angle, and stop angle.</span>
+
+<span class="sd">        :param radius: The radius of the circular path in millimeters.</span>
+<span class="sd">        :type radius: float</span>
+<span class="sd">        :param step: The step size in degrees for moving along the circular path (default is 0.5 degrees).</span>
+<span class="sd">        :type step: float</span>
+<span class="sd">        :param start_angle: The starting angle of the circular path in degrees (default is 0 degrees).</span>
+<span class="sd">        :type start_angle: float</span>
+<span class="sd">        :param stop_angle: The stopping angle of the circular path in degrees (default is 360 degrees).</span>
+<span class="sd">        :type stop_angle: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">timeout</span><span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">break_time</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_moving</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_general_error</span><span class="p">():</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_kinematics_error</span><span class="p">():</span>
+                <span class="k">break</span>
+        <span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">z_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cartesian_position</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">arange</span><span class="p">(</span><span class="n">start_angle</span><span class="p">,</span> <span class="n">stop_angle</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">+</span> <span class="n">x_val</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">+</span> <span class="n">y_val</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_and_move</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">z_val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.get_list_of_porgrams">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.get_list_of_porgrams">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_list_of_porgrams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a list of available robot programs.</span>
+
+<span class="sd">        This method retrieves a list of robot programs from the robot controller.</span>
+<span class="sd">        It communicates with the robot controller to gather program names.</span>
+
+<span class="sd">        :return: A list of program names.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="c1"># Initialize an empty list to store program names</span>
+        <span class="n">program_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Read the number of programs available on the robot controller</span>
+        <span class="n">num_programs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">331</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Ensure that the list starts from the top by repeatedly navigating to the previous program</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_programs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Loop through the program indices</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_programs</span><span class="p">):</span>
+            <span class="c1"># Read the program name as a string</span>
+            <span class="n">program_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">333</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+
+            <span class="c1"># Remove null characters from the program name</span>
+            <span class="n">program_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">program_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Append the program name to the list</span>
+            <span class="n">program_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">program_name</span><span class="p">)</span>
+
+            <span class="c1"># Trigger the robot controller to move to the next program</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">program_list</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">331</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">read_input_registers</span><span class="p">(</span><span class="mi">333</span><span class="p">,</span> <span class="mi">32</span><span class="p">)))</span>
+            <span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_coil</span><span class="p">(</span><span class="mi">130</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span></div>
+
+
+<div class="viewcode-block" id="Robot.print_list_of_programs">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.print_list_of_programs">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_list_of_programs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print a list of available robot programs.</span>
+
+<span class="sd">        This method retrieves a list of robot programs and prints them to the console.</span>
+<span class="sd">        If the robot is not connected, it will return without performing any action.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_porgrams</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot.read_string">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.read_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read a string from a sequence of registers.</span>
+
+<span class="sd">        This method reads a string from a sequence of registers and returns the decoded string.</span>
+
+<span class="sd">        :param read: The sequence of registers containing the string data.</span>
+<span class="sd">        :type read: list</span>
+<span class="sd">        :return: The decoded string.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">read</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mh">0x00FF</span><span class="p">)</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="Robot.write_string">
+<a class="viewcode-back" href="../../src.html#src.igus_modbus.Robot.write_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">ad</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a string to a sequence of registers.</span>
+
+<span class="sd">        This method allows you to write a string to a sequence of registers, starting from a specified address.</span>
+
+<span class="sd">        :param string: The string to write.</span>
+<span class="sd">        :type string: str</span>
+<span class="sd">        :param ad: The starting address to write the string.</span>
+<span class="sd">        :type ad: int</span>
+<span class="sd">        :param number: The maximum number of characters to write (default is 32).</span>
+<span class="sd">        :type number: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="n">number</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="c1"># val = (next(string) + i)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">string</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="o">|</span> <span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_single_register</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="n">ad</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></div>
+</div>
+
+
+    <span class="c1"># }}}</span>
+
+
+<span class="c1"># vim:foldmethod=marker</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Yaman Alsaady.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

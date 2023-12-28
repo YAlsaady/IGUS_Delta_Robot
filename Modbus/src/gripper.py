@@ -11,8 +11,8 @@ Usage:
     To use this module, create an instance of the 'Gripper' class with the appropriate serial port and settings.
 """
 
-from time import sleep
 import serial
+from src.igus_modbus import Robot
 
 
 class Gripper:
@@ -21,7 +21,7 @@ class Gripper:
     opening = 0
 
     def __init__(
-        self, port: str = "/dev/ttyUSB0", baudrate: int = 9600, timeout: int = 1
+        self, port: str = "/dev/ttyUSB0", baudrate: int = 115200, timeout: int = 1
     ):
         """
         Initialize the Gripper instance.
@@ -38,6 +38,7 @@ class Gripper:
             self.orientation = 90
             self.opening = 100
             self.is_connected = self.ser.is_open
+            self.delta = Robot("192.168.3.11")
         except:
             pass
 
@@ -115,3 +116,31 @@ class Gripper:
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
         return True
+
+    def modbus(self, signal: int = 6, var1: int = 15, var2: int = 16):
+        """
+        Control the gripper using Modbus signals and variables.
+
+        :param signal: The Modbus signal number to enable/disable gripper control.
+                       Default is 6.
+        :type signal: int
+        :param var1: The Modbus variable number for reading the gripper opening.
+                     Default is 15.
+        :type var1: int
+        :param var2: The Modbus variable number for reading the gripper orientation.
+                     Default is 16.
+        :type var2: int
+        :return: True if the gripper control was successful, False otherwise.
+        :rtype: bool
+        """
+        if not self.is_connected:
+            return False
+        if not self.delta.is_connected:
+            self.delta = Robot("192.168.3.11")
+        if not self.delta.is_connected:
+            return False
+        if not self.delta.get_globale_signal(signal):
+            return False
+        opening = self.delta.get_writable_number_variable(var1)
+        orientation = self.delta.get_writable_number_variable(var2)
+        return self.controll(opening, orientation)

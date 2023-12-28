@@ -3,14 +3,14 @@
 
 #define SERVO 26
 #define SERVO_ROT 27
-#define CLOSE 10
-#define OPEN 170
+#define CLOSE 165
+#define OPEN 15
 
 Servo gripper;
 Servo rotation;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   pinMode(SERVO, OUTPUT);
   pinMode(SERVO_ROT, OUTPUT);
@@ -47,9 +47,8 @@ void loop() {
   }
 
   val1 = map(val1, 0, 100, OPEN, CLOSE);
-
   gripper.write(val1);
-  rotation.write(val2);
+  rotation.write(180-val2);
 
   i = 0;
 
