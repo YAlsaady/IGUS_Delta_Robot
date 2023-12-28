@@ -1379,12 +1379,25 @@ class Robot:
                 val = ord(i)
             self.client.write_single_register(count + ad, val)
 
-    def control_gripper(self, val1: int, val2: int, signal: int = 6):
+    def control_gripper(self, opening: int, orientation: int, signal: int = 6):
+        """
+        Control the gripper using specified values and a Modbus signal.
+
+        :param opening: The value for the gripper opening.
+        :type opening: int
+        :param orientation: The value for the gripper orientation.
+        :type orientation: int
+        :param signal: The Modbus signal number to enable/disable gripper control.
+                       Default is 6.
+        :type signal: int
+        :return: True if the gripper control was successful, False otherwise.
+        :rtype: bool
+        """
         if not self.is_connected:
             return False
         self.set_globale_signal(signal, True)
-        self.set_number_variables(15, val1)
-        self.set_number_variables(16, val2)
+        self.set_number_variables(15, opening)
+        self.set_number_variables(16, orientation)
         self.set_globale_signal(signal, False)
         return True
     # }}}

@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 import os
 import webbrowser
-import threading
 
 from src.igus_modbus import Robot
 from src.gripper import Gripper
@@ -79,7 +78,6 @@ class App(ttk.Frame):
         self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         self.update_list()
-        # threading.Thread(target=self.thread_reference)
 
     def tabs(self):
         self.tabs = ttk.Notebook(self)
@@ -129,10 +127,6 @@ class App(ttk.Frame):
             ),
         )
         self.doc_button.grid(row=2, column=0, padx=5, pady=10, sticky="nw")
-        # self.about_label.grid(row=5, column=0, padx=5, pady=10)
-        # self.reset = ttk.Button(
-        #     self.info_frame, text="Reset", command=lambda: self.dr.reset()
-        # )
 
     def setting_widgets(self):
         self.setting_frame = ttk.LabelFrame(self, text="Setting", padding=(20, 10))
@@ -163,7 +157,6 @@ class App(ttk.Frame):
             command=lambda: (
                 self.reference_label.config(text="Reference: Robot is referencing ..."),
                 self.reference_var.set(True),
-                # threading.Thread(target=self.thread_reference).start(),
                 self.delta.reference(True),
             ),
         )
@@ -180,9 +173,6 @@ class App(ttk.Frame):
             row=2, column=0, padx=5, pady=10, sticky="nsew", columnspan=2
         )
 
-        # self.theme = ttk.Combobox(
-        #     self.setting_frame, state="readonly", values=self.theme
-        # )
         self.theme = ttk.OptionMenu(
             self.setting_frame,
             self.theme_var,
@@ -192,23 +182,6 @@ class App(ttk.Frame):
             direction="above",
         )
         self.theme.grid(row=3, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
-        # self.theme.current(0)
-        # self.theme.bind("<<ComboboxSelected>>", self.update_theme)
-
-        # self.update_label = ttk.Label(
-        #     self.setting_frame, text="Update delay:", font=("-size", fontsize)
-        # )
-        # self.update_label.grid(row=5, column=0, padx=5, pady=10)
-        #
-        # self.update_box = ttk.Spinbox(
-        #     self.setting_frame,
-        #     from_=10,
-        #     to=1000,
-        #     increment=10,
-        #     textvariable=self.update_delay,
-        #     width=10,
-        # )
-        # self.update_box.grid(row=5, column=1, padx=5, pady=10, sticky="ew")
 
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
@@ -298,10 +271,6 @@ class App(ttk.Frame):
         )
 
     def gripper_widgets(self, tab_name, row, column):
-        # self.separator = ttk.Separator(tab_name)
-        # self.separator.grid(
-        #     row=row - 1, column=0, padx=(10, 10), pady=10, sticky="nwew"
-        # )
 
         self.gripper_frame = ttk.LabelFrame(tab_name, text="Gripper", padding=(20, 20))
         self.gripper_frame.grid(
@@ -311,10 +280,8 @@ class App(ttk.Frame):
         self.switch = ttk.Checkbutton(
             self.gripper_frame,
             text="Enable Gripper",
-            # style="Switch.TCheckbutton",
             style="Toggle.TButton",
             variable=self.gripper_enable_var,
-            # command=lambda: self.enable_robot(),
         )
         self.switch.grid(row=0, column=0, padx=0, pady=0, sticky="nsew", columnspan=3)
 
@@ -327,7 +294,6 @@ class App(ttk.Frame):
             command=lambda _: (
                 self.gripper_var.set(self.gripper_scale.get()),
                 self.gripper_label.config(text=int(self.gripper_var.get())),
-                # self.gripper_mov(),
             ),
         )
         self.gripper_scale.grid(
@@ -361,7 +327,6 @@ class App(ttk.Frame):
                 self.gripper_orient_label.config(
                     text=int(self.gripper_orient_var.get())
                 ),
-                # self.gripper_mov(),
             ),
         )
         self.gripper_orient_scale.grid(
@@ -473,26 +438,15 @@ class App(ttk.Frame):
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
-        # self.step = ttk.Spinbox(
-        #     self.move_tab,
-        #     from_=1,
-        #     to=100,
-        #     increment=1,
-        #     textvariable=self.step_var,
-        #     width=10,
-        # )
-        # self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
 
         self.step = ttk.OptionMenu(
             self.move_tab,
             self.step_var,
             self.steps[0],
             *self.steps,
-            # command=lambda _: self.update_theme(),
             direction="below",
         )
         self.step.grid(row=3, column=1, padx=5, pady=10, sticky="ew", columnspan=2)
-        # Tab #2
         self.axes_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.axes_tab, text="Joints")
 
@@ -570,21 +524,11 @@ class App(ttk.Frame):
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
-        # self.step = ttk.Spinbox(
-        #     self.axes_tab,
-        #     from_=1,
-        #     to=100,
-        #     increment=1,
-        #     textvariable=self.step_var,
-        #     width=10,
-        # )
-        # self.step.grid(row=3, column=2, padx=5, pady=10, sticky="ew")
         self.step = ttk.OptionMenu(
             self.axes_tab,
             self.step_var,
             self.steps[0],
             *self.steps,
-            # command=lambda _: self.update_theme(),
             direction="below",
         )
         self.step.grid(row=3, column=1, padx=5, pady=10, sticky="ew", columnspan=2)
@@ -663,12 +607,6 @@ class App(ttk.Frame):
         self.load_label.grid(
             row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
         )
-
-        # self.load_p = ttk.Spinbox(
-        #     self.load_frame, from_=1, to=100, increment=1, textvariable=self.program_var
-        # )
-        # self.load_p.insert(0, "Program Number")
-        # self.load_p.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
 
         self.next_prog = ttk.Button(
             self.load_frame,
@@ -770,7 +708,6 @@ class App(ttk.Frame):
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
 
     def update_theme(self):
-        # theme = self.theme.get()
         theme = self.theme_var.get()
         self.tk.call("set_theme", theme)
         if theme == "dark":
@@ -807,7 +744,6 @@ class App(ttk.Frame):
             self.count_kin_error += 1
         self.kinematic_label.config(
             text=self.kinematic_error
-            # text="Kinematic:\n" + self.delta.get_kinematics_error()
         )
         self.last_kin_error = self.delta.get_kinematics_error()
         #
@@ -822,28 +758,14 @@ class App(ttk.Frame):
                 + strftime("%H:%M:%S", localtime())
                 + ": "
                 + self.split_list(self.delta.get_robot_errors())
-                # + "\n"
             )
             self.count_error += 1
         self.robot_label.config(
             text=self.robot_error
-            # text="Robot:\n"
-            # + self.split_list(self.delta.get_robot_errors())
         )
         self.last_error = self.delta.get_robot_errors()[0]
-        # if (
-        #     self.delta.get_kinematics_error() != ""
-        #     # and self.robot.get_kinematics_error() != "no error"
-        #     and self.delta.get_kinematics_error() != last
-        # ):
-        #     self.kinematic_error = self.kinematic_error + "\n"+self.delta.get_kinematics_error()
-
-        # self.robot_error = self.robot_error + (
-        #     self.split_list(self.delta.get_robot_errors())
-        # )
 
     def program_names(self, list):
-        # self.dr.print_list_of_programs()
         if list:
             string = ""
             for count, i in enumerate(list):
@@ -879,16 +801,6 @@ class App(ttk.Frame):
             self.gripper_opening = int(self.gripper_scale.get())
             self.gripper_orientation = int(self.gripper_orient_scale.get())
             self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
-        # self.gripper.modbus()
-        # if self.delta.is_connected:
-        #     self.delta.set_globale_signal(6,True)
-        #     self.delta.set_number_variables(15,int(self.gripper_scale.get()))
-        #     self.delta.set_number_variables(16,int(self.gripper_orient_scale.get()))
-        #     self.delta.set_globale_signal(6,False)
-        # if self.delta.is_connected and not self.delta.get_globale_signal(6):
-        #     self.gripper.controll(
-        #         int(self.gripper_scale.get()), int(self.gripper_orient_scale.get())
-        #     ),
 
     def enable_robot(self):
         if self.enalbe_var.get():
@@ -939,19 +851,7 @@ class App(ttk.Frame):
                     self.gripper_var.set(i[1][0])
                     self.gripper_orient_var.set(i[1][1])
                     self.delta.control_gripper(*i[1])
-                    # self.gripper_mov()
                     sleep(1.5)
-            # if self.gripper.is_connected and False:
-            #     if i[1]:
-            #         if (
-            #             i[1][0] != self.gripper.opening
-            #             or i[1][0] != self.gripper.orientation
-            #         ):
-            #             self.gripper.opening = i[1][0]
-            #             self.gripper.orientation = i[1][0]
-            #             self.gripper.controll(*i[1])
-            #             sleep(2.5)
-            # else:
         self.run_var.set(False)
 
     def sort_list(self):
@@ -1022,19 +922,10 @@ class App(ttk.Frame):
         )
         self.after(self.update_delay.get(), self.update)
 
-    def thread_reference(self):
-        self.delta.reference(True)
-        # if self.reference_var.get():
-        #     self.reference_var.set(True)
-        # thread = Thread(target=self.test)
-
-
 def main():
     root = tk.Tk()
     root.title("HS Emden/Leer: Delta Robot")
-    # root.attributes("-fullscreen", True)
     root.attributes("-zoomed", True)
-    # root.iconbitmap(PATH+"img/hsel_logo.ico")
     root.iconphoto(False, tk.PhotoImage(file=PATH + "img/hsel_icon.png"))
     app = App(root)
     app.pack(fill="both", expand=True)

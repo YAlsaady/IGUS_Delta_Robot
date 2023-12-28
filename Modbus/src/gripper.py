@@ -11,10 +11,7 @@ Usage:
     To use this module, create an instance of the 'Gripper' class with the appropriate serial port and settings.
 """
 
-from time import sleep
 import serial
-
-# from .igus_modbus import Robot
 from src.igus_modbus import Robot
 
 
@@ -121,6 +118,21 @@ class Gripper:
         return True
 
     def modbus(self, signal: int = 6, var1: int = 15, var2: int = 16):
+        """
+        Control the gripper using Modbus signals and variables.
+
+        :param signal: The Modbus signal number to enable/disable gripper control.
+                       Default is 6.
+        :type signal: int
+        :param var1: The Modbus variable number for reading the gripper opening.
+                     Default is 15.
+        :type var1: int
+        :param var2: The Modbus variable number for reading the gripper orientation.
+                     Default is 16.
+        :type var2: int
+        :return: True if the gripper control was successful, False otherwise.
+        :rtype: bool
+        """
         if not self.is_connected:
             return False
         if not self.delta.is_connected:
