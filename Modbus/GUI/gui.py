@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import os
 import webbrowser
+import json
 
 from src.igus_modbus import Robot
 from src.gripper import Gripper
@@ -43,6 +44,7 @@ class App(ttk.Frame):
         self.gripper_orient_var = tk.IntVar(value=90)
         self.gripper_enable_var = tk.BooleanVar(value=False)
         self.program_var = tk.IntVar()
+        self.locale_program_var = tk.IntVar()
         self.remove_var = tk.StringVar()
         self.update_delay = tk.IntVar(value=1)
         self.step_var = tk.DoubleVar(value=10)
@@ -56,7 +58,7 @@ class App(ttk.Frame):
         self.robot_error = "Robot:\n"
         self.kinematic_error = "Kinematic:\n"
         self.about_msg = (
-            "User Interface to contol the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
+            "User Interface to control the Robot\nPart of Project Work\n\nCreated by:\n\tYaman Alsaady\nSupervised by:\n\tM. Eng. Jeffrey Wermann",
         )
         self.logo_widgets()
         self.setting_widgets()
@@ -69,6 +71,7 @@ class App(ttk.Frame):
         self.error_widgets()
 
         self.programs_widgets()
+        self.locale_programs_widgets()
         self.load_widgets()
 
         self.move_widgets(self.tab_3, 0, 0)
@@ -78,6 +81,7 @@ class App(ttk.Frame):
         self.delta.set_velocity(2000)
         self.after(self.update_delay.get(), self.update)
         self.update_list()
+        self.locale_update_list()
 
     def tabs(self):
         self.tabs = ttk.Notebook(self)
@@ -90,6 +94,8 @@ class App(ttk.Frame):
         self.tabs.add(self.tab_1, text="Control")
         self.tab_2 = ttk.Frame(self)
         self.tabs.add(self.tab_2, text="Program")
+        self.tab_6 = ttk.Frame(self)
+        self.tabs.add(self.tab_6, text="Locale Program")
         self.tab_3 = ttk.Frame(self)
         self.tabs.add(self.tab_3, text="Teach and Play")
         self.tab_4 = ttk.Frame(self)
@@ -592,6 +598,60 @@ class App(ttk.Frame):
         )
         self.loaded_p.grid(row=2, column=0, padx=5, pady=10, columnspan=4, sticky="ew")
 
+    def locale_programs_widgets(self):
+        self.locale_load_frame = ttk.LabelFrame(
+            self.tab_6, text="Load Programs", padding=(20, 10)
+        )
+        self.locale_load_frame.grid(
+            row=3, column=0, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3
+        )
+        self.locale_load_label = ttk.Label(
+            self.locale_load_frame, text="Available Programs:", font=("-size", self.fontsize)
+        )
+        self.locale_load_label.grid(
+            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
+        )
+
+        self.locale_next_prog = ttk.Button(
+            self.locale_load_frame,
+            text="Next",
+            command=lambda: (
+                self.locale_program_var.set(self.locale_program_var.get() + 1),
+                self.locale_prog_label.config(text=int(self.locale_program_var.get())),
+            ),
+        )
+        self.locale_next_prog.grid(row=1, column=3, padx=5, pady=10, sticky="ew")
+
+        self.locale_previous_prog = ttk.Button(
+            self.locale_load_frame,
+            text="Previous",
+            command=lambda: (
+                self.locale_program_var.set(self.locale_program_var.get() - 1),
+                self.locale_prog_label.config(text=int(self.locale_program_var.get())),
+            ),
+        )
+        self.locale_previous_prog.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+        self.locale_prog_label = ttk.Label(
+            self.locale_load_frame, text="Program", font=("-size", self.fontsize)
+        )
+        self.locale_prog_label.grid(row=1, column=2, padx=5, pady=10, sticky="ew")
+
+        self.locale_load_button = ttk.Button(
+            self.locale_load_frame,
+            text="Load",
+            command=lambda: self.locale_load_pragram(),
+        )
+        self.locale_load_button.grid(row=1, column=0, padx=5, pady=10, sticky="nw")
+
+        self.locale_update_button = ttk.Button(
+            self.locale_load_frame,
+            text="Update List",
+            command=lambda: self.locale_update_list(),
+        )
+        self.locale_update_button.grid(row=1, column=4, padx=5, pady=10, sticky="nw")
+
+
     def load_widgets(self):
         self.separator = ttk.Separator(self.tab_2)
         self.separator.grid(row=2, column=0, padx=(10, 10), pady=10, sticky="nwewns")
@@ -816,6 +876,14 @@ class App(ttk.Frame):
         except:
             pass
 
+    def locale_load_pragram(self):
+        file = os.listdir(PATH + "programs")[self.locale_program_var.get() - 1]
+        with open(PATH + "programs/"+file, "r") as read_file:
+            self.pos_list = []
+            data = json.load(read_file)
+            for position in data["position"]:
+                self.pos_list.append([position[0], position[1]])
+
     def add(self):
         list = []
         if self.delta.is_connected:
@@ -867,6 +935,11 @@ class App(ttk.Frame):
         self.load_label.config(
             text="Programs:\n" + self.program_names(self.delta.get_list_of_porgrams())
         )
+    def locale_update_list(self):
+        dir_list = os.listdir(PATH + "programs")
+        self.locale_load_label.config(
+            text="Programs:\n" + self.program_names(dir_list)
+        )
 
     def clear_list(self):
         self.pos_list = []
@@ -913,6 +986,7 @@ class App(ttk.Frame):
                 if self.gripper_enable_var.get():
                     self.gripper_mov()
                 self.prog_label.config(text=int(self.program_var.get()))
+                self.prog_label.config(text=int(self.locale_program_var.get()))
             except:
                 pass
         else:
