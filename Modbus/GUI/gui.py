@@ -277,7 +277,6 @@ class App(ttk.Frame):
         )
 
     def gripper_widgets(self, tab_name, row, column):
-
         self.gripper_frame = ttk.LabelFrame(tab_name, text="Gripper", padding=(20, 20))
         self.gripper_frame.grid(
             row=row, column=column, padx=(20, 20), pady=10, sticky="nwew"
@@ -444,7 +443,6 @@ class App(ttk.Frame):
         )
         self.step_label.grid(row=3, column=0, padx=5, pady=10)
 
-
         self.step = ttk.OptionMenu(
             self.move_tab,
             self.step_var,
@@ -606,7 +604,9 @@ class App(ttk.Frame):
             row=3, column=0, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3
         )
         self.locale_load_label = ttk.Label(
-            self.locale_load_frame, text="Available Programs:", font=("-size", self.fontsize)
+            self.locale_load_frame,
+            text="Available Programs:",
+            font=("-size", self.fontsize),
         )
         self.locale_load_label.grid(
             row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
@@ -650,7 +650,6 @@ class App(ttk.Frame):
             command=lambda: self.locale_update_list(),
         )
         self.locale_update_button.grid(row=1, column=4, padx=5, pady=10, sticky="nw")
-
 
     def load_widgets(self):
         self.separator = ttk.Separator(self.tab_2)
@@ -714,11 +713,17 @@ class App(ttk.Frame):
         self.show_frame.grid(
             row=0, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=10
         )
+        self.save_button = ttk.Button(
+            self.show_frame, text="Save", command=lambda: self.save_list()
+        )
+        self.save_button.grid(
+            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
+        )
         self.teach_label = ttk.Label(
             self.show_frame, text="Positions:\t\t\t\t\n", font=("-size", self.fontsize)
         )
         self.teach_label.grid(
-            row=0, column=0, padx=5, pady=10, sticky="ew", columnspan=4
+            row=1, column=0, padx=5, pady=10, sticky="ew", columnspan=4
         )
 
         self.teach_frame = ttk.LabelFrame(
@@ -802,9 +807,7 @@ class App(ttk.Frame):
                 + "\n"
             )
             self.count_kin_error += 1
-        self.kinematic_label.config(
-            text=self.kinematic_error
-        )
+        self.kinematic_label.config(text=self.kinematic_error)
         self.last_kin_error = self.delta.get_kinematics_error()
         #
         # Robot Errors
@@ -820,9 +823,7 @@ class App(ttk.Frame):
                 + self.split_list(self.delta.get_robot_errors())
             )
             self.count_error += 1
-        self.robot_label.config(
-            text=self.robot_error
-        )
+        self.robot_label.config(text=self.robot_error)
         self.last_error = self.delta.get_robot_errors()[0]
 
     def program_names(self, list):
@@ -878,7 +879,7 @@ class App(ttk.Frame):
 
     def locale_load_pragram(self):
         file = os.listdir(PATH + "programs")[self.locale_program_var.get() - 1]
-        with open(PATH + "programs/"+file, "r") as read_file:
+        with open(PATH + "programs/" + file, "r") as read_file:
             self.pos_list = []
             data = json.load(read_file)
             for position in data["position"]:
@@ -935,11 +936,21 @@ class App(ttk.Frame):
         self.load_label.config(
             text="Programs:\n" + self.program_names(self.delta.get_list_of_porgrams())
         )
+
     def locale_update_list(self):
         dir_list = os.listdir(PATH + "programs")
-        self.locale_load_label.config(
-            text="Programs:\n" + self.program_names(dir_list)
-        )
+        self.locale_load_label.config(text="Programs:\n" + self.program_names(dir_list))
+
+    def save_list(self):
+        file = strftime("%Y%m%d-%H%M%S") + ".json"
+        list = ""
+        with open(PATH + "programs/" + file, "w") as write_file:
+            list += '{\n\t"position":[\n'
+            for i in self.pos_list:
+                list += "\t\t" + str(i) + ",\n"
+            list = list[:-2]
+            list += "\n\t]\n}"
+            write_file.write(list)
 
     def clear_list(self):
         self.pos_list = []
@@ -995,6 +1006,7 @@ class App(ttk.Frame):
             text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
         )
         self.after(self.update_delay.get(), self.update)
+
 
 def main():
     root = tk.Tk()
