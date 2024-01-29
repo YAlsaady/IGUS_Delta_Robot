@@ -881,9 +881,12 @@ class App(ttk.Frame):
         file = os.listdir(PATH + "programs")[self.locale_program_var.get() - 1]
         with open(PATH + "programs/" + file, "r") as read_file:
             self.pos_list = []
-            data = json.load(read_file)
-            for position in data["position"]:
-                self.pos_list.append([position[0], position[1]])
+            try:
+                data = json.load(read_file)
+                for position in data["position"]:
+                    self.pos_list.append([position[0], position[1]])
+            except:
+                pass
 
     def add(self):
         list = []
@@ -896,14 +899,17 @@ class App(ttk.Frame):
 
     def run_list(self):
         self.zero_torque_var.set(False)
-        self.delta.set_zero_torque(self.zero_torque_var.get())
+        self.delta.set_zero_torque(False)
         self.enalbe_var.set(True)
         self.delta.enable()
+        self.gripper_enable_var.set(False)
         if not self.run_var.get():
             self.run_var.set(False)
+            self.gripper_enable_var.set(True)
             return
         if not self.delta.is_connected:
             self.run_var.set(False)
+            self.gripper_enable_var.set(True)
             return
         for i in self.pos_list:
             if i[0] and i[0][2] != 0:
@@ -914,6 +920,8 @@ class App(ttk.Frame):
                     or i[1][1] != self.gripper_orient_var.get()
                     # or True
                 ):
+                    # while self.delta.is_moving():
+                    #     pass
                     sleep(1.5)
                     self.gripper_scale.set(i[1][0])
                     self.gripper_orient_scale.set(i[1][1])
@@ -922,6 +930,7 @@ class App(ttk.Frame):
                     self.delta.control_gripper(*i[1])
                     sleep(1.5)
         self.run_var.set(False)
+        self.gripper_enable_var.set(True)
 
     def sort_list(self):
         sort = self.sort_var.get().split()
