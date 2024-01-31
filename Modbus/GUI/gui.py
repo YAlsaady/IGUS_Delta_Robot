@@ -14,6 +14,7 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 class App(ttk.Frame):
     fontsize = 20
 
+    # {{{ init
     def __init__(self, _):
         ttk.Frame.__init__(self)
 
@@ -83,6 +84,9 @@ class App(ttk.Frame):
         self.update_list()
         self.locale_update_list()
 
+    # }}}
+
+    # {{{ Tabs
     def tabs(self):
         self.tabs = ttk.Notebook(self)
         self.tabs.grid(
@@ -101,6 +105,9 @@ class App(ttk.Frame):
         self.tab_4 = ttk.Frame(self)
         self.tabs.add(self.tab_4, text="More")
 
+    #  }}}
+
+    # {{{ LOGO
     def logo_widgets(self, img=PATH + "img/hsel_logo_dark.png"):
         self.logo_frame = tk.Frame(self)
         self.logo_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
@@ -134,6 +141,9 @@ class App(ttk.Frame):
         )
         self.doc_button.grid(row=2, column=0, padx=5, pady=10, sticky="nw")
 
+    # }}}
+
+    # {{{ Setting
     def setting_widgets(self):
         self.setting_frame = ttk.LabelFrame(self, text="Setting", padding=(20, 10))
         self.setting_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nwewns")
@@ -189,6 +199,9 @@ class App(ttk.Frame):
         )
         self.theme.grid(row=3, column=0, padx=5, pady=10, sticky="nsew", columnspan=2)
 
+    #  }}}
+
+    # {{{ Control
     def control_widgets(self):
         self.control_frame = ttk.LabelFrame(
             self.tab_1, text="Control", padding=(20, 10)
@@ -210,6 +223,9 @@ class App(ttk.Frame):
             row=2, column=0, padx=5, pady=10, sticky="ew", columnspan=4
         )
 
+    #  }}}
+
+    # {{{ Speed
     def speed_widgets(self):
         self.separator = ttk.Separator(self.tab_1)
         self.separator.grid(row=2, column=0, padx=(10, 10), pady=10, sticky="nwew")
@@ -276,6 +292,9 @@ class App(ttk.Frame):
             row=1, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
         )
 
+    #  }}}
+
+    # {{{ Gripper
     def gripper_widgets(self, tab_name, row, column):
         self.gripper_frame = ttk.LabelFrame(tab_name, text="Gripper", padding=(20, 20))
         self.gripper_frame.grid(
@@ -356,6 +375,9 @@ class App(ttk.Frame):
             row=2, column=0, padx=(5, 10), pady=(20, 20), sticky="ew"
         )
 
+    # }}}
+
+    # {{{ Move
     def move_widgets(self, tab_name, row, column):
         self.move_paned = ttk.PanedWindow(tab_name)
         self.move_paned.grid(
@@ -537,6 +559,9 @@ class App(ttk.Frame):
         )
         self.step.grid(row=3, column=1, padx=5, pady=10, sticky="ew", columnspan=2)
 
+    # }}}
+
+    # {{{ Errors
     def error_widgets(self):
         self.separator = ttk.Separator(self.tab_1)
         self.separator.grid(row=2, column=1, padx=(10, 10), pady=10, sticky="nwew")
@@ -553,6 +578,9 @@ class App(ttk.Frame):
         )
         self.kinematic_label.grid(row=1, column=0, padx=5, pady=10, sticky="ew")
 
+    #  }}}
+
+    # {{{ Programs
     def programs_widgets(self):
         self.programs_frame = ttk.LabelFrame(
             self.tab_2, text="Program execution", padding=(20, 20)
@@ -596,6 +624,9 @@ class App(ttk.Frame):
         )
         self.loaded_p.grid(row=2, column=0, padx=5, pady=10, columnspan=4, sticky="ew")
 
+    # }}}
+
+    # {{{ Locale Programs
     def locale_programs_widgets(self):
         self.locale_load_frame = ttk.LabelFrame(
             self.tab_6, text="Load Programs", padding=(20, 10)
@@ -651,6 +682,9 @@ class App(ttk.Frame):
         )
         self.locale_update_button.grid(row=1, column=4, padx=5, pady=10, sticky="nw")
 
+    # }}}
+
+    # {{{ Load Programs
     def load_widgets(self):
         self.separator = ttk.Separator(self.tab_2)
         self.separator.grid(row=2, column=0, padx=(10, 10), pady=10, sticky="nwewns")
@@ -706,6 +740,9 @@ class App(ttk.Frame):
         )
         self.update_button.grid(row=1, column=4, padx=5, pady=10, sticky="nw")
 
+    # }}}
+
+    # {{{ Teach
     def teach_widgets(self):
         self.show_frame = ttk.LabelFrame(
             self.tab_3, text="Teach and Play", padding=(20, 10)
@@ -772,6 +809,9 @@ class App(ttk.Frame):
         )
         self.sort_button.grid(row=3, column=2, padx=5, pady=10, sticky="nw")
 
+    #  }}}
+
+    # {{{ Update
     def update_theme(self):
         theme = self.theme_var.get()
         self.tk.call("set_theme", theme)
@@ -826,154 +866,6 @@ class App(ttk.Frame):
         self.robot_label.config(text=self.robot_error)
         self.last_error = self.delta.get_robot_errors()[0]
 
-    def program_names(self, list):
-        if list:
-            string = ""
-            for count, i in enumerate(list):
-                string += str(count + 1) + "\t" + i + "\n"
-            return string
-        else:
-            return "No Information available"
-
-    def show_positions(self, list):
-        if list:
-            string = "Num:\tPos:\tGrip:\n"
-            for count, i in enumerate(list):
-                string += str(count + 1) + " " + str(i[0]) + " " + str(i[1]) + "\n"
-            return string
-        else:
-            return "Num:\tPos:\tGrip:\n"
-
-    def split_list(self, list):
-        if list:
-            string = ""
-            for i in list:
-                string += i + "\n"
-            return string
-        else:
-            return "No Information available"
-
-    def gripper_mov(self):
-        if (
-            int(self.gripper_scale.get()) != self.gripper_opening
-            or int(self.gripper_orient_scale.get()) != self.gripper_orientation
-            or True
-        ):
-            self.gripper_opening = int(self.gripper_scale.get())
-            self.gripper_orientation = int(self.gripper_orient_scale.get())
-            self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
-
-    def enable_robot(self):
-        if self.enalbe_var.get():
-            self.delta.enable()
-        else:
-            self.delta.reset()
-
-    def load_pragram(self):
-        try:
-            list = self.delta.get_list_of_porgrams()
-            num = int(self.program_var.get()) - 1
-            self.delta.set_program_name(list[num])
-        except:
-            pass
-
-    def locale_load_pragram(self):
-        file = os.listdir(PATH + "programs")[self.locale_program_var.get() - 1]
-        with open(PATH + "programs/" + file, "r") as read_file:
-            self.pos_list = []
-            try:
-                data = json.load(read_file)
-                for position in data["position"]:
-                    self.pos_list.append([position[0], position[1]])
-            except:
-                pass
-
-    def add(self):
-        list = []
-        if self.delta.is_connected:
-            list.append(self.delta.get_position_endeffector())
-        else:
-            list.append([10, 10, 200])
-        list.append([self.gripper_var.get(), self.gripper_orient_var.get()])
-        self.pos_list.append(list)
-
-    def run_list(self):
-        self.zero_torque_var.set(False)
-        self.delta.set_zero_torque(False)
-        self.enalbe_var.set(True)
-        self.delta.enable()
-        self.gripper_enable_var.set(False)
-        if not self.run_var.get():
-            self.run_var.set(False)
-            self.gripper_enable_var.set(True)
-            return
-        if not self.delta.is_connected:
-            self.run_var.set(False)
-            self.gripper_enable_var.set(True)
-            return
-        for i in self.pos_list:
-            if i[0] and i[0][2] != 0:
-                self.delta.set_and_move(*i[0])
-            if i[1]:
-                if (
-                    i[1][0] != self.gripper_var.get()
-                    or i[1][1] != self.gripper_orient_var.get()
-                    # or True
-                ):
-                    # while self.delta.is_moving():
-                    #     pass
-                    sleep(1.5)
-                    self.gripper_scale.set(i[1][0])
-                    self.gripper_orient_scale.set(i[1][1])
-                    self.gripper_var.set(i[1][0])
-                    self.gripper_orient_var.set(i[1][1])
-                    self.delta.control_gripper(*i[1])
-                    sleep(1.5)
-        self.run_var.set(False)
-        self.gripper_enable_var.set(True)
-
-    def sort_list(self):
-        sort = self.sort_var.get().split()
-        list = []
-        for i in sort:
-            i = int(i)
-            list.append(self.pos_list[i - 1])
-        self.pos_list = list
-        self.sort_var.set("")
-
-    def update_list(self):
-        self.load_label.config(
-            text="Programs:\n" + self.program_names(self.delta.get_list_of_porgrams())
-        )
-
-    def locale_update_list(self):
-        dir_list = os.listdir(PATH + "programs")
-        self.locale_load_label.config(text="Programs:\n" + self.program_names(dir_list))
-
-    def save_list(self):
-        file = strftime("%Y%m%d-%H%M%S") + ".json"
-        list = ""
-        with open(PATH + "programs/" + file, "w") as write_file:
-            list += '{\n\t"position":[\n'
-            for i in self.pos_list:
-                list += "\t\t" + str(i) + ",\n"
-            list = list[:-2]
-            list += "\n\t]\n}"
-            write_file.write(list)
-
-    def clear_list(self):
-        self.pos_list = []
-
-    def remove_list_element(self):
-        try:
-            index = int(self.remove_var.get()) - 1
-            self.pos_list.pop(index)
-        except:
-            pass
-
-    def connect(self):
-        self.delta = Robot("192.168.3.11")
-
     def update(self):
         if self.delta.is_connected:
             try:
@@ -1003,18 +895,167 @@ class App(ttk.Frame):
                     )
                 self.zero_torque_var.set(self.delta.is_zero_torque())
                 self.update_error()
-                if self.gripper_enable_var.get():
-                    self.gripper_mov()
                 self.prog_label.config(text=int(self.program_var.get()))
                 self.prog_label.config(text=int(self.locale_program_var.get()))
             except:
                 pass
         else:
             self.connect_label.config(text="Connection: Robot is not connected")
+        self.gripper_mov()
         self.teach_label.config(
             text="Positions:\t\t\t\t\n" + self.show_positions(self.pos_list)
         )
         self.after(self.update_delay.get(), self.update)
+
+    # }}}
+
+    # {{{ Position List
+    def locale_load_pragram(self):
+        file = os.listdir(PATH + "programs")[self.locale_program_var.get() - 1]
+        with open(PATH + "programs/" + file, "r") as read_file:
+            self.pos_list = []
+            try:
+                data = json.load(read_file)
+                for position in data["position"]:
+                    self.pos_list.append([position[0], position[1]])
+            except:
+                pass
+
+    def add(self):
+        list = []
+        if self.delta.is_connected:
+            list.append(self.delta.get_position_endeffector())
+        else:
+            list.append([10, 10, 200])
+        list.append([self.gripper_var.get(), self.gripper_orient_var.get()])
+        self.pos_list.append(list)
+
+    def run_list(self):
+        self.zero_torque_var.set(False)
+        self.delta.set_zero_torque(False)
+        self.enalbe_var.set(True)
+        self.delta.enable()
+        self.gripper_enable_var.set(False)
+        if not self.delta.is_connected:
+            self.run_var.set(False)
+            self.gripper_enable_var.set(True)
+            return
+        for i in self.pos_list:
+            self.delta.set_and_move(*i[0])
+            if (
+                i[1][0] != self.gripper_var.get()
+                or i[1][1] != self.gripper_orient_var.get()
+            ):
+                while self.delta.is_moving():
+                    pass
+                self.gripper_scale.set(i[1][0])
+                self.gripper_var.set(i[1][0])
+                self.gripper_orient_scale.set(i[1][1])
+                self.gripper_orient_var.set(i[1][1])
+                self.gripper_mov()
+                sleep(1.5)
+        self.run_var.set(False)
+        self.gripper_enable_var.set(True)
+
+    def sort_list(self):
+        sort = self.sort_var.get().split()
+        list = []
+        for i in sort:
+            i = int(i)
+            list.append(self.pos_list[i - 1])
+        self.pos_list = list
+        self.sort_var.set("")
+
+    def save_list(self):
+        file = strftime("%Y%m%d-%H%M%S") + ".json"
+        list = ""
+        with open(PATH + "programs/" + file, "w") as write_file:
+            list += '{\n\t"position":[\n'
+            for i in self.pos_list:
+                list += "\t\t" + str(i) + ",\n"
+            list = list[:-2]
+            list += "\n\t]\n}"
+            write_file.write(list)
+
+    def clear_list(self):
+        self.pos_list = []
+
+    def remove_list_element(self):
+        try:
+            index = int(self.remove_var.get()) - 1
+            self.pos_list.pop(index)
+        except:
+            pass
+
+    # }}}
+
+    # {{{ Misc
+    def program_names(self, list):
+        if list:
+            string = ""
+            for count, i in enumerate(list):
+                string += str(count + 1) + "\t" + i + "\n"
+            return string
+        else:
+            return "No Information available"
+
+    def show_positions(self, list):
+        if list:
+            string = "Num:\tPos:\tGrip:\n"
+            for count, i in enumerate(list):
+                string += str(count + 1) + " " + str(i[0]) + " " + str(i[1]) + "\n"
+            return string
+        else:
+            return "Num:\tPos:\tGrip:\n"
+
+    def split_list(self, list):
+        if list:
+            string = ""
+            for i in list:
+                string += i + "\n"
+            return string
+        else:
+            return "No Information available"
+
+    def gripper_mov(self):
+        if not self.gripper_enable_var.get():
+            return
+        if (
+            self.gripper_var.get() != self.gripper_opening
+            or self.gripper_orient_var.get() != self.gripper_orientation
+        ):
+            self.gripper_opening = self.gripper_var.get()
+            self.gripper_orientation = self.gripper_orient_var.get()
+            print(self.gripper_opening, self.gripper_orientation)
+            self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
+
+    def enable_robot(self):
+        if self.enalbe_var.get():
+            self.delta.enable()
+        else:
+            self.delta.reset()
+
+    def load_pragram(self):
+        try:
+            list = self.delta.get_list_of_porgrams()
+            num = int(self.program_var.get()) - 1
+            self.delta.set_program_name(list[num])
+        except:
+            pass
+
+    def update_list(self):
+        self.load_label.config(
+            text="Programs:\n" + self.program_names(self.delta.get_list_of_porgrams())
+        )
+
+    def locale_update_list(self):
+        dir_list = os.listdir(PATH + "programs")
+        self.locale_load_label.config(text="Programs:\n" + self.program_names(dir_list))
+
+    def connect(self):
+        self.delta = Robot("192.168.3.11")
+
+    # }}}
 
 
 def main():
@@ -1027,3 +1068,6 @@ def main():
 
     root.update()
     app.mainloop()
+
+
+# vim:foldmethod=marker

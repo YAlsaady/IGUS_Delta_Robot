@@ -1279,10 +1279,8 @@ class Robot:
         """
         if not self.is_connected:
             return []
-        # Initialize an empty list to store program names
         program_list = []
 
-        # Read the number of programs available on the robot controller
         num_programs = self.client.read_input_registers(331)[0]
 
         # Ensure that the list starts from the top by repeatedly navigating to the previous program
@@ -1292,13 +1290,9 @@ class Robot:
 
         # Loop through the program indices
         for i in range(num_programs):
-            # Read the program name as a string
             program_name = self.read_string(self.client.read_input_registers(333, 32))
-
             # Remove null characters from the program name
             program_name = str(program_name).replace("\x00", "")
-
-            # Append the program name to the list
             program_list.append(program_name)
 
             # Trigger the robot controller to move to the next program
@@ -1306,17 +1300,6 @@ class Robot:
             self.client.write_single_coil(130, True)
 
         return program_list
-        list = []
-        val = self.client.read_input_registers(331)[0]
-        for i in range(val):
-            self.client.write_single_coil(131, False)
-            self.client.write_single_coil(131, True)
-        for i in range(val):
-            list.append(self.read_string(self.client.read_input_registers(333, 32)))
-            list[i] = str(list[i]).replace("\x00", "")
-            self.client.write_single_coil(130, False)
-            self.client.write_single_coil(130, True)
-        return list
 
     def print_list_of_programs(self):
         """
@@ -1372,7 +1355,6 @@ class Robot:
         for count, i in enumerate(string):
             if count == number:
                 break
-            # val = (next(string) + i)
             try:
                 val = ord(next(string)) << 8 | ord(i)
             except:
