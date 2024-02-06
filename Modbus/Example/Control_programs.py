@@ -1,6 +1,13 @@
+"""
+Description:
+    This example demonstrates controlling the gripper with the Delta robot. The following code provide an overview of the basic functions for controlling the gripper.
+"""
 from src.igus_modbus import Robot
 
 def main():
+    """
+    This function creates an instance of the Robot class, establishes a connection to the robot, and interacts with its control programs.
+    """
     delta = Robot("192.168.3.11")
 
     if delta.is_connected:

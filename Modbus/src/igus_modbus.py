@@ -3,7 +3,11 @@
 igus_modbus Module
 ==================
 
-This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.
+Author: 
+     Yaman Alsaady
+
+Description:
+    This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.
 
 Classes:
     - Robot: Represents the Robot and provides methods for controlling it.
@@ -721,7 +725,7 @@ class Robot:
             return ""
         code = self.client.read_holding_registers(260)[0]
         if code == 0:
-            return "Programm is not running"
+            return "Program is not running"
         elif code == 1:
             return "Program is running"
         elif code == 2:

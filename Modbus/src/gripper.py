@@ -2,7 +2,11 @@
 Gripper Module
 ==============
 
-This module provides a Python interface for controlling a gripper device through serial communication.
+Author: 
+    Yaman Alsaady
+
+Description:
+    This module provides a Python interface for controlling a gripper device through serial communication.
 
 Classes:
     - Gripper: Represents the gripper and provides methods for controlling its opening and orientation.

@@ -1,3 +1,18 @@
+"""
+Delta Robot Control Application
+===============================
+
+Author: 
+    Yaman Alsaady
+
+Description:
+    - This application provides a graphical user interface (GUI) to control a Delta robot and its gripper.
+    - The GUI allows the user to control the robot's movements, adjust speed settings, operate the gripper, and manage robot programs.
+
+Classes:
+    - App: Represents the main application window and contains methods for initializing the GUI and running the application.
+
+"""
 from time import localtime, sleep, strftime
 import tkinter as tk
 from tkinter import ttk
@@ -120,7 +135,7 @@ class App(ttk.Frame):
 
         self.delta_label = ttk.Label(
             self.info_frame,
-            text="Delta Robto",
+            text="Delta Robot",
             font=("-size", self.fontsize),
         )
         self.delta_label.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")

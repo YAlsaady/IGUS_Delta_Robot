@@ -1,6 +1,13 @@
+"""
+Description:
+    This example shows how to control programs on the Delta robot. It demonstrates the selection of a program, starting, stopping, pausing, and resuming execution.
+"""
 from src.igus_modbus import Robot
 
 def main():
+    """
+    This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements combined with gripper control commands.
+    """
     delta = Robot("192.168.3.11")
 
     if delta.is_connected:
