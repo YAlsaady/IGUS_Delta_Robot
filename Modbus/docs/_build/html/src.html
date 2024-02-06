@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modbus package &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Main package &mdash; Delta-Robot 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -43,129 +45,153 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Modbus package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#igus-modbus-module">igus_modbus Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#src.igus_modbus.Robot"><code class="docutils literal notranslate"><span class="pre">Robot</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.break_time"><code class="docutils literal notranslate"><span class="pre">Robot.break_time</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.controll_programs"><code class="docutils literal notranslate"><span class="pre">Robot.controll_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.disable"><code class="docutils literal notranslate"><span class="pre">Robot.disable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.enable"><code class="docutils literal notranslate"><span class="pre">Robot.enable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_input"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_input()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.get_globale_signal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_info_message"><code class="docutils literal notranslate"><span class="pre">Robot.get_info_message()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.get_kinematics_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_list_of_porgrams"><code class="docutils literal notranslate"><span class="pre">Robot.get_list_of_porgrams()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_current_program"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_current_program()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_loaded_programs"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_loaded_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_operation_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_operation_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_orientation_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_replay_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_runstate"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_runstate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_number_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_robot_errors"><code class="docutils literal notranslate"><span class="pre">Robot.get_robot_errors()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_stop_reason_description"><code class="docutils literal notranslate"><span class="pre">Robot.get_stop_reason_description()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_number_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_connected"><code class="docutils literal notranslate"><span class="pre">Robot.is_connected</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_enabled"><code class="docutils literal notranslate"><span class="pre">Robot.is_enabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_general_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_general_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_kinematics_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_moving"><code class="docutils literal notranslate"><span class="pre">Robot.is_moving()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_program_loaded"><code class="docutils literal notranslate"><span class="pre">Robot.is_program_loaded()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_referenced"><code class="docutils literal notranslate"><span class="pre">Robot.is_referenced()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.is_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.is_zero_torque()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_axes"><code class="docutils literal notranslate"><span class="pre">Robot.move_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_circular"><code class="docutils literal notranslate"><span class="pre">Robot.move_circular()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.move_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.move_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.print_list_of_programs"><code class="docutils literal notranslate"><span class="pre">Robot.print_list_of_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.read_string"><code class="docutils literal notranslate"><span class="pre">Robot.read_string()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.reference"><code class="docutils literal notranslate"><span class="pre">Robot.reference()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.reset"><code class="docutils literal notranslate"><span class="pre">Robot.reset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_and_move"><code class="docutils literal notranslate"><span class="pre">Robot.set_and_move()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.set_digital_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.set_globale_signal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_number_variables"><code class="docutils literal notranslate"><span class="pre">Robot.set_number_variables()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_orientation_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_override_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_override_velocity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_replay_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_velocity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.set_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.set_zero_torque()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.shutdown"><code class="docutils literal notranslate"><span class="pre">Robot.shutdown()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot.write_string"><code class="docutils literal notranslate"><span class="pre">Robot.write_string()</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Main package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-main">Run GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-example">Run Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gripper_global">Gripper Golbal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#modbus-package">Modbus package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.igus_modbus">igus modbus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#igus-modbus-module">igus_modbus Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.igus_modbus.Robot"><code class="docutils literal notranslate"><span class="pre">Robot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.break_time"><code class="docutils literal notranslate"><span class="pre">Robot.break_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.control_gripper"><code class="docutils literal notranslate"><span class="pre">Robot.control_gripper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.controll_programs"><code class="docutils literal notranslate"><span class="pre">Robot.controll_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.disable"><code class="docutils literal notranslate"><span class="pre">Robot.disable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.enable"><code class="docutils literal notranslate"><span class="pre">Robot.enable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_input"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.get_globale_signal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_info_message"><code class="docutils literal notranslate"><span class="pre">Robot.get_info_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.get_kinematics_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_list_of_porgrams"><code class="docutils literal notranslate"><span class="pre">Robot.get_list_of_porgrams()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_current_program"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_current_program()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_number_of_loaded_programs"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_loaded_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_operation_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_operation_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_replay_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_program_runstate"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_runstate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_number_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_readable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_robot_errors"><code class="docutils literal notranslate"><span class="pre">Robot.get_robot_errors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_stop_reason_description"><code class="docutils literal notranslate"><span class="pre">Robot.get_stop_reason_description()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_number_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.get_writable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_connected"><code class="docutils literal notranslate"><span class="pre">Robot.is_connected</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_enabled"><code class="docutils literal notranslate"><span class="pre">Robot.is_enabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_general_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_general_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_kinematics_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_moving"><code class="docutils literal notranslate"><span class="pre">Robot.is_moving()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_program_loaded"><code class="docutils literal notranslate"><span class="pre">Robot.is_program_loaded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_referenced"><code class="docutils literal notranslate"><span class="pre">Robot.is_referenced()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.is_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.is_zero_torque()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.move_axes"><code class="docutils literal notranslate"><span class="pre">Robot.move_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.move_circular"><code class="docutils literal notranslate"><span class="pre">Robot.move_circular()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.move_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.move_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.print_list_of_programs"><code class="docutils literal notranslate"><span class="pre">Robot.print_list_of_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.read_string"><code class="docutils literal notranslate"><span class="pre">Robot.read_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.reference"><code class="docutils literal notranslate"><span class="pre">Robot.reference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.reset"><code class="docutils literal notranslate"><span class="pre">Robot.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_and_move"><code class="docutils literal notranslate"><span class="pre">Robot.set_and_move()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.set_digital_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.set_globale_signal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_number_variables"><code class="docutils literal notranslate"><span class="pre">Robot.set_number_variables()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_override_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_override_velocity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_replay_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_velocity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.set_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.set_zero_torque()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.shutdown"><code class="docutils literal notranslate"><span class="pre">Robot.shutdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.igus_modbus.Robot.write_string"><code class="docutils literal notranslate"><span class="pre">Robot.write_string()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#gripper-package">Gripper package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#gripper-module">Gripper Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#src.gripper.Gripper"><code class="docutils literal notranslate"><span class="pre">Gripper</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.close"><code class="docutils literal notranslate"><span class="pre">Gripper.close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.controll"><code class="docutils literal notranslate"><span class="pre">Gripper.controll()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.is_connected"><code class="docutils literal notranslate"><span class="pre">Gripper.is_connected</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.open"><code class="docutils literal notranslate"><span class="pre">Gripper.open()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.opening"><code class="docutils literal notranslate"><span class="pre">Gripper.opening</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.orientation"><code class="docutils literal notranslate"><span class="pre">Gripper.orientation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper.rotate"><code class="docutils literal notranslate"><span class="pre">Gripper.rotate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.gripper">Gripper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gripper-module">Gripper Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gripper.Gripper"><code class="docutils literal notranslate"><span class="pre">Gripper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.close"><code class="docutils literal notranslate"><span class="pre">Gripper.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.controll"><code class="docutils literal notranslate"><span class="pre">Gripper.controll()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.is_connected"><code class="docutils literal notranslate"><span class="pre">Gripper.is_connected</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.modbus"><code class="docutils literal notranslate"><span class="pre">Gripper.modbus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.open"><code class="docutils literal notranslate"><span class="pre">Gripper.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.opening"><code class="docutils literal notranslate"><span class="pre">Gripper.opening</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.orientation"><code class="docutils literal notranslate"><span class="pre">Gripper.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.gripper.Gripper.rotate"><code class="docutils literal notranslate"><span class="pre">Gripper.rotate()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#module-GUI.gui">GUI package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.fontsize"><code class="docutils literal notranslate"><span class="pre">App.fontsize</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.gripper_mov"><code class="docutils literal notranslate"><span class="pre">App.gripper_mov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.speed_widgets"><code class="docutils literal notranslate"><span class="pre">App.speed_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.split_list"><code class="docutils literal notranslate"><span class="pre">App.split_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#GUI.gui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#gui-package">GUI package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-GUI.gui">GUI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#delta-robot-control-application">Delta Robot Control Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.connect"><code class="docutils literal notranslate"><span class="pre">App.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.fontsize"><code class="docutils literal notranslate"><span class="pre">App.fontsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.gripper_mov"><code class="docutils literal notranslate"><span class="pre">App.gripper_mov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.locale_load_pragram"><code class="docutils literal notranslate"><span class="pre">App.locale_load_pragram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.locale_programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.locale_programs_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.locale_update_list"><code class="docutils literal notranslate"><span class="pre">App.locale_update_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.save_list"><code class="docutils literal notranslate"><span class="pre">App.save_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.speed_widgets"><code class="docutils literal notranslate"><span class="pre">App.speed_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.split_list"><code class="docutils literal notranslate"><span class="pre">App.split_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.update_error"><code class="docutils literal notranslate"><span class="pre">App.update_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.update_list"><code class="docutils literal notranslate"><span class="pre">App.update_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#GUI.gui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#example-package">Example package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-Example.example">Example.example module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Example.example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.Move">Move</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.Move.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Example.example2">Example.example2 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Example.example2.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Example.Control_programs">Control programs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.Control_programs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Example.example3">Example.example3 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Example.example3.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Gripper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Example.Gripper.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Example.example_gripper">Example.example_gripper module</a></li>
 </ul>
 </li>
 </ul>
@@ -184,7 +210,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Modbus package</li>
+      <li class="breadcrumb-item active">Main package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -194,12 +220,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="modbus-package">
+  <section id="main-package">
+<h1>Main package<a class="headerlink" href="#main-package" title="Link to this heading"></a></h1>
+<section id="module-main">
+<span id="run-gui"></span><h2>Run GUI<a class="headerlink" href="#module-main" title="Link to this heading"></a></h2>
+<dl>
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><p>Main script to launch the GUI.</p>
+<p>This script imports the main function from the GUI module and calls it to launch the graphical user interface (GUI).</p>
+</dd>
+</dl>
+</section>
+<section id="module-example">
+<span id="run-examples"></span><h2>Run Examples<a class="headerlink" href="#module-example" title="Link to this heading"></a></h2>
+<dl>
+<dt>Description:</dt><dd><p>Main function to select and run different example modules.</p>
+<p>This script prompts the user to choose from three example modules: Move, Gripper, and Control_programs.
+After the user selects a module by entering a number, the corresponding main function of that module is executed.
+If the user enters an invalid number, a message indicating that the command is not recognized is printed.</p>
+</dd>
+</dl>
+</section>
+<section id="module-gripper_global">
+<span id="gripper-golbal"></span><h2>Gripper Golbal<a class="headerlink" href="#module-gripper_global" title="Link to this heading"></a></h2>
+<dl>
+<dt>Description:</dt><dd><p>Main script for continuous control of the gripper using Modbus.</p>
+<p>This script initializes a Gripper object and continuously calls its modbus() method as long as the gripper is connected.
+If the gripper gets disconnected, a new Gripper object is created to reestablish the connection.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="modbus-package">
 <h1>Modbus package<a class="headerlink" href="#modbus-package" title="Link to this heading"></a></h1>
+<section id="module-src.igus_modbus">
+<span id="igus-modbus"></span><h2>igus modbus<a class="headerlink" href="#module-src.igus_modbus" title="Link to this heading"></a></h2>
 <section id="igus-modbus-module">
-<span id="module-src.igus_modbus"></span><h2>igus_modbus Module<a class="headerlink" href="#igus-modbus-module" title="Link to this heading"></a></h2>
-<p>This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.</p>
+<h3>igus_modbus Module<a class="headerlink" href="#igus-modbus-module" title="Link to this heading"></a></h3>
 <dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><p>This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.</p>
+</dd>
 <dt>Classes:</dt><dd><ul class="simple">
 <li><p>Robot: Represents the Robot and provides methods for controlling it.</p></li>
 </ul>
@@ -226,6 +289,28 @@ delta_robot.enable()</p>
 <dt class="sig sig-object py" id="src.igus_modbus.Robot.break_time">
 <span class="sig-name descname"><span class="pre">break_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.igus_modbus.Robot.break_time" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.igus_modbus.Robot.control_gripper">
+<span class="sig-name descname"><span class="pre">control_gripper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opening</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/igus_modbus.html#Robot.control_gripper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.igus_modbus.Robot.control_gripper" title="Link to this definition"></a></dt>
+<dd><p>Control the gripper using specified values and a Modbus signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>opening</strong> (<em>int</em>) – The value for the gripper opening.</p></li>
+<li><p><strong>orientation</strong> (<em>int</em>) – The value for the gripper orientation.</p></li>
+<li><p><strong>signal</strong> (<em>int</em>) – The Modbus signal number to enable/disable gripper control.
+Default is 6.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the gripper control was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.igus_modbus.Robot.controll_programs">
@@ -1062,10 +1147,10 @@ The <cite>mode</cite> parameter specifies the desired mode and can take one of t
 <dd class="field-odd"><p><strong>mode</strong> (<em>str</em>) – The desired program replay mode.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the mode was successfully set, False if an invalid mode is provided.</p>
+<dd class="field-even"><p>0 if</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1134,12 +1219,18 @@ The actual motion speed also depends on the global override value (holding regis
 </dd></dl>
 
 </section>
+</section>
 <section id="gripper-package">
 <h1>Gripper package<a class="headerlink" href="#gripper-package" title="Link to this heading"></a></h1>
+<section id="module-src.gripper">
+<span id="gripper"></span><h2>Gripper<a class="headerlink" href="#module-src.gripper" title="Link to this heading"></a></h2>
 <section id="gripper-module">
-<span id="module-src.gripper"></span><h2>Gripper Module<a class="headerlink" href="#gripper-module" title="Link to this heading"></a></h2>
-<p>This module provides a Python interface for controlling a gripper device through serial communication.</p>
+<h3>Gripper Module<a class="headerlink" href="#gripper-module" title="Link to this heading"></a></h3>
 <dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><p>This module provides a Python interface for controlling a gripper device through serial communication.</p>
+</dd>
 <dt>Classes:</dt><dd><ul class="simple">
 <li><p>Gripper: Represents the gripper and provides methods for controlling its opening and orientation.</p></li>
 </ul>
@@ -1150,7 +1241,7 @@ The actual motion speed also depends on the global override value (holding regis
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="src.gripper.Gripper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.gripper.</span></span><span class="sig-name descname"><span class="pre">Gripper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/dev/ttyUSB0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/gripper.html#Gripper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.gripper.</span></span><span class="sig-name descname"><span class="pre">Gripper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/dev/ttyUSB0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">115200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/gripper.html#Gripper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.gripper.Gripper.close">
@@ -1192,6 +1283,30 @@ The actual motion speed also depends on the global override value (holding regis
 <dt class="sig sig-object py" id="src.gripper.Gripper.is_connected">
 <span class="sig-name descname"><span class="pre">is_connected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#src.gripper.Gripper.is_connected" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.gripper.Gripper.modbus">
+<span class="sig-name descname"><span class="pre">modbus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/gripper.html#Gripper.modbus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.gripper.Gripper.modbus" title="Link to this definition"></a></dt>
+<dd><p>Control the gripper using Modbus signals and variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>int</em>) – The Modbus signal number to enable/disable gripper control.
+Default is 6.</p></li>
+<li><p><strong>var1</strong> (<em>int</em>) – The Modbus variable number for reading the gripper opening.
+Default is 15.</p></li>
+<li><p><strong>var2</strong> (<em>int</em>) – The Modbus variable number for reading the gripper orientation.
+Default is 16.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the gripper control was successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.gripper.Gripper.open">
@@ -1239,8 +1354,27 @@ The actual motion speed also depends on the global override value (holding regis
 </dd></dl>
 
 </section>
+</section>
+<section id="gui-package">
+<h1>GUI package<a class="headerlink" href="#gui-package" title="Link to this heading"></a></h1>
 <section id="module-GUI.gui">
-<span id="gui-package"></span><h1>GUI package<a class="headerlink" href="#module-GUI.gui" title="Link to this heading"></a></h1>
+<span id="gui"></span><h2>GUI<a class="headerlink" href="#module-GUI.gui" title="Link to this heading"></a></h2>
+<section id="delta-robot-control-application">
+<h3>Delta Robot Control Application<a class="headerlink" href="#delta-robot-control-application" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><ul class="simple">
+<li><p>This application provides a graphical user interface (GUI) to control a Delta robot and its gripper.</p></li>
+<li><p>The GUI allows the user to control the robot’s movements, adjust speed settings, operate the gripper, and manage robot programs.</p></li>
+</ul>
+</dd>
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>App: Represents the main application window and contains methods for initializing the GUI and running the application.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GUI.gui.App">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GUI.gui.</span></span><span class="sig-name descname"><span class="pre">App</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App" title="Link to this definition"></a></dt>
@@ -1253,6 +1387,11 @@ The actual motion speed also depends on the global override value (holding regis
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.clear_list">
 <span class="sig-name descname"><span class="pre">clear_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.clear_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.clear_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.connect" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1296,8 +1435,23 @@ The actual motion speed also depends on the global override value (holding regis
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_load_pragram">
+<span class="sig-name descname"><span class="pre">locale_load_pragram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_load_pragram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_load_pragram" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_programs_widgets">
+<span class="sig-name descname"><span class="pre">locale_programs_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_programs_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_programs_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_update_list">
+<span class="sig-name descname"><span class="pre">locale_update_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_update_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_update_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.logo_widgets">
-<span class="sig-name descname"><span class="pre">logo_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/yaman/Git/IGUS_Delta_Robot/Modbus/GUI/img/hsel_logo_dark.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.logo_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.logo_widgets" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">logo_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/yaman/src/IGUS_Delta_Robot/Modbus/GUI/img/hsel_logo_dark.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.logo_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.logo_widgets" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1323,6 +1477,11 @@ The actual motion speed also depends on the global override value (holding regis
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.run_list">
 <span class="sig-name descname"><span class="pre">run_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.run_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.run_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.save_list">
+<span class="sig-name descname"><span class="pre">save_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.save_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.save_list" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1367,13 +1526,23 @@ The actual motion speed also depends on the global override value (holding regis
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_error">
+<span class="sig-name descname"><span class="pre">update_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_list">
+<span class="sig-name descname"><span class="pre">update_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.update_tabs">
 <span class="sig-name descname"><span class="pre">update_tabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_tabs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.update_theme">
-<span class="sig-name descname"><span class="pre">update_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_theme" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_theme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_theme" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1384,34 +1553,49 @@ The actual motion speed also depends on the global override value (holding regis
 <dd></dd></dl>
 
 </section>
+</section>
 <section id="example-package">
 <h1>Example package<a class="headerlink" href="#example-package" title="Link to this heading"></a></h1>
-<section id="module-Example.example">
-<span id="example-example-module"></span><h2>Example.example module<a class="headerlink" href="#module-Example.example" title="Link to this heading"></a></h2>
+<section id="module-Example.Move">
+<span id="move"></span><h2>Move<a class="headerlink" href="#module-Example.Move" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><p>This example demonstrates how to move the Delta robot in a rectangular pattern. It begins by establishing a connection to the robot, and if successful, performs some basic movements.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Move.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Move.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Move.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Move.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements.</p>
+</dd></dl>
 
 </section>
-<section id="module-Example.example2">
-<span id="example-example2-module"></span><h2>Example.example2 module<a class="headerlink" href="#module-Example.example2" title="Link to this heading"></a></h2>
+<section id="module-Example.Control_programs">
+<span id="control-programs"></span><h2>Control programs<a class="headerlink" href="#module-Example.Control_programs" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Description:</dt><dd><p>This example demonstrates controlling the gripper with the Delta robot. The following code provide an overview of the basic functions for controlling the gripper.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example2.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example2.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example2.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example2.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Control_programs.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Control_programs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Control_programs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Control_programs.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and interacts with its control programs.</p>
+</dd></dl>
 
 </section>
-<section id="module-Example.example3">
-<span id="example-example3-module"></span><h2>Example.example3 module<a class="headerlink" href="#module-Example.example3" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Gripper<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple" id="module-Example.Gripper">
+<dt>Description:</dt><dd><p>This example shows how to control programs on the Delta robot. It demonstrates the selection of a program, starting, stopping, pausing, and resuming execution.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example3.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example3.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example3.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example3.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Gripper.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Gripper.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Gripper.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Gripper.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements combined with gripper control commands.</p>
+</dd></dl>
 
-</section>
-<section id="module-Example.example_gripper">
-<span id="example-example-gripper-module"></span><h2>Example.example_gripper module<a class="headerlink" href="#module-Example.example_gripper" title="Link to this heading"></a></h2>
 </section>
 </section>
 

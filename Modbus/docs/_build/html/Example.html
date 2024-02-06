@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Example package &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -42,9 +44,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#modbus-package">Modbus package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#gripper-package">Gripper package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html#module-GUI.gui">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#gui-package">GUI package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#example-package">Example package</a></li>
 </ul>
 
@@ -77,32 +80,46 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="module-Example.example">
-<span id="example-example-module"></span><h2>Example.example module<a class="headerlink" href="#module-Example.example" title="Link to this heading"></a></h2>
+<section id="module-Example.Move">
+<span id="example-move-module"></span><h2>Example.Move module<a class="headerlink" href="#module-Example.Move" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><p>This example demonstrates how to move the Delta robot in a rectangular pattern. It begins by establishing a connection to the robot, and if successful, performs some basic movements.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Move.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Move.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Move.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Move.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements.</p>
+</dd></dl>
 
 </section>
-<section id="module-Example.example2">
-<span id="example-example2-module"></span><h2>Example.example2 module<a class="headerlink" href="#module-Example.example2" title="Link to this heading"></a></h2>
+<section id="example-control-programs-module">
+<h2>Example.Control_programs module<a class="headerlink" href="#example-control-programs-module" title="Link to this heading"></a></h2>
+<dl class="simple" id="module-Example.Control_programs">
+<dt>Description:</dt><dd><p>This example demonstrates controlling the gripper with the Delta robot. The following code provide an overview of the basic functions for controlling the gripper.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example2.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example2.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example2.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example2.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Control_programs.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Control_programs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Control_programs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Control_programs.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and interacts with its control programs.</p>
+</dd></dl>
 
 </section>
-<section id="module-Example.example3">
-<span id="example-example3-module"></span><h2>Example.example3 module<a class="headerlink" href="#module-Example.example3" title="Link to this heading"></a></h2>
+<section id="module-Example.Gripper">
+<span id="example-gripper-module"></span><h2>Example.Gripper module<a class="headerlink" href="#module-Example.Gripper" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Description:</dt><dd><p>This example shows how to control programs on the Delta robot. It demonstrates the selection of a program, starting, stopping, pausing, and resuming execution.</p>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="Example.example3.main">
-<span class="sig-prename descclassname"><span class="pre">Example.example3.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/example3.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.example3.main" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="Example.Gripper.main">
+<span class="sig-prename descclassname"><span class="pre">Example.Gripper.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Example/Gripper.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Example.Gripper.main" title="Link to this definition"></a></dt>
+<dd><p>This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements combined with gripper control commands.</p>
+</dd></dl>
 
-</section>
-<section id="module-Example.example_gripper">
-<span id="example-example-gripper-module"></span><h2>Example.example_gripper module<a class="headerlink" href="#module-Example.example_gripper" title="Link to this heading"></a></h2>
 </section>
 <section id="module-Example">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Example" title="Link to this heading"></a></h2>

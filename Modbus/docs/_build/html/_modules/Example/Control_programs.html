@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example.example3 &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>Example.Control_programs &mdash; Delta-Robot 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -41,7 +43,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#modbus-package">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#gripper-package">Gripper package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#gui-package">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#example-package">Example package</a></li>
 </ul>
 
         </div>
@@ -59,7 +65,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">Example.example3</li>
+      <li class="breadcrumb-item active">Example.Control_programs</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,14 +74,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for Example.example3</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">src.igus_modbus</span> <span class="kn">import</span> <span class="n">Robot</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-
+  <h1>Source code for Example.Control_programs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Description:</span>
+<span class="sd">    This example demonstrates controlling the gripper with the Delta robot. The following code provide an overview of the basic functions for controlling the gripper.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">src.igus_modbus</span> <span class="kn">import</span> <span class="n">Robot</span>
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../Example.html#Example.example3.main">[docs]</a>
+<a class="viewcode-back" href="../../src.html#Example.Control_programs.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates an instance of the Robot class, establishes a connection to the robot, and interacts with its control programs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">delta</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">(</span><span class="s2">&quot;192.168.3.11&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">delta</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
@@ -83,20 +94,18 @@
         <span class="n">delta</span><span class="o">.</span><span class="n">reference</span><span class="p">()</span>
         <span class="n">delta</span><span class="o">.</span><span class="n">set_override_velocity</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 
-        <span class="c1"># delta.print_list_of_programs()</span>
-        <span class="nb">list</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_list_of_porgrams</span><span class="p">()</span>
-        <span class="n">delta</span><span class="o">.</span><span class="n">set_program_name</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">delta</span><span class="o">.</span><span class="n">print_list_of_programs</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;select a program</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">delta</span><span class="o">.</span><span class="n">controll_programs</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">)</span>
-        <span class="n">delta</span><span class="o">.</span><span class="n">set_position_variable</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">movement</span><span class="o">=</span><span class="s2">&quot;cartesian&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
-        <span class="c1"># delta_robot.set_position_variable(number=1,movement=&quot;axes&quot;,a1=30,a2=30,a3=30,conversion=1)</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">get_list_of_porgrams</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">delta</span><span class="o">.</span><span class="n">set_program_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;select an action:</span><span class="se">\n</span><span class="s2"> 1. start</span><span class="se">\n</span><span class="s2"> 2. stop</span><span class="se">\n</span><span class="s2"> 3. pause</span><span class="se">\n</span><span class="s2"> 4. continue</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
 
-        <span class="n">delta</span><span class="o">.</span><span class="n">set_globale_signal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">delta</span><span class="o">.</span><span class="n">set_digital_output</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">get_kinematics_error</span><span class="p">())</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">get_robot_errors</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">delta</span><span class="o">.</span><span class="n">get_readable_number_variable</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">delta</span><span class="o">.</span><span class="n">controll_programs</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No Connection&quot;</span><span class="p">)</span></div>
 

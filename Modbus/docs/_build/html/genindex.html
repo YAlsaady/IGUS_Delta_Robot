@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -41,9 +43,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#modbus-package">Modbus package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#gripper-package">Gripper package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html#module-GUI.gui">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#gui-package">GUI package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#example-package">Example package</a></li>
 </ul>
 
@@ -120,8 +123,12 @@
 </li>
       <li><a href="src.html#src.gripper.Gripper.close">close() (src.gripper.Gripper method)</a>
 </li>
+      <li><a href="GUI.html#GUI.gui.App.connect">connect() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.connect">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src.html#src.igus_modbus.Robot.control_gripper">control_gripper() (src.igus_modbus.Robot method)</a>
+</li>
       <li><a href="GUI.html#GUI.gui.App.control_widgets">control_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.control_widgets">[1]</a>
 </li>
       <li><a href="src.html#src.gripper.Gripper.controll">controll() (src.gripper.Gripper method)</a>
@@ -156,33 +163,33 @@
 </li>
       </ul></li>
       <li>
-    Example.example
+    example
 
       <ul>
-        <li><a href="Example.html#module-Example.example">module</a>, <a href="src.html#module-Example.example">[1]</a>
+        <li><a href="src.html#module-example">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    Example.example2
+    Example.Control_programs
 
       <ul>
-        <li><a href="Example.html#module-Example.example2">module</a>, <a href="src.html#module-Example.example2">[1]</a>
+        <li><a href="Example.html#module-Example.Control_programs">module</a>, <a href="src.html#module-Example.Control_programs">[1]</a>
 </li>
       </ul></li>
       <li>
-    Example.example3
+    Example.Gripper
 
       <ul>
-        <li><a href="Example.html#module-Example.example3">module</a>, <a href="src.html#module-Example.example3">[1]</a>
+        <li><a href="Example.html#module-Example.Gripper">module</a>, <a href="src.html#module-Example.Gripper">[1]</a>
 </li>
       </ul></li>
       <li>
-    Example.example_gripper
+    Example.Move
 
       <ul>
-        <li><a href="Example.html#module-Example.example_gripper">module</a>, <a href="src.html#module-Example.example_gripper">[1]</a>
+        <li><a href="Example.html#module-Example.Move">module</a>, <a href="src.html#module-Example.Move">[1]</a>
 </li>
       </ul></li>
   </ul></td>
@@ -227,10 +234,10 @@
 </li>
       <li><a href="src.html#src.igus_modbus.Robot.get_program_replay_mode">get_program_replay_mode() (src.igus_modbus.Robot method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src.html#src.igus_modbus.Robot.get_program_runstate">get_program_runstate() (src.igus_modbus.Robot method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src.html#src.igus_modbus.Robot.get_readable_number_variable">get_readable_number_variable() (src.igus_modbus.Robot method)</a>
 </li>
       <li><a href="src.html#src.igus_modbus.Robot.get_readable_position_variable">get_readable_position_variable() (src.igus_modbus.Robot method)</a>
@@ -245,6 +252,13 @@
 </li>
       <li><a href="src.html#src.gripper.Gripper">Gripper (class in src.gripper)</a>
 </li>
+      <li>
+    gripper_global
+
+      <ul>
+        <li><a href="src.html#module-gripper_global">module</a>
+</li>
+      </ul></li>
       <li><a href="GUI.html#GUI.gui.App.gripper_mov">gripper_mov() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.gripper_mov">[1]</a>
 </li>
       <li><a href="GUI.html#GUI.gui.App.gripper_widgets">gripper_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.gripper_widgets">[1]</a>
@@ -299,9 +313,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="GUI.html#GUI.gui.App.load_pragram">load_pragram() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.load_pragram">[1]</a>
 </li>
+      <li><a href="GUI.html#GUI.gui.App.load_widgets">load_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.load_widgets">[1]</a>
+</li>
+      <li><a href="GUI.html#GUI.gui.App.locale_load_pragram">locale_load_pragram() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.locale_load_pragram">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="GUI.html#GUI.gui.App.load_widgets">load_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.load_widgets">[1]</a>
+      <li><a href="GUI.html#GUI.gui.App.locale_programs_widgets">locale_programs_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.locale_programs_widgets">[1]</a>
+</li>
+      <li><a href="GUI.html#GUI.gui.App.locale_update_list">locale_update_list() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.locale_update_list">[1]</a>
 </li>
       <li><a href="GUI.html#GUI.gui.App.logo_widgets">logo_widgets() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.logo_widgets">[1]</a>
 </li>
@@ -315,38 +335,42 @@
     main
 
       <ul>
-        <li><a href="main.html#module-main">module</a>
+        <li><a href="main.html#module-main">module</a>, <a href="src.html#module-main">[1]</a>
 </li>
       </ul></li>
-      <li><a href="Example.html#Example.example.main">main() (in module Example.example)</a>, <a href="src.html#Example.example.main">[1]</a>
+      <li><a href="Example.html#Example.Control_programs.main">main() (in module Example.Control_programs)</a>, <a href="src.html#Example.Control_programs.main">[1]</a>
 
       <ul>
-        <li><a href="Example.html#Example.example2.main">(in module Example.example2)</a>, <a href="src.html#Example.example2.main">[1]</a>
+        <li><a href="Example.html#Example.Gripper.main">(in module Example.Gripper)</a>, <a href="src.html#Example.Gripper.main">[1]</a>
 </li>
-        <li><a href="Example.html#Example.example3.main">(in module Example.example3)</a>, <a href="src.html#Example.example3.main">[1]</a>
+        <li><a href="Example.html#Example.Move.main">(in module Example.Move)</a>, <a href="src.html#Example.Move.main">[1]</a>
 </li>
         <li><a href="GUI.html#GUI.gui.main">(in module GUI.gui)</a>, <a href="src.html#GUI.gui.main">[1]</a>
 </li>
       </ul></li>
+      <li><a href="src.html#src.gripper.Gripper.modbus">modbus() (src.gripper.Gripper method)</a>
+</li>
       <li>
     module
 
       <ul>
         <li><a href="Example.html#module-Example">Example</a>
 </li>
-        <li><a href="Example.html#module-Example.example">Example.example</a>, <a href="src.html#module-Example.example">[1]</a>
+        <li><a href="src.html#module-example">example</a>
 </li>
-        <li><a href="Example.html#module-Example.example2">Example.example2</a>, <a href="src.html#module-Example.example2">[1]</a>
+        <li><a href="Example.html#module-Example.Control_programs">Example.Control_programs</a>, <a href="src.html#module-Example.Control_programs">[1]</a>
 </li>
-        <li><a href="Example.html#module-Example.example3">Example.example3</a>, <a href="src.html#module-Example.example3">[1]</a>
+        <li><a href="Example.html#module-Example.Gripper">Example.Gripper</a>, <a href="src.html#module-Example.Gripper">[1]</a>
 </li>
-        <li><a href="Example.html#module-Example.example_gripper">Example.example_gripper</a>, <a href="src.html#module-Example.example_gripper">[1]</a>
+        <li><a href="Example.html#module-Example.Move">Example.Move</a>, <a href="src.html#module-Example.Move">[1]</a>
+</li>
+        <li><a href="src.html#module-gripper_global">gripper_global</a>
 </li>
         <li><a href="GUI.html#module-GUI">GUI</a>
 </li>
         <li><a href="GUI.html#module-GUI.gui">GUI.gui</a>, <a href="src.html#module-GUI.gui">[1]</a>
 </li>
-        <li><a href="main.html#module-main">main</a>
+        <li><a href="main.html#module-main">main</a>, <a href="src.html#module-main">[1]</a>
 </li>
         <li><a href="src.html#module-src.gripper">src.gripper</a>
 </li>
@@ -419,6 +443,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="GUI.html#GUI.gui.App.save_list">save_list() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.save_list">[1]</a>
+</li>
       <li><a href="src.html#src.igus_modbus.Robot.set_and_move">set_and_move() (src.igus_modbus.Robot method)</a>
 </li>
       <li><a href="src.html#src.igus_modbus.Robot.set_digital_output">set_digital_output() (src.igus_modbus.Robot method)</a>
@@ -493,8 +519,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="GUI.html#GUI.gui.App.update">update() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.update">[1]</a>
 </li>
+      <li><a href="GUI.html#GUI.gui.App.update_error">update_error() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.update_error">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="GUI.html#GUI.gui.App.update_list">update_list() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.update_list">[1]</a>
+</li>
       <li><a href="GUI.html#GUI.gui.App.update_tabs">update_tabs() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.update_tabs">[1]</a>
 </li>
       <li><a href="GUI.html#GUI.gui.App.update_theme">update_theme() (GUI.gui.App method)</a>, <a href="src.html#GUI.gui.App.update_theme">[1]</a>

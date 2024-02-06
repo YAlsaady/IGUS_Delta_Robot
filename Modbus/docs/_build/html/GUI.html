@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GUI package &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -42,9 +44,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#modbus-package">Modbus package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#gripper-package">Gripper package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html#module-GUI.gui">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#gui-package">GUI package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#example-package">Example package</a></li>
 </ul>
 
@@ -79,6 +82,22 @@
 </section>
 <section id="module-GUI.gui">
 <span id="gui-gui-module"></span><h2>GUI.gui module<a class="headerlink" href="#module-GUI.gui" title="Link to this heading"></a></h2>
+<section id="delta-robot-control-application">
+<h3>Delta Robot Control Application<a class="headerlink" href="#delta-robot-control-application" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Author:</dt><dd><p>Yaman Alsaady</p>
+</dd>
+<dt>Description:</dt><dd><ul class="simple">
+<li><p>This application provides a graphical user interface (GUI) to control a Delta robot and its gripper.</p></li>
+<li><p>The GUI allows the user to control the robot’s movements, adjust speed settings, operate the gripper, and manage robot programs.</p></li>
+</ul>
+</dd>
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>App: Represents the main application window and contains methods for initializing the GUI and running the application.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GUI.gui.App">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GUI.gui.</span></span><span class="sig-name descname"><span class="pre">App</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App" title="Link to this definition"></a></dt>
@@ -91,6 +110,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.clear_list">
 <span class="sig-name descname"><span class="pre">clear_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.clear_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.clear_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.connect" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -134,8 +158,23 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_load_pragram">
+<span class="sig-name descname"><span class="pre">locale_load_pragram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_load_pragram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_load_pragram" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_programs_widgets">
+<span class="sig-name descname"><span class="pre">locale_programs_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_programs_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_programs_widgets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.locale_update_list">
+<span class="sig-name descname"><span class="pre">locale_update_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.locale_update_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.locale_update_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.logo_widgets">
-<span class="sig-name descname"><span class="pre">logo_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/yaman/Git/IGUS_Delta_Robot/Modbus/GUI/img/hsel_logo_dark.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.logo_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.logo_widgets" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">logo_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/yaman/src/IGUS_Delta_Robot/Modbus/GUI/img/hsel_logo_dark.png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.logo_widgets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.logo_widgets" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -161,6 +200,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.run_list">
 <span class="sig-name descname"><span class="pre">run_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.run_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.run_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.save_list">
+<span class="sig-name descname"><span class="pre">save_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.save_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.save_list" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -205,13 +249,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_error">
+<span class="sig-name descname"><span class="pre">update_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GUI.gui.App.update_list">
+<span class="sig-name descname"><span class="pre">update_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.update_tabs">
 <span class="sig-name descname"><span class="pre">update_tabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_tabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_tabs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GUI.gui.App.update_theme">
-<span class="sig-name descname"><span class="pre">update_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_theme" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_theme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GUI/gui.html#App.update_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GUI.gui.App.update_theme" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

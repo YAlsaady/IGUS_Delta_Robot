@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Modbus &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -42,9 +44,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#modbus-package">Modbus package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#gripper-package">Gripper package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html#module-GUI.gui">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#gui-package">GUI package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#example-package">Example package</a></li>
 </ul>
 
@@ -78,28 +81,29 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Example.html">Example package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Example.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.example">Example.example module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.Move">Example.Move module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.Move.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.example2">Example.example2 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.example2.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example.html#example-control-programs-module">Example.Control_programs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.Control_programs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.example3">Example.example3 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.example3.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.Gripper">Example.Gripper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Example.html#Example.Gripper.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example.example_gripper">Example.example_gripper module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Example.html#module-Example">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="GUI.html">GUI package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html#module-GUI.gui">GUI.gui module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html#delta-robot-control-application">Delta Robot Control Application</a></li>
 <li class="toctree-l3"><a class="reference internal" href="GUI.html#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.connect"><code class="docutils literal notranslate"><span class="pre">App.connect()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
@@ -108,12 +112,16 @@
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.locale_load_pragram"><code class="docutils literal notranslate"><span class="pre">App.locale_load_pragram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.locale_programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.locale_programs_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.locale_update_list"><code class="docutils literal notranslate"><span class="pre">App.locale_update_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.save_list"><code class="docutils literal notranslate"><span class="pre">App.save_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
@@ -122,6 +130,8 @@
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.update_error"><code class="docutils literal notranslate"><span class="pre">App.update_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.update_list"><code class="docutils literal notranslate"><span class="pre">App.update_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="GUI.html#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
 </ul>
@@ -133,129 +143,153 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html">Modbus package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src.html#igus-modbus-module">igus_modbus Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#src.igus_modbus.Robot"><code class="docutils literal notranslate"><span class="pre">Robot</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.break_time"><code class="docutils literal notranslate"><span class="pre">Robot.break_time</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.controll_programs"><code class="docutils literal notranslate"><span class="pre">Robot.controll_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.disable"><code class="docutils literal notranslate"><span class="pre">Robot.disable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.enable"><code class="docutils literal notranslate"><span class="pre">Robot.enable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_digital_input"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_input()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.get_globale_signal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_info_message"><code class="docutils literal notranslate"><span class="pre">Robot.get_info_message()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.get_kinematics_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_list_of_porgrams"><code class="docutils literal notranslate"><span class="pre">Robot.get_list_of_porgrams()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_number_of_current_program"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_current_program()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_number_of_loaded_programs"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_loaded_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_operation_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_operation_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_orientation_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_replay_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_runstate"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_runstate()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_readable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_number_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_readable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_robot_errors"><code class="docutils literal notranslate"><span class="pre">Robot.get_robot_errors()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_stop_reason_description"><code class="docutils literal notranslate"><span class="pre">Robot.get_stop_reason_description()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_writable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_number_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_writable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_connected"><code class="docutils literal notranslate"><span class="pre">Robot.is_connected</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_enabled"><code class="docutils literal notranslate"><span class="pre">Robot.is_enabled()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_general_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_general_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_kinematics_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_moving"><code class="docutils literal notranslate"><span class="pre">Robot.is_moving()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_program_loaded"><code class="docutils literal notranslate"><span class="pre">Robot.is_program_loaded()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_referenced"><code class="docutils literal notranslate"><span class="pre">Robot.is_referenced()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.is_zero_torque()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_axes"><code class="docutils literal notranslate"><span class="pre">Robot.move_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_circular"><code class="docutils literal notranslate"><span class="pre">Robot.move_circular()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.move_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.print_list_of_programs"><code class="docutils literal notranslate"><span class="pre">Robot.print_list_of_programs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.read_string"><code class="docutils literal notranslate"><span class="pre">Robot.read_string()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.reference"><code class="docutils literal notranslate"><span class="pre">Robot.reference()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.reset"><code class="docutils literal notranslate"><span class="pre">Robot.reset()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_and_move"><code class="docutils literal notranslate"><span class="pre">Robot.set_and_move()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.set_digital_output()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.set_globale_signal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_number_variables"><code class="docutils literal notranslate"><span class="pre">Robot.set_number_variables()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_orientation_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_override_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_override_velocity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_axes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_endeffector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_variable()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_replay_mode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_velocity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.set_zero_torque()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.shutdown"><code class="docutils literal notranslate"><span class="pre">Robot.shutdown()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot.write_string"><code class="docutils literal notranslate"><span class="pre">Robot.write_string()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">Main package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-main">Run GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-example">Run Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-gripper_global">Gripper Golbal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#modbus-package">Modbus package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.igus_modbus">igus modbus</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#igus-modbus-module">igus_modbus Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.igus_modbus.Robot"><code class="docutils literal notranslate"><span class="pre">Robot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.break_time"><code class="docutils literal notranslate"><span class="pre">Robot.break_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.control_gripper"><code class="docutils literal notranslate"><span class="pre">Robot.control_gripper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.controll_programs"><code class="docutils literal notranslate"><span class="pre">Robot.controll_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.disable"><code class="docutils literal notranslate"><span class="pre">Robot.disable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.enable"><code class="docutils literal notranslate"><span class="pre">Robot.enable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_digital_input"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.get_digital_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.get_globale_signal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_info_message"><code class="docutils literal notranslate"><span class="pre">Robot.get_info_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.get_kinematics_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_list_of_porgrams"><code class="docutils literal notranslate"><span class="pre">Robot.get_list_of_porgrams()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_number_of_current_program"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_current_program()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_number_of_loaded_programs"><code class="docutils literal notranslate"><span class="pre">Robot.get_number_of_loaded_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_operation_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_operation_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.get_position_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_replay_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_program_runstate"><code class="docutils literal notranslate"><span class="pre">Robot.get_program_runstate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_readable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_number_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_readable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_readable_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_robot_errors"><code class="docutils literal notranslate"><span class="pre">Robot.get_robot_errors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_stop_reason_description"><code class="docutils literal notranslate"><span class="pre">Robot.get_stop_reason_description()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_writable_number_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_number_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.get_writable_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.get_writable_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_connected"><code class="docutils literal notranslate"><span class="pre">Robot.is_connected</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_enabled"><code class="docutils literal notranslate"><span class="pre">Robot.is_enabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_general_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_general_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_kinematics_error"><code class="docutils literal notranslate"><span class="pre">Robot.is_kinematics_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_moving"><code class="docutils literal notranslate"><span class="pre">Robot.is_moving()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_program_loaded"><code class="docutils literal notranslate"><span class="pre">Robot.is_program_loaded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_referenced"><code class="docutils literal notranslate"><span class="pre">Robot.is_referenced()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.is_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.is_zero_torque()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_axes"><code class="docutils literal notranslate"><span class="pre">Robot.move_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_circular"><code class="docutils literal notranslate"><span class="pre">Robot.move_circular()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.move_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.move_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.print_list_of_programs"><code class="docutils literal notranslate"><span class="pre">Robot.print_list_of_programs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.read_string"><code class="docutils literal notranslate"><span class="pre">Robot.read_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.reference"><code class="docutils literal notranslate"><span class="pre">Robot.reference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.reset"><code class="docutils literal notranslate"><span class="pre">Robot.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_and_move"><code class="docutils literal notranslate"><span class="pre">Robot.set_and_move()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_digital_output"><code class="docutils literal notranslate"><span class="pre">Robot.set_digital_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_globale_signal"><code class="docutils literal notranslate"><span class="pre">Robot.set_globale_signal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_number_variables"><code class="docutils literal notranslate"><span class="pre">Robot.set_number_variables()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_orientation_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_orientation_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_override_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_override_velocity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_axes"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_endeffector"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_endeffector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_position_variable"><code class="docutils literal notranslate"><span class="pre">Robot.set_position_variable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_program_name"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_program_replay_mode"><code class="docutils literal notranslate"><span class="pre">Robot.set_program_replay_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_velocity"><code class="docutils literal notranslate"><span class="pre">Robot.set_velocity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.set_zero_torque"><code class="docutils literal notranslate"><span class="pre">Robot.set_zero_torque()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.shutdown"><code class="docutils literal notranslate"><span class="pre">Robot.shutdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.igus_modbus.Robot.write_string"><code class="docutils literal notranslate"><span class="pre">Robot.write_string()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#gripper-package">Gripper package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src.html#gripper-module">Gripper Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#src.gripper.Gripper"><code class="docutils literal notranslate"><span class="pre">Gripper</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.close"><code class="docutils literal notranslate"><span class="pre">Gripper.close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.controll"><code class="docutils literal notranslate"><span class="pre">Gripper.controll()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.is_connected"><code class="docutils literal notranslate"><span class="pre">Gripper.is_connected</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.open"><code class="docutils literal notranslate"><span class="pre">Gripper.open()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.opening"><code class="docutils literal notranslate"><span class="pre">Gripper.opening</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.orientation"><code class="docutils literal notranslate"><span class="pre">Gripper.orientation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper.rotate"><code class="docutils literal notranslate"><span class="pre">Gripper.rotate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.gripper">Gripper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#gripper-module">Gripper Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#src.gripper.Gripper"><code class="docutils literal notranslate"><span class="pre">Gripper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.close"><code class="docutils literal notranslate"><span class="pre">Gripper.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.controll"><code class="docutils literal notranslate"><span class="pre">Gripper.controll()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.is_connected"><code class="docutils literal notranslate"><span class="pre">Gripper.is_connected</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.modbus"><code class="docutils literal notranslate"><span class="pre">Gripper.modbus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.open"><code class="docutils literal notranslate"><span class="pre">Gripper.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.opening"><code class="docutils literal notranslate"><span class="pre">Gripper.opening</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.orientation"><code class="docutils literal notranslate"><span class="pre">Gripper.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#src.gripper.Gripper.rotate"><code class="docutils literal notranslate"><span class="pre">Gripper.rotate()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="src.html#module-GUI.gui">GUI package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src.html#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.fontsize"><code class="docutils literal notranslate"><span class="pre">App.fontsize</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.gripper_mov"><code class="docutils literal notranslate"><span class="pre">App.gripper_mov()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.speed_widgets"><code class="docutils literal notranslate"><span class="pre">App.speed_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.split_list"><code class="docutils literal notranslate"><span class="pre">App.split_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#GUI.gui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html#gui-package">GUI package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-GUI.gui">GUI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#delta-robot-control-application">Delta Robot Control Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.App"><code class="docutils literal notranslate"><span class="pre">App</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.add"><code class="docutils literal notranslate"><span class="pre">App.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.clear_list"><code class="docutils literal notranslate"><span class="pre">App.clear_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.connect"><code class="docutils literal notranslate"><span class="pre">App.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.control_widgets"><code class="docutils literal notranslate"><span class="pre">App.control_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.enable_robot"><code class="docutils literal notranslate"><span class="pre">App.enable_robot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.error_widgets"><code class="docutils literal notranslate"><span class="pre">App.error_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.fontsize"><code class="docutils literal notranslate"><span class="pre">App.fontsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.gripper_mov"><code class="docutils literal notranslate"><span class="pre">App.gripper_mov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.gripper_widgets"><code class="docutils literal notranslate"><span class="pre">App.gripper_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.load_pragram"><code class="docutils literal notranslate"><span class="pre">App.load_pragram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.load_widgets"><code class="docutils literal notranslate"><span class="pre">App.load_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.locale_load_pragram"><code class="docutils literal notranslate"><span class="pre">App.locale_load_pragram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.locale_programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.locale_programs_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.locale_update_list"><code class="docutils literal notranslate"><span class="pre">App.locale_update_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.logo_widgets"><code class="docutils literal notranslate"><span class="pre">App.logo_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.move_widgets"><code class="docutils literal notranslate"><span class="pre">App.move_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.program_names"><code class="docutils literal notranslate"><span class="pre">App.program_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.programs_widgets"><code class="docutils literal notranslate"><span class="pre">App.programs_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.remove_list_element"><code class="docutils literal notranslate"><span class="pre">App.remove_list_element()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.run_list"><code class="docutils literal notranslate"><span class="pre">App.run_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.save_list"><code class="docutils literal notranslate"><span class="pre">App.save_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.setting_widgets"><code class="docutils literal notranslate"><span class="pre">App.setting_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.show_positions"><code class="docutils literal notranslate"><span class="pre">App.show_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.sort_list"><code class="docutils literal notranslate"><span class="pre">App.sort_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.speed_widgets"><code class="docutils literal notranslate"><span class="pre">App.speed_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.split_list"><code class="docutils literal notranslate"><span class="pre">App.split_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.tabs"><code class="docutils literal notranslate"><span class="pre">App.tabs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.teach_widgets"><code class="docutils literal notranslate"><span class="pre">App.teach_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.update"><code class="docutils literal notranslate"><span class="pre">App.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.update_error"><code class="docutils literal notranslate"><span class="pre">App.update_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.update_list"><code class="docutils literal notranslate"><span class="pre">App.update_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.update_tabs"><code class="docutils literal notranslate"><span class="pre">App.update_tabs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.html#GUI.gui.App.update_theme"><code class="docutils literal notranslate"><span class="pre">App.update_theme()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#GUI.gui.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src.html#example-package">Example package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.example">Example.example module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#Example.example.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.Move">Move</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#Example.Move.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.example2">Example.example2 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#Example.example2.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.Control_programs">Control programs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#Example.Control_programs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.example3">Example.example3 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="src.html#Example.example3.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#id1">Gripper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.html#Example.Gripper.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src.html#module-Example.example_gripper">Example.example_gripper module</a></li>
 </ul>
 </li>
 </ul>

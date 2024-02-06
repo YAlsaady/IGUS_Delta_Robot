@@ -4,34 +4,23 @@ Example package
 Submodules
 ----------
 
-Example.example module
+Example.Move module
 ----------------------
-
-.. automodule:: Example.example
+.. automodule:: Example.Move
    :members:
    :undoc-members:
    :show-inheritance:
 
-Example.example2 module
+Example.Control_programs module
 -----------------------
-
-.. automodule:: Example.example2
+.. automodule:: Example.Control_programs
    :members:
    :undoc-members:
    :show-inheritance:
 
-Example.example3 module
+Example.Gripper module
 -----------------------
-
-.. automodule:: Example.example3
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Example.example\_gripper module
--------------------------------
-
-.. automodule:: Example.example_gripper
+.. automodule:: Example.Gripper
    :members:
    :undoc-members:
    :show-inheritance:

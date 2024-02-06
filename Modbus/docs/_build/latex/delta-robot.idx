@@ -1,109 +1,122 @@
-\indexentry{module@\spxentry{module}!src.igus\_modbus@\spxentry{src.igus\_modbus}|hyperpage}{1}
-\indexentry{src.igus\_modbus@\spxentry{src.igus\_modbus}!module@\spxentry{module}|hyperpage}{1}
-\indexentry{Robot (class in src.igus\_modbus)@\spxentry{Robot}\spxextra{class in src.igus\_modbus}|hyperpage}{1}
-\indexentry{break\_time (src.igus\_modbus.Robot attribute)@\spxentry{break\_time}\spxextra{src.igus\_modbus.Robot attribute}|hyperpage}{1}
-\indexentry{controll\_programs() (src.igus\_modbus.Robot method)@\spxentry{controll\_programs()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{1}
-\indexentry{disable() (src.igus\_modbus.Robot method)@\spxentry{disable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{1}
-\indexentry{enable() (src.igus\_modbus.Robot method)@\spxentry{enable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{1}
-\indexentry{get\_digital\_input() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_input()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{2}
-\indexentry{get\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{2}
-\indexentry{get\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{get\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{2}
-\indexentry{get\_info\_message() (src.igus\_modbus.Robot method)@\spxentry{get\_info\_message()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{2}
-\indexentry{get\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{get\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{2}
-\indexentry{get\_list\_of\_porgrams() (src.igus\_modbus.Robot method)@\spxentry{get\_list\_of\_porgrams()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{3}
-\indexentry{get\_number\_of\_current\_program() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_current\_program()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{3}
-\indexentry{get\_number\_of\_loaded\_programs() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_loaded\_programs()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{3}
-\indexentry{get\_operation\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_operation\_mode()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{3}
-\indexentry{get\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{3}
-\indexentry{get\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{4}
-\indexentry{get\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{4}
-\indexentry{get\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_name()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{4}
-\indexentry{get\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{4}
-\indexentry{get\_program\_runstate() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_runstate()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{4}
-\indexentry{get\_readable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{5}
-\indexentry{get\_readable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{5}
-\indexentry{get\_robot\_errors() (src.igus\_modbus.Robot method)@\spxentry{get\_robot\_errors()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{5}
-\indexentry{get\_stop\_reason\_description() (src.igus\_modbus.Robot method)@\spxentry{get\_stop\_reason\_description()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{5}
-\indexentry{get\_writable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{5}
-\indexentry{get\_writable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{6}
-\indexentry{is\_connected (src.igus\_modbus.Robot attribute)@\spxentry{is\_connected}\spxextra{src.igus\_modbus.Robot attribute}|hyperpage}{6}
-\indexentry{is\_enabled() (src.igus\_modbus.Robot method)@\spxentry{is\_enabled()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{6}
-\indexentry{is\_general\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_general\_error()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{6}
-\indexentry{is\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{6}
-\indexentry{is\_moving() (src.igus\_modbus.Robot method)@\spxentry{is\_moving()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{is\_program\_loaded() (src.igus\_modbus.Robot method)@\spxentry{is\_program\_loaded()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{is\_referenced() (src.igus\_modbus.Robot method)@\spxentry{is\_referenced()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{is\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{is\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{move\_axes() (src.igus\_modbus.Robot method)@\spxentry{move\_axes()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{move\_circular() (src.igus\_modbus.Robot method)@\spxentry{move\_circular()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{7}
-\indexentry{move\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{move\_endeffector()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{8}
-\indexentry{print\_list\_of\_programs() (src.igus\_modbus.Robot method)@\spxentry{print\_list\_of\_programs()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{8}
-\indexentry{read\_string() (src.igus\_modbus.Robot method)@\spxentry{read\_string()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{8}
-\indexentry{reference() (src.igus\_modbus.Robot method)@\spxentry{reference()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{8}
-\indexentry{reset() (src.igus\_modbus.Robot method)@\spxentry{reset()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{9}
-\indexentry{set\_and\_move() (src.igus\_modbus.Robot method)@\spxentry{set\_and\_move()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{9}
-\indexentry{set\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{set\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{9}
-\indexentry{set\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{set\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{9}
-\indexentry{set\_number\_variables() (src.igus\_modbus.Robot method)@\spxentry{set\_number\_variables()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{9}
-\indexentry{set\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{10}
-\indexentry{set\_override\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_override\_velocity()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{10}
-\indexentry{set\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{10}
-\indexentry{set\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{11}
-\indexentry{set\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{11}
-\indexentry{set\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_name()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{11}
-\indexentry{set\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{12}
-\indexentry{set\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_velocity()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{12}
-\indexentry{set\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{set\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{12}
-\indexentry{shutdown() (src.igus\_modbus.Robot method)@\spxentry{shutdown()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{12}
-\indexentry{write\_string() (src.igus\_modbus.Robot method)@\spxentry{write\_string()}\spxextra{src.igus\_modbus.Robot method}|hyperpage}{12}
-\indexentry{module@\spxentry{module}!src.gripper@\spxentry{src.gripper}|hyperpage}{15}
-\indexentry{src.gripper@\spxentry{src.gripper}!module@\spxentry{module}|hyperpage}{15}
-\indexentry{Gripper (class in src.gripper)@\spxentry{Gripper}\spxextra{class in src.gripper}|hyperpage}{15}
-\indexentry{close() (src.gripper.Gripper method)@\spxentry{close()}\spxextra{src.gripper.Gripper method}|hyperpage}{15}
-\indexentry{controll() (src.gripper.Gripper method)@\spxentry{controll()}\spxextra{src.gripper.Gripper method}|hyperpage}{15}
-\indexentry{is\_connected (src.gripper.Gripper attribute)@\spxentry{is\_connected}\spxextra{src.gripper.Gripper attribute}|hyperpage}{15}
-\indexentry{open() (src.gripper.Gripper method)@\spxentry{open()}\spxextra{src.gripper.Gripper method}|hyperpage}{15}
-\indexentry{opening (src.gripper.Gripper attribute)@\spxentry{opening}\spxextra{src.gripper.Gripper attribute}|hyperpage}{16}
-\indexentry{orientation (src.gripper.Gripper attribute)@\spxentry{orientation}\spxextra{src.gripper.Gripper attribute}|hyperpage}{16}
-\indexentry{rotate() (src.gripper.Gripper method)@\spxentry{rotate()}\spxextra{src.gripper.Gripper method}|hyperpage}{16}
-\indexentry{module@\spxentry{module}!GUI.gui@\spxentry{GUI.gui}|hyperpage}{17}
-\indexentry{GUI.gui@\spxentry{GUI.gui}!module@\spxentry{module}|hyperpage}{17}
-\indexentry{App (class in GUI.gui)@\spxentry{App}\spxextra{class in GUI.gui}|hyperpage}{17}
-\indexentry{add() (GUI.gui.App method)@\spxentry{add()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{clear\_list() (GUI.gui.App method)@\spxentry{clear\_list()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{control\_widgets() (GUI.gui.App method)@\spxentry{control\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{enable\_robot() (GUI.gui.App method)@\spxentry{enable\_robot()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{error\_widgets() (GUI.gui.App method)@\spxentry{error\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{fontsize (GUI.gui.App attribute)@\spxentry{fontsize}\spxextra{GUI.gui.App attribute}|hyperpage}{17}
-\indexentry{gripper\_mov() (GUI.gui.App method)@\spxentry{gripper\_mov()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{gripper\_widgets() (GUI.gui.App method)@\spxentry{gripper\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{load\_pragram() (GUI.gui.App method)@\spxentry{load\_pragram()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{load\_widgets() (GUI.gui.App method)@\spxentry{load\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{logo\_widgets() (GUI.gui.App method)@\spxentry{logo\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{move\_widgets() (GUI.gui.App method)@\spxentry{move\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{program\_names() (GUI.gui.App method)@\spxentry{program\_names()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{programs\_widgets() (GUI.gui.App method)@\spxentry{programs\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{remove\_list\_element() (GUI.gui.App method)@\spxentry{remove\_list\_element()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{run\_list() (GUI.gui.App method)@\spxentry{run\_list()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{setting\_widgets() (GUI.gui.App method)@\spxentry{setting\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{show\_positions() (GUI.gui.App method)@\spxentry{show\_positions()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{sort\_list() (GUI.gui.App method)@\spxentry{sort\_list()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{speed\_widgets() (GUI.gui.App method)@\spxentry{speed\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{split\_list() (GUI.gui.App method)@\spxentry{split\_list()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{tabs() (GUI.gui.App method)@\spxentry{tabs()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{teach\_widgets() (GUI.gui.App method)@\spxentry{teach\_widgets()}\spxextra{GUI.gui.App method}|hyperpage}{17}
-\indexentry{update() (GUI.gui.App method)@\spxentry{update()}\spxextra{GUI.gui.App method}|hyperpage}{18}
-\indexentry{update\_tabs() (GUI.gui.App method)@\spxentry{update\_tabs()}\spxextra{GUI.gui.App method}|hyperpage}{18}
-\indexentry{update\_theme() (GUI.gui.App method)@\spxentry{update\_theme()}\spxextra{GUI.gui.App method}|hyperpage}{18}
-\indexentry{main() (in module GUI.gui)@\spxentry{main()}\spxextra{in module GUI.gui}|hyperpage}{18}
-\indexentry{module@\spxentry{module}!Example.example@\spxentry{Example.example}|hyperpage}{19}
-\indexentry{Example.example@\spxentry{Example.example}!module@\spxentry{module}|hyperpage}{19}
-\indexentry{main() (in module Example.example)@\spxentry{main()}\spxextra{in module Example.example}|hyperpage}{19}
-\indexentry{module@\spxentry{module}!Example.example2@\spxentry{Example.example2}|hyperpage}{19}
-\indexentry{Example.example2@\spxentry{Example.example2}!module@\spxentry{module}|hyperpage}{19}
-\indexentry{main() (in module Example.example2)@\spxentry{main()}\spxextra{in module Example.example2}|hyperpage}{19}
-\indexentry{module@\spxentry{module}!Example.example3@\spxentry{Example.example3}|hyperpage}{19}
-\indexentry{Example.example3@\spxentry{Example.example3}!module@\spxentry{module}|hyperpage}{19}
-\indexentry{main() (in module Example.example3)@\spxentry{main()}\spxextra{in module Example.example3}|hyperpage}{19}
-\indexentry{module@\spxentry{module}!Example.example\_gripper@\spxentry{Example.example\_gripper}|hyperpage}{19}
-\indexentry{Example.example\_gripper@\spxentry{Example.example\_gripper}!module@\spxentry{module}|hyperpage}{19}
+\indexentry{module@\spxentry{module}!main@\spxentry{main}}{1}
+\indexentry{main@\spxentry{main}!module@\spxentry{module}}{1}
+\indexentry{module@\spxentry{module}!example@\spxentry{example}}{1}
+\indexentry{example@\spxentry{example}!module@\spxentry{module}}{1}
+\indexentry{module@\spxentry{module}!gripper\_global@\spxentry{gripper\_global}}{1}
+\indexentry{gripper\_global@\spxentry{gripper\_global}!module@\spxentry{module}}{1}
+\indexentry{module@\spxentry{module}!src.igus\_modbus@\spxentry{src.igus\_modbus}}{3}
+\indexentry{src.igus\_modbus@\spxentry{src.igus\_modbus}!module@\spxentry{module}}{3}
+\indexentry{Robot (class in src.igus\_modbus)@\spxentry{Robot}\spxextra{class in src.igus\_modbus}}{3}
+\indexentry{break\_time (src.igus\_modbus.Robot attribute)@\spxentry{break\_time}\spxextra{src.igus\_modbus.Robot attribute}}{3}
+\indexentry{control\_gripper() (src.igus\_modbus.Robot method)@\spxentry{control\_gripper()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{controll\_programs() (src.igus\_modbus.Robot method)@\spxentry{controll\_programs()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{disable() (src.igus\_modbus.Robot method)@\spxentry{disable()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{enable() (src.igus\_modbus.Robot method)@\spxentry{enable()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{get\_digital\_input() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_input()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{get\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}}{4}
+\indexentry{get\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{get\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}}{5}
+\indexentry{get\_info\_message() (src.igus\_modbus.Robot method)@\spxentry{get\_info\_message()}\spxextra{src.igus\_modbus.Robot method}}{5}
+\indexentry{get\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{get\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}}{5}
+\indexentry{get\_list\_of\_porgrams() (src.igus\_modbus.Robot method)@\spxentry{get\_list\_of\_porgrams()}\spxextra{src.igus\_modbus.Robot method}}{5}
+\indexentry{get\_number\_of\_current\_program() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_current\_program()}\spxextra{src.igus\_modbus.Robot method}}{5}
+\indexentry{get\_number\_of\_loaded\_programs() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_loaded\_programs()}\spxextra{src.igus\_modbus.Robot method}}{6}
+\indexentry{get\_operation\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_operation\_mode()}\spxextra{src.igus\_modbus.Robot method}}{6}
+\indexentry{get\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}{6}
+\indexentry{get\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}}{6}
+\indexentry{get\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}{6}
+\indexentry{get\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_name()}\spxextra{src.igus\_modbus.Robot method}}{7}
+\indexentry{get\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}}{7}
+\indexentry{get\_program\_runstate() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_runstate()}\spxextra{src.igus\_modbus.Robot method}}{7}
+\indexentry{get\_readable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}}{7}
+\indexentry{get\_readable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}{8}
+\indexentry{get\_robot\_errors() (src.igus\_modbus.Robot method)@\spxentry{get\_robot\_errors()}\spxextra{src.igus\_modbus.Robot method}}{8}
+\indexentry{get\_stop\_reason\_description() (src.igus\_modbus.Robot method)@\spxentry{get\_stop\_reason\_description()}\spxextra{src.igus\_modbus.Robot method}}{8}
+\indexentry{get\_writable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}}{8}
+\indexentry{get\_writable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}{8}
+\indexentry{is\_connected (src.igus\_modbus.Robot attribute)@\spxentry{is\_connected}\spxextra{src.igus\_modbus.Robot attribute}}{9}
+\indexentry{is\_enabled() (src.igus\_modbus.Robot method)@\spxentry{is\_enabled()}\spxextra{src.igus\_modbus.Robot method}}{9}
+\indexentry{is\_general\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_general\_error()}\spxextra{src.igus\_modbus.Robot method}}{9}
+\indexentry{is\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}}{9}
+\indexentry{is\_moving() (src.igus\_modbus.Robot method)@\spxentry{is\_moving()}\spxextra{src.igus\_modbus.Robot method}}{9}
+\indexentry{is\_program\_loaded() (src.igus\_modbus.Robot method)@\spxentry{is\_program\_loaded()}\spxextra{src.igus\_modbus.Robot method}}{10}
+\indexentry{is\_referenced() (src.igus\_modbus.Robot method)@\spxentry{is\_referenced()}\spxextra{src.igus\_modbus.Robot method}}{10}
+\indexentry{is\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{is\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}}{10}
+\indexentry{move\_axes() (src.igus\_modbus.Robot method)@\spxentry{move\_axes()}\spxextra{src.igus\_modbus.Robot method}}{10}
+\indexentry{move\_circular() (src.igus\_modbus.Robot method)@\spxentry{move\_circular()}\spxextra{src.igus\_modbus.Robot method}}{10}
+\indexentry{move\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{move\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}{11}
+\indexentry{print\_list\_of\_programs() (src.igus\_modbus.Robot method)@\spxentry{print\_list\_of\_programs()}\spxextra{src.igus\_modbus.Robot method}}{11}
+\indexentry{read\_string() (src.igus\_modbus.Robot method)@\spxentry{read\_string()}\spxextra{src.igus\_modbus.Robot method}}{11}
+\indexentry{reference() (src.igus\_modbus.Robot method)@\spxentry{reference()}\spxextra{src.igus\_modbus.Robot method}}{11}
+\indexentry{reset() (src.igus\_modbus.Robot method)@\spxentry{reset()}\spxextra{src.igus\_modbus.Robot method}}{12}
+\indexentry{set\_and\_move() (src.igus\_modbus.Robot method)@\spxentry{set\_and\_move()}\spxextra{src.igus\_modbus.Robot method}}{12}
+\indexentry{set\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{set\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}}{12}
+\indexentry{set\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{set\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}}{12}
+\indexentry{set\_number\_variables() (src.igus\_modbus.Robot method)@\spxentry{set\_number\_variables()}\spxextra{src.igus\_modbus.Robot method}}{13}
+\indexentry{set\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}{13}
+\indexentry{set\_override\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_override\_velocity()}\spxextra{src.igus\_modbus.Robot method}}{13}
+\indexentry{set\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}}{13}
+\indexentry{set\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}{14}
+\indexentry{set\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}{14}
+\indexentry{set\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_name()}\spxextra{src.igus\_modbus.Robot method}}{15}
+\indexentry{set\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}}{15}
+\indexentry{set\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_velocity()}\spxextra{src.igus\_modbus.Robot method}}{15}
+\indexentry{set\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{set\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}}{15}
+\indexentry{shutdown() (src.igus\_modbus.Robot method)@\spxentry{shutdown()}\spxextra{src.igus\_modbus.Robot method}}{15}
+\indexentry{write\_string() (src.igus\_modbus.Robot method)@\spxentry{write\_string()}\spxextra{src.igus\_modbus.Robot method}}{16}
+\indexentry{module@\spxentry{module}!src.gripper@\spxentry{src.gripper}}{17}
+\indexentry{src.gripper@\spxentry{src.gripper}!module@\spxentry{module}}{17}
+\indexentry{Gripper (class in src.gripper)@\spxentry{Gripper}\spxextra{class in src.gripper}}{17}
+\indexentry{close() (src.gripper.Gripper method)@\spxentry{close()}\spxextra{src.gripper.Gripper method}}{17}
+\indexentry{controll() (src.gripper.Gripper method)@\spxentry{controll()}\spxextra{src.gripper.Gripper method}}{17}
+\indexentry{is\_connected (src.gripper.Gripper attribute)@\spxentry{is\_connected}\spxextra{src.gripper.Gripper attribute}}{18}
+\indexentry{modbus() (src.gripper.Gripper method)@\spxentry{modbus()}\spxextra{src.gripper.Gripper method}}{18}
+\indexentry{open() (src.gripper.Gripper method)@\spxentry{open()}\spxextra{src.gripper.Gripper method}}{18}
+\indexentry{opening (src.gripper.Gripper attribute)@\spxentry{opening}\spxextra{src.gripper.Gripper attribute}}{18}
+\indexentry{orientation (src.gripper.Gripper attribute)@\spxentry{orientation}\spxextra{src.gripper.Gripper attribute}}{18}
+\indexentry{rotate() (src.gripper.Gripper method)@\spxentry{rotate()}\spxextra{src.gripper.Gripper method}}{18}
+\indexentry{module@\spxentry{module}!GUI.gui@\spxentry{GUI.gui}}{19}
+\indexentry{GUI.gui@\spxentry{GUI.gui}!module@\spxentry{module}}{19}
+\indexentry{App (class in GUI.gui)@\spxentry{App}\spxextra{class in GUI.gui}}{19}
+\indexentry{add() (GUI.gui.App method)@\spxentry{add()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{clear\_list() (GUI.gui.App method)@\spxentry{clear\_list()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{connect() (GUI.gui.App method)@\spxentry{connect()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{control\_widgets() (GUI.gui.App method)@\spxentry{control\_widgets()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{enable\_robot() (GUI.gui.App method)@\spxentry{enable\_robot()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{error\_widgets() (GUI.gui.App method)@\spxentry{error\_widgets()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{fontsize (GUI.gui.App attribute)@\spxentry{fontsize}\spxextra{GUI.gui.App attribute}}{19}
+\indexentry{gripper\_mov() (GUI.gui.App method)@\spxentry{gripper\_mov()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{gripper\_widgets() (GUI.gui.App method)@\spxentry{gripper\_widgets()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{load\_pragram() (GUI.gui.App method)@\spxentry{load\_pragram()}\spxextra{GUI.gui.App method}}{19}
+\indexentry{load\_widgets() (GUI.gui.App method)@\spxentry{load\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{locale\_load\_pragram() (GUI.gui.App method)@\spxentry{locale\_load\_pragram()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{locale\_programs\_widgets() (GUI.gui.App method)@\spxentry{locale\_programs\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{locale\_update\_list() (GUI.gui.App method)@\spxentry{locale\_update\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{logo\_widgets() (GUI.gui.App method)@\spxentry{logo\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{move\_widgets() (GUI.gui.App method)@\spxentry{move\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{program\_names() (GUI.gui.App method)@\spxentry{program\_names()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{programs\_widgets() (GUI.gui.App method)@\spxentry{programs\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{remove\_list\_element() (GUI.gui.App method)@\spxentry{remove\_list\_element()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{run\_list() (GUI.gui.App method)@\spxentry{run\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{save\_list() (GUI.gui.App method)@\spxentry{save\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{setting\_widgets() (GUI.gui.App method)@\spxentry{setting\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{show\_positions() (GUI.gui.App method)@\spxentry{show\_positions()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{sort\_list() (GUI.gui.App method)@\spxentry{sort\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{speed\_widgets() (GUI.gui.App method)@\spxentry{speed\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{split\_list() (GUI.gui.App method)@\spxentry{split\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{tabs() (GUI.gui.App method)@\spxentry{tabs()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{teach\_widgets() (GUI.gui.App method)@\spxentry{teach\_widgets()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{update() (GUI.gui.App method)@\spxentry{update()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{update\_error() (GUI.gui.App method)@\spxentry{update\_error()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{update\_list() (GUI.gui.App method)@\spxentry{update\_list()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{update\_tabs() (GUI.gui.App method)@\spxentry{update\_tabs()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{update\_theme() (GUI.gui.App method)@\spxentry{update\_theme()}\spxextra{GUI.gui.App method}}{20}
+\indexentry{main() (in module GUI.gui)@\spxentry{main()}\spxextra{in module GUI.gui}}{20}
+\indexentry{module@\spxentry{module}!Example.Move@\spxentry{Example.Move}}{21}
+\indexentry{Example.Move@\spxentry{Example.Move}!module@\spxentry{module}}{21}
+\indexentry{main() (in module Example.Move)@\spxentry{main()}\spxextra{in module Example.Move}}{21}
+\indexentry{module@\spxentry{module}!Example.Control\_programs@\spxentry{Example.Control\_programs}}{21}
+\indexentry{Example.Control\_programs@\spxentry{Example.Control\_programs}!module@\spxentry{module}}{21}
+\indexentry{main() (in module Example.Control\_programs)@\spxentry{main()}\spxextra{in module Example.Control\_programs}}{21}
+\indexentry{module@\spxentry{module}!Example.Gripper@\spxentry{Example.Gripper}}{22}
+\indexentry{Example.Gripper@\spxentry{Example.Gripper}!module@\spxentry{module}}{22}
+\indexentry{main() (in module Example.Gripper)@\spxentry{main()}\spxextra{in module Example.Gripper}}{22}

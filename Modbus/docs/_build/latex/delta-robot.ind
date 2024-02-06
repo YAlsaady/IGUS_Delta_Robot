@@ -1,190 +1,207 @@
 \begin{sphinxtheindex}
-\let\bigletter\sphinxstyleindexlettergroup
-\let\spxpagem \sphinxstyleindexpagemain
-\let\spxentry \sphinxstyleindexentry
-\let\spxextra \sphinxstyleindexextra
+\let\lettergroup\sphinxstyleindexlettergroup
+\let\lettergroupDefault\sphinxstyleindexlettergroupDefault
+\let\spxpagem\sphinxstyleindexpagemain
+\let\spxentry\sphinxstyleindexentry
+\let\spxextra\sphinxstyleindexextra
 
-  \bigletter A
-  \item \spxentry{add()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{App}\spxextra{class in GUI.gui}, \hyperpage{17}
 
-  \indexspace
-  \bigletter B
-  \item \spxentry{break\_time}\spxextra{src.igus\_modbus.Robot attribute}, \hyperpage{1}
+  \lettergroup{A}
+  \item \spxentry{add()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{App}\spxextra{class in GUI.gui}, \hyperpage{19}
 
   \indexspace
-  \bigletter C
-  \item \spxentry{clear\_list()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{close()}\spxextra{src.gripper.Gripper method}, \hyperpage{15}
-  \item \spxentry{control\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{controll()}\spxextra{src.gripper.Gripper method}, \hyperpage{15}
-  \item \spxentry{controll\_programs()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{1}
+
+  \lettergroup{B}
+  \item \spxentry{break\_time}\spxextra{src.igus\_modbus.Robot attribute}, \hyperpage{3}
 
   \indexspace
-  \bigletter D
-  \item \spxentry{disable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{1}
+
+  \lettergroup{C}
+  \item \spxentry{clear\_list()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{close()}\spxextra{src.gripper.Gripper method}, \hyperpage{17}
+  \item \spxentry{connect()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{control\_gripper()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
+  \item \spxentry{control\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{controll()}\spxextra{src.gripper.Gripper method}, \hyperpage{17}
+  \item \spxentry{controll\_programs()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
 
   \indexspace
-  \bigletter E
-  \item \spxentry{enable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{1}
-  \item \spxentry{enable\_robot()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{error\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{Example.example}
-    \subitem \spxentry{module}, \hyperpage{19}
-  \item \spxentry{Example.example2}
-    \subitem \spxentry{module}, \hyperpage{19}
-  \item \spxentry{Example.example3}
-    \subitem \spxentry{module}, \hyperpage{19}
-  \item \spxentry{Example.example\_gripper}
-    \subitem \spxentry{module}, \hyperpage{19}
+
+  \lettergroup{D}
+  \item \spxentry{disable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
 
   \indexspace
-  \bigletter F
-  \item \spxentry{fontsize}\spxextra{GUI.gui.App attribute}, \hyperpage{17}
 
-  \indexspace
-  \bigletter G
-  \item \spxentry{get\_digital\_input()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{2}
-  \item \spxentry{get\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{2}
-  \item \spxentry{get\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{2}
-  \item \spxentry{get\_info\_message()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{2}
-  \item \spxentry{get\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{2}
-  \item \spxentry{get\_list\_of\_porgrams()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{3}
-  \item \spxentry{get\_number\_of\_current\_program()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{3}
-  \item \spxentry{get\_number\_of\_loaded\_programs()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{3}
-  \item \spxentry{get\_operation\_mode()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{3}
-  \item \spxentry{get\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{3}
-  \item \spxentry{get\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
-  \item \spxentry{get\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{4}
-  \item \spxentry{get\_program\_name()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
-  \item \spxentry{get\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{4}
-  \item \spxentry{get\_program\_runstate()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
-  \item \spxentry{get\_readable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{5}
-  \item \spxentry{get\_readable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{5}
-  \item \spxentry{get\_robot\_errors()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
-  \item \spxentry{get\_stop\_reason\_description()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{5}
-  \item \spxentry{get\_writable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{5}
-  \item \spxentry{get\_writable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{6}
-  \item \spxentry{Gripper}\spxextra{class in src.gripper}, \hyperpage{15}
-  \item \spxentry{gripper\_mov()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{gripper\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{GUI.gui}
-    \subitem \spxentry{module}, \hyperpage{17}
-
-  \indexspace
-  \bigletter I
-  \item \spxentry{is\_connected}\spxextra{src.gripper.Gripper attribute}, \hyperpage{15}
-  \item \spxentry{is\_connected}\spxextra{src.igus\_modbus.Robot attribute}, \hyperpage{6}
-  \item \spxentry{is\_enabled()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
-  \item \spxentry{is\_general\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
-  \item \spxentry{is\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
-  \item \spxentry{is\_moving()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-  \item \spxentry{is\_program\_loaded()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-  \item \spxentry{is\_referenced()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-  \item \spxentry{is\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-
-  \indexspace
-  \bigletter L
-  \item \spxentry{load\_pragram()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{load\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{logo\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-
-  \indexspace
-  \bigletter M
-  \item \spxentry{main()}\spxextra{in module Example.example}, \hyperpage{19}
-  \item \spxentry{main()}\spxextra{in module Example.example2}, \hyperpage{19}
-  \item \spxentry{main()}\spxextra{in module Example.example3}, \hyperpage{19}
-  \item \spxentry{main()}\spxextra{in module GUI.gui}, \hyperpage{18}
-  \item \spxentry{module}
-    \subitem \spxentry{Example.example}, \hyperpage{19}
-    \subitem \spxentry{Example.example2}, \hyperpage{19}
-    \subitem \spxentry{Example.example3}, \hyperpage{19}
-    \subitem \spxentry{Example.example\_gripper}, \hyperpage{19}
-    \subitem \spxentry{GUI.gui}, \hyperpage{17}
-    \subitem \spxentry{src.gripper}, \hyperpage{15}
-    \subitem \spxentry{src.igus\_modbus}, \hyperpage{1}
-  \item \spxentry{move\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-  \item \spxentry{move\_circular()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
-  \item \spxentry{move\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
-  \item \spxentry{move\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-
-  \indexspace
-  \bigletter O
-  \item \spxentry{open()}\spxextra{src.gripper.Gripper method}, \hyperpage{15}
-  \item \spxentry{opening}\spxextra{src.gripper.Gripper attribute}, \hyperpage{16}
-  \item \spxentry{orientation}\spxextra{src.gripper.Gripper attribute}, \hyperpage{16}
-
-  \indexspace
-  \bigletter P
-  \item \spxentry{print\_list\_of\_programs()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{8}
-  \item \spxentry{program\_names()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{programs\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-
-  \indexspace
-  \bigletter R
-  \item \spxentry{read\_string()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
-  \item \spxentry{reference()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
-  \item \spxentry{remove\_list\_element()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{reset()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
-  \item \spxentry{Robot}\spxextra{class in src.igus\_modbus}, \hyperpage{1}
-  \item \spxentry{rotate()}\spxextra{src.gripper.Gripper method}, \hyperpage{16}
-  \item \spxentry{run\_list()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-
-  \indexspace
-  \bigletter S
-  \item \spxentry{set\_and\_move()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
-  \item \spxentry{set\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
-  \item \spxentry{set\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
-  \item \spxentry{set\_number\_variables()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
-  \item \spxentry{set\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{10}
-  \item \spxentry{set\_override\_velocity()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{10}
-  \item \spxentry{set\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
-  \item \spxentry{set\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{11}
-  \item \spxentry{set\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{11}
-  \item \spxentry{set\_program\_name()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{11}
-  \item \spxentry{set\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}, 
-		\hyperpage{12}
-  \item \spxentry{set\_velocity()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
-  \item \spxentry{set\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
-  \item \spxentry{setting\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{show\_positions()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{shutdown()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
-  \item \spxentry{sort\_list()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{speed\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{split\_list()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{src.gripper}
-    \subitem \spxentry{module}, \hyperpage{15}
-  \item \spxentry{src.igus\_modbus}
+  \lettergroup{E}
+  \item \spxentry{enable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
+  \item \spxentry{enable\_robot()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{error\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{example}
     \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{Example.Control\_programs}
+    \subitem \spxentry{module}, \hyperpage{21}
+  \item \spxentry{Example.Gripper}
+    \subitem \spxentry{module}, \hyperpage{22}
+  \item \spxentry{Example.Move}
+    \subitem \spxentry{module}, \hyperpage{21}
 
   \indexspace
-  \bigletter T
-  \item \spxentry{tabs()}\spxextra{GUI.gui.App method}, \hyperpage{17}
-  \item \spxentry{teach\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{17}
+
+  \lettergroup{F}
+  \item \spxentry{fontsize}\spxextra{GUI.gui.App attribute}, \hyperpage{19}
 
   \indexspace
-  \bigletter U
-  \item \spxentry{update()}\spxextra{GUI.gui.App method}, \hyperpage{18}
-  \item \spxentry{update\_tabs()}\spxextra{GUI.gui.App method}, \hyperpage{18}
-  \item \spxentry{update\_theme()}\spxextra{GUI.gui.App method}, \hyperpage{18}
+
+  \lettergroup{G}
+  \item \spxentry{get\_digital\_input()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
+  \item \spxentry{get\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{4}
+  \item \spxentry{get\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
+  \item \spxentry{get\_info\_message()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
+  \item \spxentry{get\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
+  \item \spxentry{get\_list\_of\_porgrams()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
+  \item \spxentry{get\_number\_of\_current\_program()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{5}
+  \item \spxentry{get\_number\_of\_loaded\_programs()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
+  \item \spxentry{get\_operation\_mode()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
+  \item \spxentry{get\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
+  \item \spxentry{get\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
+  \item \spxentry{get\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{6}
+  \item \spxentry{get\_program\_name()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
+  \item \spxentry{get\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
+  \item \spxentry{get\_program\_runstate()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
+  \item \spxentry{get\_readable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{7}
+  \item \spxentry{get\_readable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
+  \item \spxentry{get\_robot\_errors()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
+  \item \spxentry{get\_stop\_reason\_description()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
+  \item \spxentry{get\_writable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
+  \item \spxentry{get\_writable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{8}
+  \item \spxentry{Gripper}\spxextra{class in src.gripper}, \hyperpage{17}
+  \item \spxentry{gripper\_global}
+    \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{gripper\_mov()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{gripper\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{GUI.gui}
+    \subitem \spxentry{module}, \hyperpage{19}
 
   \indexspace
-  \bigletter W
-  \item \spxentry{write\_string()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
+
+  \lettergroup{I}
+  \item \spxentry{is\_connected}\spxextra{src.gripper.Gripper attribute}, \hyperpage{18}
+  \item \spxentry{is\_connected}\spxextra{src.igus\_modbus.Robot attribute}, \hyperpage{9}
+  \item \spxentry{is\_enabled()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
+  \item \spxentry{is\_general\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
+  \item \spxentry{is\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
+  \item \spxentry{is\_moving()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{9}
+  \item \spxentry{is\_program\_loaded()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
+  \item \spxentry{is\_referenced()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
+  \item \spxentry{is\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
+
+  \indexspace
+
+  \lettergroup{L}
+  \item \spxentry{load\_pragram()}\spxextra{GUI.gui.App method}, \hyperpage{19}
+  \item \spxentry{load\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{locale\_load\_pragram()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{locale\_programs\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{locale\_update\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{logo\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{M}
+  \item \spxentry{main}
+    \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{main()}\spxextra{in module Example.Control\_programs}, \hyperpage{21}
+  \item \spxentry{main()}\spxextra{in module Example.Gripper}, \hyperpage{22}
+  \item \spxentry{main()}\spxextra{in module Example.Move}, \hyperpage{21}
+  \item \spxentry{main()}\spxextra{in module GUI.gui}, \hyperpage{20}
+  \item \spxentry{modbus()}\spxextra{src.gripper.Gripper method}, \hyperpage{18}
+  \item \spxentry{module}
+    \subitem \spxentry{example}, \hyperpage{1}
+    \subitem \spxentry{Example.Control\_programs}, \hyperpage{21}
+    \subitem \spxentry{Example.Gripper}, \hyperpage{22}
+    \subitem \spxentry{Example.Move}, \hyperpage{21}
+    \subitem \spxentry{gripper\_global}, \hyperpage{1}
+    \subitem \spxentry{GUI.gui}, \hyperpage{19}
+    \subitem \spxentry{main}, \hyperpage{1}
+    \subitem \spxentry{src.gripper}, \hyperpage{17}
+    \subitem \spxentry{src.igus\_modbus}, \hyperpage{3}
+  \item \spxentry{move\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
+  \item \spxentry{move\_circular()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{10}
+  \item \spxentry{move\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{11}
+  \item \spxentry{move\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{O}
+  \item \spxentry{open()}\spxextra{src.gripper.Gripper method}, \hyperpage{18}
+  \item \spxentry{opening}\spxextra{src.gripper.Gripper attribute}, \hyperpage{18}
+  \item \spxentry{orientation}\spxextra{src.gripper.Gripper attribute}, \hyperpage{18}
+
+  \indexspace
+
+  \lettergroup{P}
+  \item \spxentry{print\_list\_of\_programs()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{11}
+  \item \spxentry{program\_names()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{programs\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{R}
+  \item \spxentry{read\_string()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{11}
+  \item \spxentry{reference()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{11}
+  \item \spxentry{remove\_list\_element()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{reset()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
+  \item \spxentry{Robot}\spxextra{class in src.igus\_modbus}, \hyperpage{3}
+  \item \spxentry{rotate()}\spxextra{src.gripper.Gripper method}, \hyperpage{18}
+  \item \spxentry{run\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{S}
+  \item \spxentry{save\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{set\_and\_move()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
+  \item \spxentry{set\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
+  \item \spxentry{set\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{12}
+  \item \spxentry{set\_number\_variables()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{13}
+  \item \spxentry{set\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{13}
+  \item \spxentry{set\_override\_velocity()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{13}
+  \item \spxentry{set\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{13}
+  \item \spxentry{set\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{14}
+  \item \spxentry{set\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{14}
+  \item \spxentry{set\_program\_name()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{15}
+  \item \spxentry{set\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{15}
+  \item \spxentry{set\_velocity()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{15}
+  \item \spxentry{set\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{15}
+  \item \spxentry{setting\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{show\_positions()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{shutdown()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{15}
+  \item \spxentry{sort\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{speed\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{split\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{src.gripper}
+    \subitem \spxentry{module}, \hyperpage{17}
+  \item \spxentry{src.igus\_modbus}
+    \subitem \spxentry{module}, \hyperpage{3}
+
+  \indexspace
+
+  \lettergroup{T}
+  \item \spxentry{tabs()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{teach\_widgets()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{U}
+  \item \spxentry{update()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{update\_error()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{update\_list()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{update\_tabs()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+  \item \spxentry{update\_theme()}\spxextra{GUI.gui.App method}, \hyperpage{20}
+
+  \indexspace
+
+  \lettergroup{W}
+  \item \spxentry{write\_string()}\spxextra{src.igus\_modbus.Robot method}, \hyperpage{16}
 
 \end{sphinxtheindex}

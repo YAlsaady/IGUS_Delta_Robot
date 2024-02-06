@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>src.gripper &mdash; Delta-Robot 0.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -41,7 +43,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html">Main package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#modbus-package">Modbus package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#gripper-package">Gripper package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#gui-package">GUI package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../src.html#example-package">Example package</a></li>
 </ul>
 
         </div>
@@ -73,7 +79,11 @@
 <span class="sd">Gripper Module</span>
 <span class="sd">==============</span>
 
-<span class="sd">This module provides a Python interface for controlling a gripper device through serial communication.</span>
+<span class="sd">Author: </span>
+<span class="sd">    Yaman Alsaady</span>
+
+<span class="sd">Description:</span>
+<span class="sd">    This module provides a Python interface for controlling a gripper device through serial communication.</span>
 
 <span class="sd">Classes:</span>
 <span class="sd">    - Gripper: Represents the gripper and provides methods for controlling its opening and orientation.</span>
@@ -82,8 +92,8 @@
 <span class="sd">    To use this module, create an instance of the &#39;Gripper&#39; class with the appropriate serial port and settings.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
 <span class="kn">import</span> <span class="nn">serial</span>
+<span class="kn">from</span> <span class="nn">src.igus_modbus</span> <span class="kn">import</span> <span class="n">Robot</span>
 
 
 <div class="viewcode-block" id="Gripper">
@@ -94,7 +104,7 @@
     <span class="n">opening</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/dev/ttyUSB0&quot;</span><span class="p">,</span> <span class="n">baudrate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9600</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/dev/ttyUSB0&quot;</span><span class="p">,</span> <span class="n">baudrate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">115200</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Gripper instance.</span>
@@ -111,6 +121,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="mi">90</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">opening</span> <span class="o">=</span> <span class="mi">100</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">is_open</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">(</span><span class="s2">&quot;192.168.3.11&quot;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
@@ -199,6 +210,37 @@
         <span class="n">pos</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">opening</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Gripper.modbus">
+<a class="viewcode-back" href="../../src.html#src.gripper.Gripper.modbus">[docs]</a>
+    <span class="k">def</span> <span class="nf">modbus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">var1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Control the gripper using Modbus signals and variables.</span>
+
+<span class="sd">        :param signal: The Modbus signal number to enable/disable gripper control.</span>
+<span class="sd">                       Default is 6.</span>
+<span class="sd">        :type signal: int</span>
+<span class="sd">        :param var1: The Modbus variable number for reading the gripper opening.</span>
+<span class="sd">                     Default is 15.</span>
+<span class="sd">        :type var1: int</span>
+<span class="sd">        :param var2: The Modbus variable number for reading the gripper orientation.</span>
+<span class="sd">                     Default is 16.</span>
+<span class="sd">        :type var2: int</span>
+<span class="sd">        :return: True if the gripper control was successful, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">(</span><span class="s2">&quot;192.168.3.11&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">get_globale_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">opening</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">get_writable_number_variable</span><span class="p">(</span><span class="n">var1</span><span class="p">)</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">get_writable_number_variable</span><span class="p">(</span><span class="n">var2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">controll</span><span class="p">(</span><span class="n">opening</span><span class="p">,</span> <span class="n">orientation</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

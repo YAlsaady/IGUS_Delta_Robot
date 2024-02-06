@@ -9,43 +9,38 @@
 \fi
 %% let collapsible pdf bookmarks panel have high depth per default
 \PassOptionsToPackage{bookmarksdepth=5}{hyperref}
+%% turn off hyperref patch of \index as sphinx.xdy xindy module takes care of
+%% suitable \hyperpage mark-up, working around hyperref-xindy incompatibility
+\PassOptionsToPackage{hyperindex=false}{hyperref}
+%% memoir class requires extra handling
+\makeatletter\@ifclassloaded{memoir}
+{\ifdefined\memhyperindexfalse\memhyperindexfalse\fi}{}\makeatother
 
 \PassOptionsToPackage{booktabs}{sphinx}
 \PassOptionsToPackage{colorrows}{sphinx}
 
 \PassOptionsToPackage{warn}{textcomp}
-\usepackage[utf8]{inputenc}
-\ifdefined\DeclareUnicodeCharacter
-% support both utf8 and utf8x syntaxes
-  \ifdefined\DeclareUnicodeCharacterAsOptional
-    \def\sphinxDUC#1{\DeclareUnicodeCharacter{"#1}}
-  \else
-    \let\sphinxDUC\DeclareUnicodeCharacter
-  \fi
-  \sphinxDUC{00A0}{\nobreakspace}
-  \sphinxDUC{2500}{\sphinxunichar{2500}}
-  \sphinxDUC{2502}{\sphinxunichar{2502}}
-  \sphinxDUC{2514}{\sphinxunichar{2514}}
-  \sphinxDUC{251C}{\sphinxunichar{251C}}
-  \sphinxDUC{2572}{\textbackslash}
-\fi
+
+\catcode`^^^^00a0\active\protected\def^^^^00a0{\leavevmode\nobreak\ }
 \usepackage{cmap}
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\defaultfontfeatures[\rmfamily,\sffamily,\ttfamily]{}
 \usepackage{amsmath,amssymb,amstext}
-\usepackage{babel}
+\usepackage{polyglossia}
+\setmainlanguage{english}
 
 
 
-\usepackage{tgtermes}
-\usepackage{tgheros}
-\renewcommand{\ttdefault}{txtt}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
 
 
 
-\usepackage[Bjarne]{fncychap}
+\usepackage[Bjornstrup]{fncychap}
 \usepackage{sphinx}
 
-\fvset{fontsize=auto}
+\fvset{fontsize=\small}
 \usepackage{geometry}
 
 
@@ -62,9 +57,15 @@
 \setcounter{tocdepth}{1}
 
 
+\usepackage[titles]{tocloft}
+\cftsetpnumwidth {1.25cm}\cftsetrmarg{1.5cm}
+\setlength{\cftchapnumwidth}{0.75cm}
+\setlength{\cftsecindent}{\cftchapnumwidth}
+\setlength{\cftsecnumwidth}{1.25cm}
+
 
 \title{Delta\sphinxhyphen{}Robot}
-\date{Oct 09, 2023}
+\date{Feb 06, 2024}
 \release{0.1}
 \author{Yaman Alsaady}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -72,13 +73,9 @@
 \makeindex
 \begin{document}
 
-\ifdefined\shorthandoff
-  \ifnum\catcode`\=\string=\active\shorthandoff{=}\fi
-  \ifnum\catcode`\"=\active\shorthandoff{"}\fi
-\fi
-
 \pagestyle{empty}
-\sphinxmaketitle
+\input{../tex/title.tex}
+% \sphinxmaketitle
 \pagestyle{plain}
 \sphinxtableofcontents
 \pagestyle{normal}
@@ -88,14 +85,68 @@
 \sphinxstepscope
 
 
-\chapter{Modbus package}
-\label{\detokenize{src:modbus-package}}\label{\detokenize{src::doc}}\index{module@\spxentry{module}!src.igus\_modbus@\spxentry{src.igus\_modbus}}\index{src.igus\_modbus@\spxentry{src.igus\_modbus}!module@\spxentry{module}}
+\chapter{Main package}
+\label{\detokenize{src:main-package}}\label{\detokenize{src::doc}}
 
-\section{igus\_modbus Module}
-\label{\detokenize{src:igus-modbus-module}}\label{\detokenize{src:module-src.igus_modbus}}
+\section{Run GUI}
+\label{\detokenize{src:module-main}}\label{\detokenize{src:run-gui}}\index{module@\spxentry{module}!main@\spxentry{main}}\index{main@\spxentry{main}!module@\spxentry{module}}\begin{description}
+\sphinxlineitem{Author:}
+\sphinxAtStartPar
+Yaman Alsaady
+
+\sphinxlineitem{Description:}
+\sphinxAtStartPar
+Main script to launch the GUI.
+
+\sphinxAtStartPar
+This script imports the main function from the GUI module and calls it to launch the graphical user interface (GUI).
+
+\end{description}
+
+
+\section{Run Examples}
+\label{\detokenize{src:module-example}}\label{\detokenize{src:run-examples}}\index{module@\spxentry{module}!example@\spxentry{example}}\index{example@\spxentry{example}!module@\spxentry{module}}\begin{description}
+\sphinxlineitem{Description:}
+\sphinxAtStartPar
+Main function to select and run different example modules.
+
+\sphinxAtStartPar
+This script prompts the user to choose from three example modules: Move, Gripper, and Control\_programs.
+After the user selects a module by entering a number, the corresponding main function of that module is executed.
+If the user enters an invalid number, a message indicating that the command is not recognized is printed.
+
+\end{description}
+
+
+\section{Gripper Golbal}
+\label{\detokenize{src:module-gripper_global}}\label{\detokenize{src:gripper-golbal}}\index{module@\spxentry{module}!gripper\_global@\spxentry{gripper\_global}}\index{gripper\_global@\spxentry{gripper\_global}!module@\spxentry{module}}\begin{description}
+\sphinxlineitem{Description:}
+\sphinxAtStartPar
+Main script for continuous control of the gripper using Modbus.
+
+\sphinxAtStartPar
+This script initializes a Gripper object and continuously calls its modbus() method as long as the gripper is connected.
+If the gripper gets disconnected, a new Gripper object is created to reestablish the connection.
+
+\end{description}
+
+
+\chapter{Modbus package}
+\label{\detokenize{src:modbus-package}}
+
+\section{igus modbus}
+\label{\detokenize{src:module-src.igus_modbus}}\label{\detokenize{src:igus-modbus}}\index{module@\spxentry{module}!src.igus\_modbus@\spxentry{src.igus\_modbus}}\index{src.igus\_modbus@\spxentry{src.igus\_modbus}!module@\spxentry{module}}
+
+\subsection{igus\_modbus Module}
+\label{\detokenize{src:igus-modbus-module}}\begin{description}
+\sphinxlineitem{Author:}
+\sphinxAtStartPar
+Yaman Alsaady
+
+\sphinxlineitem{Description:}
 \sphinxAtStartPar
 This module provides a Python interface for controlling a Delta Robot (from igus) using Modbus TCP communication.
-\begin{description}
+
 \sphinxlineitem{Classes:}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
@@ -120,13 +171,21 @@ delta\_robot = Robot(‘192.168.3.11’)
 \sphinxAtStartPar
 \# Perform actions with the Delta Robot
 delta\_robot.enable()
+
+\sphinxAtStartPar
 delta\_robot.reference()
+
+\sphinxAtStartPar
 delta\_robot.set\_position\_endeffector(0, 0, 250)
+
+\sphinxAtStartPar
 delta\_robot.set\_velocity(120)
+
+\sphinxAtStartPar
 delta\_robot.move\_endeffector\_absolute()
 \index{Robot (class in src.igus\_modbus)@\spxentry{Robot}\spxextra{class in src.igus\_modbus}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{src.igus\_modbus.}}\sphinxbfcode{\sphinxupquote{Robot}}}{\sphinxparam{\DUrole{n}{address}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}\sphinxparamcomma \sphinxparam{\DUrole{n}{port}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{502}}}{}
@@ -135,16 +194,54 @@ delta\_robot.move\_endeffector\_absolute()
 Bases: \sphinxcode{\sphinxupquote{object}}
 \index{break\_time (src.igus\_modbus.Robot attribute)@\spxentry{break\_time}\spxextra{src.igus\_modbus.Robot attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.break_time}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{break\_time}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }5}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{control\_gripper() (src.igus\_modbus.Robot method)@\spxentry{control\_gripper()}\spxextra{src.igus\_modbus.Robot method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:src.igus_modbus.Robot.control_gripper}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{control\_gripper}}}{\sphinxparam{\DUrole{n}{opening}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{orientation}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{signal}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{6}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Control the gripper using specified values and a Modbus signal.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{opening}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value for the gripper opening.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{orientation}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value for the gripper orientation.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{signal}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Modbus signal number to enable/disable gripper control.
+Default is 6.
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+True if the gripper control was successful, False otherwise.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+bool
+
+\end{description}\end{quote}
+
+\end{fulllineitems}\end{savenotes}
 
 \index{controll\_programs() (src.igus\_modbus.Robot method)@\spxentry{controll\_programs()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.controll_programs}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{controll\_programs}}}{\sphinxparam{\DUrole{n}{action}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}}}{}
@@ -158,15 +255,15 @@ Supported actions are: ‘start’, ‘continue’, ‘pause’, and ‘stop’.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{action}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} The action to perform (‘start’, ‘continue’, ‘pause’, or ‘stop’).
+\sphinxstyleliteralstrong{\sphinxupquote{action}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – The action to perform (‘start’, ‘continue’, ‘pause’, or ‘stop’).
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{disable() (src.igus\_modbus.Robot method)@\spxentry{disable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.disable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{disable}}}{}{}
@@ -183,11 +280,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{enable() (src.igus\_modbus.Robot method)@\spxentry{enable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.enable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{enable}}}{}{}
@@ -204,11 +301,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_digital\_input() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_input()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_digital_input}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_digital\_input}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -221,7 +318,7 @@ This method allows you to get the state of a digital input by specifying its num
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the digital input (1 to 64).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the digital input (1 to 64).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -233,11 +330,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{get\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_digital_output}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_digital\_output}}}{\sphinxparam{\DUrole{n}{number}}}{}
@@ -250,7 +347,7 @@ This method allows you to get the state of a digital output by specifying its nu
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the digital output (1 to 64).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the digital output (1 to 64).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -262,11 +359,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{get\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_globale_signal}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_globale\_signal}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -279,7 +376,7 @@ This method allows you to get the state of a global signal by specifying its num
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the global signal (1 to 100).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the global signal (1 to 100).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -291,11 +388,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_info\_message() (src.igus\_modbus.Robot method)@\spxentry{get\_info\_message()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_info_message}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_info\_message}}}{}{}
@@ -317,11 +414,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{get\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_kinematics_error}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_kinematics\_error}}}{}{}
@@ -342,11 +439,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_list\_of\_porgrams() (src.igus\_modbus.Robot method)@\spxentry{get\_list\_of\_porgrams()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_list_of_porgrams}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_list\_of\_porgrams}}}{}{}
@@ -368,11 +465,11 @@ list
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_number\_of\_current\_program() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_current\_program()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_number_of_current_program}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_number\_of\_current\_program}}}{}{}
@@ -394,11 +491,11 @@ int
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_number\_of\_loaded\_programs() (src.igus\_modbus.Robot method)@\spxentry{get\_number\_of\_loaded\_programs()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_number_of_loaded_programs}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_number\_of\_loaded\_programs}}}{}{}
@@ -419,11 +516,11 @@ int
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_operation\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_operation\_mode()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_operation_mode}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_operation\_mode}}}{}{}
@@ -444,11 +541,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_orientation_endeffector}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_orientation\_endeffector}}}{}{}
@@ -469,11 +566,11 @@ list{[}float{]}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_position_axes}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_position\_axes}}}{}{}
@@ -495,11 +592,11 @@ list{[}float{]}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{get\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_position_endeffector}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_position\_endeffector}}}{}{}
@@ -518,11 +615,11 @@ list{[}float{]}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_name()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_program_name}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_program\_name}}}{}{}
@@ -543,11 +640,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_program_replay_mode}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_program\_replay\_mode}}}{}{}
@@ -573,11 +670,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_program\_runstate() (src.igus\_modbus.Robot method)@\spxentry{get\_program\_runstate()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_program_runstate}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_program\_runstate}}}{}{}
@@ -602,11 +699,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_readable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_readable_number_variable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_readable\_number\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -620,7 +717,7 @@ the variable name in your program follows the naming convention: mb\_num\_r1 \sp
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -632,11 +729,11 @@ int or bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_readable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_readable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_readable_position_variable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_readable\_position\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -650,7 +747,7 @@ Ensure that the variable name in your program follows the naming convention, e.g
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -663,11 +760,11 @@ list
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_robot\_errors() (src.igus\_modbus.Robot method)@\spxentry{get\_robot\_errors()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_robot_errors}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_robot\_errors}}}{}{}
@@ -689,11 +786,11 @@ list{[}str{]}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_stop\_reason\_description() (src.igus\_modbus.Robot method)@\spxentry{get\_stop\_reason\_description()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_stop_reason_description}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_stop\_reason\_description}}}{}{}
@@ -714,11 +811,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_writable\_number\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_number\_variable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_writable_number_variable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_writable\_number\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -732,7 +829,7 @@ variable name in your program adheres to the naming convention: mb\_num\_w1 \sph
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -744,11 +841,11 @@ int or bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{get\_writable\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{get\_writable\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.get_writable_position_variable}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_writable\_position\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{}
@@ -762,7 +859,7 @@ Ensure that the variable name in your program follows the naming convention, e.g
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -775,20 +872,20 @@ list
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_connected (src.igus\_modbus.Robot attribute)@\spxentry{is\_connected}\spxextra{src.igus\_modbus.Robot attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_connected}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{is\_connected}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }False}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_enabled() (src.igus\_modbus.Robot method)@\spxentry{is\_enabled()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_enabled}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_enabled}}}{}{}
@@ -809,11 +906,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_general\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_general\_error()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_general_error}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_general\_error}}}{}{}
@@ -836,11 +933,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_kinematics\_error() (src.igus\_modbus.Robot method)@\spxentry{is\_kinematics\_error()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_kinematics_error}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_kinematics\_error}}}{}{}
@@ -863,11 +960,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_moving() (src.igus\_modbus.Robot method)@\spxentry{is\_moving()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_moving}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_moving}}}{}{}
@@ -888,11 +985,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_program\_loaded() (src.igus\_modbus.Robot method)@\spxentry{is\_program\_loaded()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_program_loaded}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_program\_loaded}}}{}{}
@@ -913,11 +1010,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_referenced() (src.igus\_modbus.Robot method)@\spxentry{is\_referenced()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_referenced}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_referenced}}}{}{}
@@ -938,11 +1035,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{is\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.is_zero_torque}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{is\_zero\_torque}}}{}{}
@@ -964,11 +1061,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{move\_axes() (src.igus\_modbus.Robot method)@\spxentry{move\_axes()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.move_axes}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{move\_axes}}}{\sphinxparam{\DUrole{n}{wait}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{relative}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{False}}}{}
@@ -984,21 +1081,21 @@ To specify the position, use the method set\_position\_axes.
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If True (default), wait until the movement is complete before returning.
+\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – If True (default), wait until the movement is complete before returning.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If False (default), the movement will be absolute, otherwise will be relative to the current position
+\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – If False (default), the movement will be absolute, otherwise will be relative to the current position
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{move\_circular() (src.igus\_modbus.Robot method)@\spxentry{move\_circular()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.move_circular}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{move\_circular}}}{\sphinxparam{\DUrole{n}{radius}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{step}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0.5}}\sphinxparamcomma \sphinxparam{\DUrole{n}{start\_angle}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{stop\_angle}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{360}}}{}
@@ -1013,29 +1110,29 @@ The circular path is defined by a radius, and you can specify the step size, sta
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{radius}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The radius of the circular path in millimeters.
+\sphinxstyleliteralstrong{\sphinxupquote{radius}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The radius of the circular path in millimeters.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{step}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The step size in degrees for moving along the circular path (default is 0.5 degrees).
+\sphinxstyleliteralstrong{\sphinxupquote{step}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The step size in degrees for moving along the circular path (default is 0.5 degrees).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{start\_angle}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The starting angle of the circular path in degrees (default is 0 degrees).
+\sphinxstyleliteralstrong{\sphinxupquote{start\_angle}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The starting angle of the circular path in degrees (default is 0 degrees).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{stop\_angle}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The stopping angle of the circular path in degrees (default is 360 degrees).
+\sphinxstyleliteralstrong{\sphinxupquote{stop\_angle}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The stopping angle of the circular path in degrees (default is 360 degrees).
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{move\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{move\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.move_endeffector}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{move\_endeffector}}}{\sphinxparam{\DUrole{n}{wait}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{relative}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{}
@@ -1051,21 +1148,21 @@ To specify the position, use the method set\_position\_endeffector(x, y, z).
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If True (default), wait until the movement is complete before returning.
+\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – If True (default), wait until the movement is complete before returning.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).
+\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) – Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{print\_list\_of\_programs() (src.igus\_modbus.Robot method)@\spxentry{print\_list\_of\_programs()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.print_list_of_programs}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{print\_list\_of\_programs}}}{}{}
@@ -1083,11 +1180,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{read\_string() (src.igus\_modbus.Robot method)@\spxentry{read\_string()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.read_string}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{read\_string}}}{\sphinxparam{\DUrole{n}{read}}}{}
@@ -1100,7 +1197,7 @@ This method reads a string from a sequence of registers and returns the decoded 
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{read}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) \textendash{} The sequence of registers containing the string data.
+\sphinxstyleliteralstrong{\sphinxupquote{read}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) – The sequence of registers containing the string data.
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1112,11 +1209,11 @@ str
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{reference() (src.igus\_modbus.Robot method)@\spxentry{reference()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.reference}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reference}}}{\sphinxparam{\DUrole{n}{force}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{False}}}{}
@@ -1130,7 +1227,7 @@ If ‘only\_once’ is set to True (default), it will only reference the robot i
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{force}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If False, the robot will only be referenced if not already referenced,
+\sphinxstyleliteralstrong{\sphinxupquote{force}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – If False, the robot will only be referenced if not already referenced,
 otherwise, it will be referenced each time this method is called (default is False).
 
 \sphinxlineitem{Returns}
@@ -1139,11 +1236,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{reset() (src.igus\_modbus.Robot method)@\spxentry{reset()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.reset}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reset}}}{}{}
@@ -1160,14 +1257,14 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_and\_move() (src.igus\_modbus.Robot method)@\spxentry{set\_and\_move()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_and_move}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_and\_move}}}{\sphinxparam{\DUrole{n}{val\_1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{val\_2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{val\_3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{movement}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}cartesian\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{relative}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wait}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{velocity}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_and\_move}}}{\sphinxparam{\DUrole{n}{val\_1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{val\_2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{val\_3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{movement}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{'cartesian'}}\sphinxparamcomma \sphinxparam{\DUrole{n}{relative}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{wait}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}\sphinxparamcomma \sphinxparam{\DUrole{n}{velocity}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Set the target position and move the end effector.
@@ -1181,41 +1278,41 @@ You can choose to wait until the movement is complete before returning.
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{val\_1}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position value (X, A1, or other axis, depending on the ‘movement’ parameter).
+\sphinxstyleliteralstrong{\sphinxupquote{val\_1}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position value (X, A1, or other axis, depending on the ‘movement’ parameter).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{val\_2}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position value (Y, A2, or other axis, depending on the ‘movement’ parameter).
+\sphinxstyleliteralstrong{\sphinxupquote{val\_2}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position value (Y, A2, or other axis, depending on the ‘movement’ parameter).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{val\_3}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position value (Z, A3, or other axis, depending on the ‘movement’ parameter).
+\sphinxstyleliteralstrong{\sphinxupquote{val\_3}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position value (Z, A3, or other axis, depending on the ‘movement’ parameter).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{movement}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Specifies the type of movement (‘cartesian’ or ‘axes’).
+\sphinxstyleliteralstrong{\sphinxupquote{movement}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – Specifies the type of movement (‘cartesian’ or ‘axes’).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).
+\sphinxstyleliteralstrong{\sphinxupquote{relative}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) – Specifies the reference frame for the movement (None for absolute, ‘base’, or ‘tool’).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If True (default), wait until the movement is complete before returning.
+\sphinxstyleliteralstrong{\sphinxupquote{wait}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – If True (default), wait until the movement is complete before returning.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} Optional velocity setting in millimeters per second.
+\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) – Optional velocity setting in millimeters per second.
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_digital\_output() (src.igus\_modbus.Robot method)@\spxentry{set\_digital\_output()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_digital_output}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_digital\_output}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{state}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}}}{}
@@ -1229,21 +1326,21 @@ This method allows you to set the state of a digital output by specifying its nu
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the digital output (1 to 64).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the digital output (1 to 64).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{state}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} The state to set (True for ON, False for OFF).
+\sphinxstyleliteralstrong{\sphinxupquote{state}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – The state to set (True for ON, False for OFF).
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_globale\_signal() (src.igus\_modbus.Robot method)@\spxentry{set\_globale\_signal()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_globale_signal}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_globale\_signal}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{state}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}}}{}
@@ -1257,21 +1354,21 @@ This method allows you to set the state of a global signal by specifying its num
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the global signal (1 to 100).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the global signal (1 to 100).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{state}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} The state to set (True for ON, False for OFF).
+\sphinxstyleliteralstrong{\sphinxupquote{state}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – The state to set (True for ON, False for OFF).
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_number\_variables() (src.igus\_modbus.Robot method)@\spxentry{set\_number\_variables()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_number_variables}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_number\_variables}}}{\sphinxparam{\DUrole{n}{number}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1}}\sphinxparamcomma \sphinxparam{\DUrole{n}{value}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}}{}
@@ -1286,11 +1383,11 @@ the variable name in your program should follow the naming convention: mb\_num\_
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{value}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The value to set for the Modbus variable.
+\sphinxstyleliteralstrong{\sphinxupquote{value}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value to set for the Modbus variable.
 
 \end{itemize}
 
@@ -1304,11 +1401,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_orientation\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_orientation\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_orientation_endeffector}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_orientation\_endeffector}}}{\sphinxparam{\DUrole{n}{a\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{b\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{c\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}}{}
@@ -1323,15 +1420,15 @@ This method allows you to set the orientation of the robot’s end effector by s
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The orientation angle around the X\sphinxhyphen{}axis in degrees.
+\sphinxstyleliteralstrong{\sphinxupquote{a\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The orientation angle around the X\sphinxhyphen{}axis in degrees.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{b\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The orientation angle around the Y\sphinxhyphen{}axis in degrees.
+\sphinxstyleliteralstrong{\sphinxupquote{b\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The orientation angle around the Y\sphinxhyphen{}axis in degrees.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{c\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The orientation angle around the Z\sphinxhyphen{}axis in degrees.
+\sphinxstyleliteralstrong{\sphinxupquote{c\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The orientation angle around the Z\sphinxhyphen{}axis in degrees.
 
 \end{itemize}
 
@@ -1341,11 +1438,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_override\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_override\_velocity()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_override_velocity}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_override\_velocity}}}{\sphinxparam{\DUrole{n}{velocity}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{20}}}{}
@@ -1360,7 +1457,7 @@ with 100 being the maximum velocity. The default is 20\%.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The desired velocity override as a percentage (0\sphinxhyphen{}100).
+\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The desired velocity override as a percentage (0\sphinxhyphen{}100).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1368,11 +1465,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_position\_axes() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_axes()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_position_axes}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_position\_axes}}}{\sphinxparam{\DUrole{n}{a1\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a2\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a3\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}}{}
@@ -1392,15 +1489,15 @@ To make the robot move, use the method move\_axes().
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a1\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position for axis A1.
+\sphinxstyleliteralstrong{\sphinxupquote{a1\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position for axis A1.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a2\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position for axis A2.
+\sphinxstyleliteralstrong{\sphinxupquote{a2\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position for axis A2.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a3\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target position for axis A3.
+\sphinxstyleliteralstrong{\sphinxupquote{a3\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target position for axis A3.
 
 \end{itemize}
 
@@ -1410,11 +1507,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_position\_endeffector() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_endeffector()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_position_endeffector}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_position\_endeffector}}}{\sphinxparam{\DUrole{n}{x\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{y\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}\sphinxparamcomma \sphinxparam{\DUrole{n}{z\_val}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{float}}}{}
@@ -1429,15 +1526,15 @@ to the base or to itself. To make the robot move to the specified position, use 
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{x\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target X position in millimeters.
+\sphinxstyleliteralstrong{\sphinxupquote{x\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target X position in millimeters.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{y\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target Y position in millimeters.
+\sphinxstyleliteralstrong{\sphinxupquote{y\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target Y position in millimeters.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{z\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The target Z position in millimeters.
+\sphinxstyleliteralstrong{\sphinxupquote{z\_val}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The target Z position in millimeters.
 
 \end{itemize}
 
@@ -1447,14 +1544,14 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_position\_variable() (src.igus\_modbus.Robot method)@\spxentry{set\_position\_variable()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_position_variable}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_position\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{o}{=}\DUrole{default_value}{1}}\sphinxparamcomma \sphinxparam{\DUrole{n}{movement}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}cartesian\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{x}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{y}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{z}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{b}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{c}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{180}}\sphinxparamcomma \sphinxparam{\DUrole{n}{conversion}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_position\_variable}}}{\sphinxparam{\DUrole{n}{number}\DUrole{o}{=}\DUrole{default_value}{1}}\sphinxparamcomma \sphinxparam{\DUrole{n}{movement}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{'cartesian'}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a3}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{x}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{y}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{z}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}\sphinxparamcomma \sphinxparam{\DUrole{n}{a}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{b}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}\sphinxparamcomma \sphinxparam{\DUrole{n}{c}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{180}}\sphinxparamcomma \sphinxparam{\DUrole{n}{conversion}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{0}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Set the target position for robot movement in a robot program.
@@ -1467,51 +1564,51 @@ follows the naming convention, e.g., mb\_pos\_w1.
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The number of the Modbus variable (1 to 16).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The number of the Modbus variable (1 to 16).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{movement}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} The type of movement (either “cartesian” or “axes”).
+\sphinxstyleliteralstrong{\sphinxupquote{movement}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – The type of movement (either “cartesian” or “axes”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a1}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The value of axis A1 (if movement is “axes”).
+\sphinxstyleliteralstrong{\sphinxupquote{a1}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value of axis A1 (if movement is “axes”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a2}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The value of axis A2 (if movement is “axes”).
+\sphinxstyleliteralstrong{\sphinxupquote{a2}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value of axis A2 (if movement is “axes”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a3}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The value of axis A3 (if movement is “axes”).
+\sphinxstyleliteralstrong{\sphinxupquote{a3}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The value of axis A3 (if movement is “axes”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{x}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The X\sphinxhyphen{}coordinate value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{x}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The X\sphinxhyphen{}coordinate value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{y}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The Y\sphinxhyphen{}coordinate value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{y}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Y\sphinxhyphen{}coordinate value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{z}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The Z\sphinxhyphen{}coordinate value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{z}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Z\sphinxhyphen{}coordinate value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{a}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The orientation A value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{a}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The orientation A value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{b}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The orientation B value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{b}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The orientation B value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{c}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The orientation C value (if movement is “cartesian”).
+\sphinxstyleliteralstrong{\sphinxupquote{c}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The orientation C value (if movement is “cartesian”).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{conversion}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The conversion type (useful for converting between joint and cartesian positions).
+\sphinxstyleliteralstrong{\sphinxupquote{conversion}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The conversion type (useful for converting between joint and cartesian positions).
 
 \end{itemize}
 
@@ -1525,11 +1622,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_program\_name() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_name()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_program_name}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_program\_name}}}{\sphinxparam{\DUrole{n}{name}}}{}
@@ -1542,18 +1639,18 @@ This method allows you to set the name of the robot program.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} The name of the robot program.
+\sphinxstyleliteralstrong{\sphinxupquote{name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – The name of the robot program.
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_program\_replay\_mode() (src.igus\_modbus.Robot method)@\spxentry{set\_program\_replay\_mode()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_program_replay_mode}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_program\_replay\_mode}}}{\sphinxparam{\DUrole{n}{mode}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}once\textquotesingle{}}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_program\_replay\_mode}}}{\sphinxparam{\DUrole{n}{mode}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{'once'}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Set the program replay mode for the robot.
@@ -1568,23 +1665,23 @@ The \sphinxtitleref{mode} parameter specifies the desired mode and can take one 
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{mode}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} The desired program replay mode.
+\sphinxstyleliteralstrong{\sphinxupquote{mode}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – The desired program replay mode.
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
-True if the mode was successfully set, False if an invalid mode is provided.
+0 if
 
 \sphinxlineitem{Return type}
 \sphinxAtStartPar
-bool
+int
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_velocity() (src.igus\_modbus.Robot method)@\spxentry{set\_velocity()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_velocity}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_velocity}}}{\sphinxparam{\DUrole{n}{velocity}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}}}{}
@@ -1600,7 +1697,7 @@ The actual motion speed also depends on the global override value (holding regis
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} The desired velocity in millimeters per second (or in percent).
+\sphinxstyleliteralstrong{\sphinxupquote{velocity}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) – The desired velocity in millimeters per second (or in percent).
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1608,11 +1705,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{set\_zero\_torque() (src.igus\_modbus.Robot method)@\spxentry{set\_zero\_torque()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.set_zero_torque}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_zero\_torque}}}{\sphinxparam{\DUrole{n}{enable}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{bool}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{True}}}{}
@@ -1625,7 +1722,7 @@ This method allows you to enable or disable the zero torque state, which allows 
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{enable}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} True to enable zero torque (for manual movement), False to disable.
+\sphinxstyleliteralstrong{\sphinxupquote{enable}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) – True to enable zero torque (for manual movement), False to disable.
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1633,11 +1730,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{shutdown() (src.igus\_modbus.Robot method)@\spxentry{shutdown()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.shutdown}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{shutdown}}}{}{}
@@ -1654,11 +1751,11 @@ None
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{write\_string() (src.igus\_modbus.Robot method)@\spxentry{write\_string()}\spxextra{src.igus\_modbus.Robot method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.igus_modbus.Robot.write_string}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{write\_string}}}{\sphinxparam{\DUrole{n}{string}}\sphinxparamcomma \sphinxparam{\DUrole{n}{ad}}\sphinxparamcomma \sphinxparam{\DUrole{n}{number}\DUrole{o}{=}\DUrole{default_value}{32}}}{}
@@ -1672,35 +1769,43 @@ This method allows you to write a string to a sequence of registers, starting fr
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{string}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} The string to write.
+\sphinxstyleliteralstrong{\sphinxupquote{string}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) – The string to write.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{ad}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The starting address to write the string.
+\sphinxstyleliteralstrong{\sphinxupquote{ad}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The starting address to write the string.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The maximum number of characters to write (default is 32).
+\sphinxstyleliteralstrong{\sphinxupquote{number}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The maximum number of characters to write (default is 32).
 
 \end{itemize}
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
 
 \chapter{Gripper package}
-\label{\detokenize{src:gripper-package}}\index{module@\spxentry{module}!src.gripper@\spxentry{src.gripper}}\index{src.gripper@\spxentry{src.gripper}!module@\spxentry{module}}
+\label{\detokenize{src:gripper-package}}
 
-\section{Gripper Module}
-\label{\detokenize{src:gripper-module}}\label{\detokenize{src:module-src.gripper}}
+\section{Gripper}
+\label{\detokenize{src:module-src.gripper}}\label{\detokenize{src:gripper}}\index{module@\spxentry{module}!src.gripper@\spxentry{src.gripper}}\index{src.gripper@\spxentry{src.gripper}!module@\spxentry{module}}
+
+\subsection{Gripper Module}
+\label{\detokenize{src:gripper-module}}\begin{description}
+\sphinxlineitem{Author:}
+\sphinxAtStartPar
+Yaman Alsaady
+
+\sphinxlineitem{Description:}
 \sphinxAtStartPar
 This module provides a Python interface for controlling a gripper device through serial communication.
-\begin{description}
+
 \sphinxlineitem{Classes:}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
@@ -1715,16 +1820,16 @@ To use this module, create an instance of the ‘Gripper’ class with the appro
 \end{description}
 \index{Gripper (class in src.gripper)@\spxentry{Gripper}\spxextra{class in src.gripper}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{src.gripper.}}\sphinxbfcode{\sphinxupquote{Gripper}}}{\sphinxparam{\DUrole{n}{port}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{\textquotesingle{}/dev/ttyUSB0\textquotesingle{}}}\sphinxparamcomma \sphinxparam{\DUrole{n}{baudrate}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{9600}}\sphinxparamcomma \sphinxparam{\DUrole{n}{timeout}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{src.gripper.}}\sphinxbfcode{\sphinxupquote{Gripper}}}{\sphinxparam{\DUrole{n}{port}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{str}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{'/dev/ttyUSB0'}}\sphinxparamcomma \sphinxparam{\DUrole{n}{baudrate}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{115200}}\sphinxparamcomma \sphinxparam{\DUrole{n}{timeout}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{1}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Bases: \sphinxcode{\sphinxupquote{object}}
 \index{close() (src.gripper.Gripper method)@\spxentry{close()}\spxextra{src.gripper.Gripper method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.close}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{close}}}{}{{ $\rightarrow$ bool}}
@@ -1745,11 +1850,11 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{controll() (src.gripper.Gripper method)@\spxentry{controll()}\spxextra{src.gripper.Gripper method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.controll}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{controll}}}{\sphinxparam{\DUrole{n}{opening}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}\sphinxparamcomma \sphinxparam{\DUrole{n}{orientation}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{None}}}{{ $\rightarrow$ bool}}
@@ -1763,11 +1868,11 @@ This method allows you to control the gripper’s opening (0 to 100 percent) and
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{opening}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The desired gripper opening in percent (0 to 100).
+\sphinxstyleliteralstrong{\sphinxupquote{opening}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The desired gripper opening in percent (0 to 100).
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{orientation}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) \textendash{} The desired gripper orientation in degrees (optional).
+\sphinxstyleliteralstrong{\sphinxupquote{orientation}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{None}}) – The desired gripper orientation in degrees (optional).
 
 \end{itemize}
 
@@ -1781,20 +1886,60 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{is\_connected (src.gripper.Gripper attribute)@\spxentry{is\_connected}\spxextra{src.gripper.Gripper attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.is_connected}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{is\_connected}}\sphinxbfcode{\sphinxupquote{\DUrole{p}{:}\DUrole{w}{ }bool}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }False}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{modbus() (src.gripper.Gripper method)@\spxentry{modbus()}\spxextra{src.gripper.Gripper method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:src.gripper.Gripper.modbus}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{modbus}}}{\sphinxparam{\DUrole{n}{signal}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{6}}\sphinxparamcomma \sphinxparam{\DUrole{n}{var1}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{15}}\sphinxparamcomma \sphinxparam{\DUrole{n}{var2}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}\DUrole{w}{ }\DUrole{o}{=}\DUrole{w}{ }\DUrole{default_value}{16}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Control the gripper using Modbus signals and variables.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{signal}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Modbus signal number to enable/disable gripper control.
+Default is 6.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{var1}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Modbus variable number for reading the gripper opening.
+Default is 15.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{var2}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The Modbus variable number for reading the gripper orientation.
+Default is 16.
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+True if the gripper control was successful, False otherwise.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+bool
+
+\end{description}\end{quote}
+
+\end{fulllineitems}\end{savenotes}
 
 \index{open() (src.gripper.Gripper method)@\spxentry{open()}\spxextra{src.gripper.Gripper method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.open}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{open}}}{}{{ $\rightarrow$ bool}}
@@ -1815,29 +1960,29 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{opening (src.gripper.Gripper attribute)@\spxentry{opening}\spxextra{src.gripper.Gripper attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.opening}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{opening}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }0}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{orientation (src.gripper.Gripper attribute)@\spxentry{orientation}\spxextra{src.gripper.Gripper attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.orientation}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{orientation}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }0}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{rotate() (src.gripper.Gripper method)@\spxentry{rotate()}\spxextra{src.gripper.Gripper method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:src.gripper.Gripper.rotate}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{rotate}}}{\sphinxparam{\DUrole{n}{orientation}\DUrole{p}{:}\DUrole{w}{ }\DUrole{n}{int}}}{{ $\rightarrow$ bool}}
@@ -1850,7 +1995,7 @@ This method sets the gripper orientation to the specified degree value.
 \begin{quote}\begin{description}
 \sphinxlineitem{Parameters}
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{orientation}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} The desired gripper orientation in degrees.
+\sphinxstyleliteralstrong{\sphinxupquote{orientation}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) – The desired gripper orientation in degrees.
 
 \sphinxlineitem{Returns}
 \sphinxAtStartPar
@@ -1862,17 +2007,47 @@ bool
 
 \end{description}\end{quote}
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
 
 \chapter{GUI package}
-\label{\detokenize{src:module-GUI.gui}}\label{\detokenize{src:gui-package}}\index{module@\spxentry{module}!GUI.gui@\spxentry{GUI.gui}}\index{GUI.gui@\spxentry{GUI.gui}!module@\spxentry{module}}\index{App (class in GUI.gui)@\spxentry{App}\spxextra{class in GUI.gui}}
+\label{\detokenize{src:gui-package}}
 
-\begin{fulllineitems}
+\section{GUI}
+\label{\detokenize{src:module-GUI.gui}}\label{\detokenize{src:gui}}\index{module@\spxentry{module}!GUI.gui@\spxentry{GUI.gui}}\index{GUI.gui@\spxentry{GUI.gui}!module@\spxentry{module}}
+
+\subsection{Delta Robot Control Application}
+\label{\detokenize{src:delta-robot-control-application}}\begin{description}
+\sphinxlineitem{Author:}
+\sphinxAtStartPar
+Yaman Alsaady
+
+\sphinxlineitem{Description:}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+This application provides a graphical user interface (GUI) to control a Delta robot and its gripper.
+
+\item {} 
+\sphinxAtStartPar
+The GUI allows the user to control the robot’s movements, adjust speed settings, operate the gripper, and manage robot programs.
+
+\end{itemize}
+
+\sphinxlineitem{Classes:}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+App: Represents the main application window and contains methods for initializing the GUI and running the application.
+
+\end{itemize}
+
+\end{description}
+\index{App (class in GUI.gui)@\spxentry{App}\spxextra{class in GUI.gui}}
+
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{ }}}\sphinxcode{\sphinxupquote{GUI.gui.}}\sphinxbfcode{\sphinxupquote{App}}}{\sphinxparam{\DUrole{n}{\_}}}{}
@@ -1881,214 +2056,259 @@ bool
 Bases: \sphinxcode{\sphinxupquote{Frame}}
 \index{add() (GUI.gui.App method)@\spxentry{add()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.add}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{add}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{clear\_list() (GUI.gui.App method)@\spxentry{clear\_list()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.clear_list}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{clear\_list}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{connect() (GUI.gui.App method)@\spxentry{connect()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.connect}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{connect}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
 
 \index{control\_widgets() (GUI.gui.App method)@\spxentry{control\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.control_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{control\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{enable\_robot() (GUI.gui.App method)@\spxentry{enable\_robot()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.enable_robot}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{enable\_robot}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{error\_widgets() (GUI.gui.App method)@\spxentry{error\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.error_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{error\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{fontsize (GUI.gui.App attribute)@\spxentry{fontsize}\spxextra{GUI.gui.App attribute}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.fontsize}}
 \pysigstartsignatures
 \pysigline{\sphinxbfcode{\sphinxupquote{fontsize}}\sphinxbfcode{\sphinxupquote{\DUrole{w}{ }\DUrole{p}{=}\DUrole{w}{ }20}}}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{gripper\_mov() (GUI.gui.App method)@\spxentry{gripper\_mov()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.gripper_mov}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{gripper\_mov}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{gripper\_widgets() (GUI.gui.App method)@\spxentry{gripper\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.gripper_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{gripper\_widgets}}}{\sphinxparam{\DUrole{n}{tab\_name}}\sphinxparamcomma \sphinxparam{\DUrole{n}{row}}\sphinxparamcomma \sphinxparam{\DUrole{n}{column}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{load\_pragram() (GUI.gui.App method)@\spxentry{load\_pragram()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.load_pragram}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{load\_pragram}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{load\_widgets() (GUI.gui.App method)@\spxentry{load\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.load_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{load\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{locale\_load\_pragram() (GUI.gui.App method)@\spxentry{locale\_load\_pragram()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.locale_load_pragram}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{locale\_load\_pragram}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
+
+\index{locale\_programs\_widgets() (GUI.gui.App method)@\spxentry{locale\_programs\_widgets()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.locale_programs_widgets}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{locale\_programs\_widgets}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
+
+\index{locale\_update\_list() (GUI.gui.App method)@\spxentry{locale\_update\_list()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.locale_update_list}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{locale\_update\_list}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
 
 \index{logo\_widgets() (GUI.gui.App method)@\spxentry{logo\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.logo_widgets}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{logo\_widgets}}}{\sphinxparam{\DUrole{n}{img}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}/home/yaman/Git/IGUS\_Delta\_Robot/Modbus/GUI/img/hsel\_logo\_dark.png\textquotesingle{}}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{logo\_widgets}}}{\sphinxparam{\DUrole{n}{img}\DUrole{o}{=}\DUrole{default_value}{'/home/yaman/src/IGUS\_Delta\_Robot/Modbus/GUI/img/hsel\_logo\_dark.png'}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{move\_widgets() (GUI.gui.App method)@\spxentry{move\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.move_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{move\_widgets}}}{\sphinxparam{\DUrole{n}{tab\_name}}\sphinxparamcomma \sphinxparam{\DUrole{n}{row}}\sphinxparamcomma \sphinxparam{\DUrole{n}{column}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{program\_names() (GUI.gui.App method)@\spxentry{program\_names()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.program_names}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{program\_names}}}{\sphinxparam{\DUrole{n}{list}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{programs\_widgets() (GUI.gui.App method)@\spxentry{programs\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.programs_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{programs\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{remove\_list\_element() (GUI.gui.App method)@\spxentry{remove\_list\_element()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.remove_list_element}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{remove\_list\_element}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{run\_list() (GUI.gui.App method)@\spxentry{run\_list()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.run_list}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run\_list}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{save\_list() (GUI.gui.App method)@\spxentry{save\_list()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.save_list}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_list}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
 
 \index{setting\_widgets() (GUI.gui.App method)@\spxentry{setting\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.setting_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{setting\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{show\_positions() (GUI.gui.App method)@\spxentry{show\_positions()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.show_positions}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{show\_positions}}}{\sphinxparam{\DUrole{n}{list}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{sort\_list() (GUI.gui.App method)@\spxentry{sort\_list()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.sort_list}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{sort\_list}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{speed\_widgets() (GUI.gui.App method)@\spxentry{speed\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.speed_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{speed\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{split\_list() (GUI.gui.App method)@\spxentry{split\_list()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.split_list}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{split\_list}}}{\sphinxparam{\DUrole{n}{list}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{tabs() (GUI.gui.App method)@\spxentry{tabs()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.tabs}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{tabs}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{teach\_widgets() (GUI.gui.App method)@\spxentry{teach\_widgets()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.teach_widgets}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{teach\_widgets}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{update() (GUI.gui.App method)@\spxentry{update()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.update}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update}}}{}{}
@@ -2096,110 +2316,143 @@ Bases: \sphinxcode{\sphinxupquote{Frame}}
 \sphinxAtStartPar
 Enter event loop until all pending events have been processed by Tcl.
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
+
+\index{update\_error() (GUI.gui.App method)@\spxentry{update\_error()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.update_error}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_error}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
+
+\index{update\_list() (GUI.gui.App method)@\spxentry{update\_list()}\spxextra{GUI.gui.App method}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:GUI.gui.App.update_list}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_list}}}{}{}
+\pysigstopsignatures
+\end{fulllineitems}\end{savenotes}
 
 \index{update\_tabs() (GUI.gui.App method)@\spxentry{update\_tabs()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.update_tabs}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_tabs}}}{\sphinxparam{\DUrole{n}{\_}}}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{update\_theme() (GUI.gui.App method)@\spxentry{update\_theme()}\spxextra{GUI.gui.App method}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.App.update_theme}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_theme}}}{\sphinxparam{\DUrole{n}{\_}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{update\_theme}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 \index{main() (in module GUI.gui)@\spxentry{main()}\spxextra{in module GUI.gui}}
 
-\begin{fulllineitems}
+\begin{savenotes}\begin{fulllineitems}
 \phantomsection\label{\detokenize{src:GUI.gui.main}}
 \pysigstartsignatures
 \pysiglinewithargsret{\sphinxcode{\sphinxupquote{GUI.gui.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
 \pysigstopsignatures
-\end{fulllineitems}
+\end{fulllineitems}\end{savenotes}
 
 
 
 \chapter{Example package}
 \label{\detokenize{src:example-package}}
 
-\section{Example.example module}
-\label{\detokenize{src:module-Example.example}}\label{\detokenize{src:example-example-module}}\index{module@\spxentry{module}!Example.example@\spxentry{Example.example}}\index{Example.example@\spxentry{Example.example}!module@\spxentry{module}}\index{main() (in module Example.example)@\spxentry{main()}\spxextra{in module Example.example}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{src:Example.example.main}}
-\pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.example.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
-\pysigstopsignatures
-\end{fulllineitems}
-
-
-
-\section{Example.example2 module}
-\label{\detokenize{src:module-Example.example2}}\label{\detokenize{src:example-example2-module}}\index{module@\spxentry{module}!Example.example2@\spxentry{Example.example2}}\index{Example.example2@\spxentry{Example.example2}!module@\spxentry{module}}\index{main() (in module Example.example2)@\spxentry{main()}\spxextra{in module Example.example2}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{src:Example.example2.main}}
-\pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.example2.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
-\pysigstopsignatures
-\end{fulllineitems}
-
-
-
-\section{Example.example3 module}
-\label{\detokenize{src:module-Example.example3}}\label{\detokenize{src:example-example3-module}}\index{module@\spxentry{module}!Example.example3@\spxentry{Example.example3}}\index{Example.example3@\spxentry{Example.example3}!module@\spxentry{module}}\index{main() (in module Example.example3)@\spxentry{main()}\spxextra{in module Example.example3}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{src:Example.example3.main}}
-\pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.example3.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
-\pysigstopsignatures
-\end{fulllineitems}
-
-
-
-\section{Example.example\_gripper module}
-\label{\detokenize{src:module-Example.example_gripper}}\label{\detokenize{src:example-example-gripper-module}}\index{module@\spxentry{module}!Example.example\_gripper@\spxentry{Example.example\_gripper}}\index{Example.example\_gripper@\spxentry{Example.example\_gripper}!module@\spxentry{module}}
-
-\chapter{Indices and tables}
-\label{\detokenize{index:indices-and-tables}}\begin{itemize}
-\item {} 
+\section{Move}
+\label{\detokenize{src:module-Example.Move}}\label{\detokenize{src:move}}\index{module@\spxentry{module}!Example.Move@\spxentry{Example.Move}}\index{Example.Move@\spxentry{Example.Move}!module@\spxentry{module}}\begin{description}
+\sphinxlineitem{Author:}
 \sphinxAtStartPar
-\DUrole{xref,std,std-ref}{genindex}
+Yaman Alsaady
 
-\item {} 
+\sphinxlineitem{Description:}
 \sphinxAtStartPar
-\DUrole{xref,std,std-ref}{modindex}
+This example demonstrates how to move the Delta robot in a rectangular pattern. It begins by establishing a connection to the robot, and if successful, performs some basic movements.
 
-\item {} 
+\end{description}
+\index{main() (in module Example.Move)@\spxentry{main()}\spxextra{in module Example.Move}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:Example.Move.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.Move.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
+\pysigstopsignatures
 \sphinxAtStartPar
-\DUrole{xref,std,std-ref}{search}
+This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements.
 
-\end{itemize}
+\end{fulllineitems}\end{savenotes}
+
+
+
+\section{Control programs}
+\label{\detokenize{src:module-Example.Control_programs}}\label{\detokenize{src:control-programs}}\index{module@\spxentry{module}!Example.Control\_programs@\spxentry{Example.Control\_programs}}\index{Example.Control\_programs@\spxentry{Example.Control\_programs}!module@\spxentry{module}}\begin{description}
+\sphinxlineitem{Description:}
+\sphinxAtStartPar
+This example demonstrates controlling the gripper with the Delta robot. The following code provide an overview of the basic functions for controlling the gripper.
+
+\end{description}
+\index{main() (in module Example.Control\_programs)@\spxentry{main()}\spxextra{in module Example.Control\_programs}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:Example.Control_programs.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.Control\_programs.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+This function creates an instance of the Robot class, establishes a connection to the robot, and interacts with its control programs.
+
+\end{fulllineitems}\end{savenotes}
+
+
+
+\section{Gripper}
+\label{\detokenize{src:id1}}\index{module@\spxentry{module}!Example.Gripper@\spxentry{Example.Gripper}}\index{Example.Gripper@\spxentry{Example.Gripper}!module@\spxentry{module}}\phantomsection\label{\detokenize{src:module-Example.Gripper}}\begin{description}
+\sphinxlineitem{Description:}
+\sphinxAtStartPar
+This example shows how to control programs on the Delta robot. It demonstrates the selection of a program, starting, stopping, pausing, and resuming execution.
+
+\end{description}
+\index{main() (in module Example.Gripper)@\spxentry{main()}\spxextra{in module Example.Gripper}}
+
+\begin{savenotes}\begin{fulllineitems}
+\phantomsection\label{\detokenize{src:Example.Gripper.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Example.Gripper.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+This function creates an instance of the Robot class, establishes a connection to the robot, and executes a predefined sequence of movements combined with gripper control commands.
+
+\end{fulllineitems}\end{savenotes}
+
 
 
 \renewcommand{\indexname}{Python Module Index}
 \begin{sphinxtheindex}
 \let\bigletter\sphinxstyleindexlettergroup
 \bigletter{e}
-\item\relax\sphinxstyleindexentry{Example.example}\sphinxstyleindexpageref{src:\detokenize{module-Example.example}}
-\item\relax\sphinxstyleindexentry{Example.example2}\sphinxstyleindexpageref{src:\detokenize{module-Example.example2}}
-\item\relax\sphinxstyleindexentry{Example.example3}\sphinxstyleindexpageref{src:\detokenize{module-Example.example3}}
-\item\relax\sphinxstyleindexentry{Example.example\_gripper}\sphinxstyleindexpageref{src:\detokenize{module-Example.example_gripper}}
+\item\relax\sphinxstyleindexentry{example}\sphinxstyleindexpageref{src:\detokenize{module-example}}
+\item\relax\sphinxstyleindexentry{Example.Control\_programs}\sphinxstyleindexpageref{src:\detokenize{module-Example.Control_programs}}
+\item\relax\sphinxstyleindexentry{Example.Gripper}\sphinxstyleindexpageref{src:\detokenize{module-Example.Gripper}}
+\item\relax\sphinxstyleindexentry{Example.Move}\sphinxstyleindexpageref{src:\detokenize{module-Example.Move}}
 \indexspace
 \bigletter{g}
+\item\relax\sphinxstyleindexentry{gripper\_global}\sphinxstyleindexpageref{src:\detokenize{module-gripper_global}}
 \item\relax\sphinxstyleindexentry{GUI.gui}\sphinxstyleindexpageref{src:\detokenize{module-GUI.gui}}
+\indexspace
+\bigletter{m}
+\item\relax\sphinxstyleindexentry{main}\sphinxstyleindexpageref{src:\detokenize{module-main}}
 \indexspace
 \bigletter{s}
 \item\relax\sphinxstyleindexentry{src.gripper}\sphinxstyleindexpageref{src:\detokenize{module-src.gripper}}
@@ -2207,5 +2460,5 @@ Enter event loop until all pending events have been processed by Tcl.
 \end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}
-\printindex
+\footnotesize\raggedright\printindex
 \end{document}

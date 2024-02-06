@@ -1,7 +1,0 @@
-This is makeindex, version 2.17 [TeX Live 2023] (kpathsea + Thai support).
-Scanning style file ./python.ist.......done (7 attributes redefined, 0 ignored).
-Scanning input file delta-robot.idx....done (109 entries accepted, 0 rejected).
-Sorting entries....done (761 comparisons).
-Generating output file delta-robot.ind....done (190 lines written, 0 warnings).
-Output written in delta-robot.ind.
-Transcript written in delta-robot.ilg.

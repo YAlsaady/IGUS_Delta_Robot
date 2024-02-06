@@ -1,6 +1,29 @@
+Main package
+===========
+Run GUI
+----------------------
+.. automodule:: main
+   :members:
+   :undoc-members:
+   :show-inheritance:
+Run Examples
+----------------------
+.. automodule:: example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+Gripper Golbal
+----------------------
+.. automodule:: gripper_global
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Modbus package
 ===========
-
+igus modbus
+----------------------
 .. automodule:: src.igus_modbus
    :members:
    :undoc-members:
@@ -8,6 +31,8 @@ Modbus package
 
 Gripper package
 ===========
+Gripper
+----------------------
 .. automodule:: src.gripper
    :members:
    :undoc-members:
@@ -15,7 +40,8 @@ Gripper package
 
 GUI package
 ===========
-
+GUI
+----------------------
 .. automodule:: GUI.gui
    :members:
    :undoc-members:
@@ -24,30 +50,23 @@ GUI package
 Example package
 ===============
 
-Example.example module
+Move
 ----------------------
-.. automodule:: Example.example
+.. automodule:: Example.Move
    :members:
    :undoc-members:
    :show-inheritance:
 
-Example.example2 module
+Control programs
 -----------------------
-.. automodule:: Example.example2
+.. automodule:: Example.Control_programs
    :members:
    :undoc-members:
    :show-inheritance:
 
-Example.example3 module
+Gripper
 -----------------------
-.. automodule:: Example.example3
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Example.example\_gripper module
--------------------------------
-.. automodule:: Example.example_gripper
+.. automodule:: Example.Gripper
    :members:
    :undoc-members:
    :show-inheritance:

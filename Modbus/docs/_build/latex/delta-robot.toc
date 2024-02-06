@@ -1,14 +1,20 @@
-\babel@toc {english}{}\relax 
-\contentsline {chapter}{\numberline {1}Modbus package}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}igus\_modbus Module}{1}{section.1.1}%
-\contentsline {chapter}{\numberline {2}Gripper package}{15}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Gripper Module}{15}{section.2.1}%
-\contentsline {chapter}{\numberline {3}GUI package}{17}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Example package}{19}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Example.example module}{19}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Example.example2 module}{19}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Example.example3 module}{19}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Example.example\_gripper module}{19}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Indices and tables}{21}{chapter.5}%
-\contentsline {chapter}{Python Module Index}{23}{section*.98}%
-\contentsline {chapter}{Index}{25}{section*.99}%
+\selectlanguage *{english}
+\contentsline {chapter}{\numberline {1}Main package}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Run GUI}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Run Examples}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Gripper Golbal}{1}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Modbus package}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}igus modbus}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}igus\_modbus Module}{3}{subsection.2.1.1}%
+\contentsline {chapter}{\numberline {3}Gripper package}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Gripper}{17}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Gripper Module}{17}{subsection.3.1.1}%
+\contentsline {chapter}{\numberline {4}GUI package}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}GUI}{19}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Delta Robot Control Application}{19}{subsection.4.1.1}%
+\contentsline {chapter}{\numberline {5}Example package}{21}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Move}{21}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Control programs}{21}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Gripper}{22}{section.5.3}%
+\contentsline {chapter}{Python Module Index}{23}{section*.108}%
+\contentsline {chapter}{Index}{25}{section*.109}%
