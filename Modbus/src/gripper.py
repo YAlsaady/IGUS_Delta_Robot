@@ -41,7 +41,10 @@ class Gripper:
             self.ser = serial.Serial(port, baudrate, timeout=timeout)
             self.orientation = 90
             self.opening = 100
+            self.open_min = 0
             self.open_max = 90
+            self.orient_min = 30
+            self.orient_max = 150
             self.is_connected = self.ser.is_open
             self.delta = Robot("192.168.3.11")
         except:
@@ -70,10 +73,10 @@ class Gripper:
         self.opening = opening
         if orientation is not None:
             self.orientation = orientation
-        opening = opening * self.open_max /100
+            orientation = orientation * (self.orient_max - self.orient_min) / (180 + self.orient_min)
+        opening = opening * (self.open_max - self.open_min) / (100 + self.open_min)
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
-        # sleep(0.05)
         return True
 
     def open(self) -> bool:
