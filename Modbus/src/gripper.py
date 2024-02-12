@@ -41,6 +41,7 @@ class Gripper:
             self.ser = serial.Serial(port, baudrate, timeout=timeout)
             self.orientation = 90
             self.opening = 100
+            self.open_max = 90
             self.is_connected = self.ser.is_open
             self.delta = Robot("192.168.3.11")
         except:
@@ -69,6 +70,7 @@ class Gripper:
         self.opening = opening
         if orientation is not None:
             self.orientation = orientation
+        opening = opening * self.open_max /100
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
         # sleep(0.05)
@@ -116,9 +118,7 @@ class Gripper:
         if not (0 <= orientation <= 180):
             return False  # Orientation value out of range
 
-        self.orientation = orientation
-        pos = f"{self.opening} {self.orientation}\n"
-        self.ser.write(pos.encode())
+        self.controll(self.opening, self.orientation)
         return True
 
     def modbus(self, signal: int = 6, var1: int = 15, var2: int = 16):
