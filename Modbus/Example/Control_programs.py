@@ -19,7 +19,7 @@ def main():
         print("select a program\n")
 
         num = input()
-        name = delta.get_list_of_porgrams(num)
+        name = delta.get_list_of_porgrams()[int(num)]
         delta.set_program_name(name)
         
         print("select an action:\n 1. start\n 2. stop\n 3. pause\n 4. continue\n")
