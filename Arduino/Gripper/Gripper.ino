@@ -1,58 +1,42 @@
+/*
+  Author: Yaman Alsaady
+  Description: This Arduino code controls two servos - one for gripping and one for rotation - using an ESP32 microcontroller.
+*/
+
 #include <Arduino.h>
 #include <ESP32Servo.h>
 
 #define SERVO 26
 #define SERVO_ROT 27
-#define CLOSE 165
-#define OPEN 15
 
 Servo gripper;
 Servo rotation;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(115200); // Initialize serial communication
 
-  pinMode(SERVO, OUTPUT);
-  pinMode(SERVO_ROT, OUTPUT);
+  pinMode(SERVO, OUTPUT); // Set servo pin as output
+  pinMode(SERVO_ROT, OUTPUT); // Set rotation servo pin as output
 
+  // Attach servos to corresponding pins with min and max pulse duration
   gripper.attach(SERVO, 500, 2500);
   rotation.attach(SERVO_ROT, 500, 2500);
 }
 
 void loop() {
-  static char reading[20];
-  static byte i = 0, val1 = CLOSE, val2 = 90;
-
-  while (Serial.available() == 0) {
-  }
-
-  while (Serial.peek() != ' ' && Serial.peek() != '\n') {
-    reading[i] = Serial.read();
-    i++;
-    delay(10);
-  }
-  reading[i] = '\0';
-
-  val1 = atoi(reading);
-
-  if (Serial.read() == ' ') {
-    i = 0;
-    while (Serial.peek() != ' ' && Serial.peek() != '\n') {
-      reading[i] = Serial.read();
-      i++;
-      delay(10);
+  // Check for incoming serial data
+  while (Serial.available() > 0) {
+    // Read gripping and rotation values
+    int gripping_var = Serial.parseInt();
+    int rotation_var = Serial.parseInt();
+    // If end of line character is received
+    if (Serial.read() == '\n') {
+      // Constrain values to be within 0 and 180
+      gripping_var = constrain(gripping_var, 0, 180);
+      rotation_var = constrain(rotation_var, 0, 180);
+      // Set servo positions
+      gripper.write(gripping_var);
+      rotation.write(rotation_var);
     }
-    reading[i] = '\0';
-    val2 = atoi(reading);
-  }
-
-  val1 = map(val1, 0, 100, OPEN, CLOSE);
-  gripper.write(val1);
-  rotation.write(180-val2);
-
-  i = 0;
-
-  while (Serial.available() != 0) {
-    Serial.read();
   }
 }
