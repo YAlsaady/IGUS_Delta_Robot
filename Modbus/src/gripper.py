@@ -17,6 +17,7 @@ Usage:
 
 import serial
 from src.igus_modbus import Robot
+from time import time
 
 
 class Gripper:
@@ -25,17 +26,23 @@ class Gripper:
     opening = 0
 
     def __init__(
-        self, port: str = "/dev/ttyUSB0", baudrate: int = 115200, timeout: int = 1
+        self,
+        port: str = "/dev/ttyUSB0",
+        baudrate: int = 115200,
+        timeout: int = 1,
+        movement_time: float = 1,
     ):
         """
         Initialize the Gripper instance.
 
         :param port: The serial port for communication (default is "/dev/ttyUSB0").
         :type port: str
-        :param baudrate: The baud rate for serial communication (default is 9600).
+        :param baudrate: The baud rate for serial communication (default is 115200).
         :type baudrate: int
         :param timeout: The timeout for serial communication (default is 1 second).
-        :type timeout: int or float
+        :type timeout: int
+        :param movement_time: The maximum movement time in seconds (default is 1 second).
+        :type movement_time: float
         """
         try:
             self.ser = serial.Serial(port, baudrate, timeout=timeout)
@@ -47,6 +54,9 @@ class Gripper:
             self.orient_max = 150
             self.is_connected = self.ser.is_open
             self.delta = Robot("192.168.3.11")
+            if self.delta.is_connected:
+                self.delta.set_globale_signal(7, False)
+            self.movement_time = movement_time
         except:
             pass
 
@@ -70,14 +80,43 @@ class Gripper:
         if orientation is not None and not (0 <= orientation <= 180):
             return False  # Orientation value out of range
 
+        if self.opening == opening and self.orientation == orientation:
+            return True
+
+        if orientation is None:
+            orientation = self.orientation
+
+        if (self.opening == opening) ^ (self.orientation == orientation):
+            self.last_control_time = time()
+        else:
+            self.last_control_time = time() + self.movement_time
+
         self.opening = opening
-        if orientation is not None:
-            self.orientation = orientation
-            orientation = orientation * (self.orient_max - self.orient_min) / (180 + self.orient_min)
-        opening = opening * (self.open_max - self.open_min) / (100 + self.open_min)
+        self.orientation = orientation
+        opening = (opening * (self.open_max - self.open_min) / 100) + self.open_min
+        orientation = (orientation * (self.orient_max - self.orient_min) / 180) + self.orient_min
         pos = f"{self.opening} {self.orientation}\n"
         self.ser.write(pos.encode())
         return True
+
+    def is_moving(self) -> bool:
+        """
+        Check if the gripper is still moving after the last control operation.
+
+        This method calculates the time since the last control operation and compares it with the maximum movement time.
+        If the time since the last control operation is less than the maximum movement time, it returns True,
+        indicating that the gripper is still moving. Otherwise, it returns False.
+
+        Additionally, if the delta robot is connected, it sets a global signal to indicate the gripper's movement state.
+
+        :return: True if the gripper is still moving, False otherwise.
+        :rtype: bool
+        """
+        time_since_last_control = time() - self.last_control_time
+        state = time_since_last_control < self.movement_time
+        if self.delta.is_connected:
+            self.delta.set_globale_signal(7, state)
+        return state
 
     def open(self) -> bool:
         """
