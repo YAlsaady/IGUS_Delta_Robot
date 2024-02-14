@@ -24,6 +24,7 @@ class Gripper:
     is_connected: bool = False
     orientation = 0
     opening = 0
+    last_control_time = 0
 
     def __init__(
         self,
@@ -48,8 +49,8 @@ class Gripper:
             self.ser = serial.Serial(port, baudrate, timeout=timeout)
             self.orientation = 90
             self.opening = 100
-            self.open_min = 0
-            self.open_max = 90
+            self.open_min = 90
+            self.open_max = 180
             self.orient_min = 30
             self.orient_max = 150
             self.is_connected = self.ser.is_open
@@ -57,6 +58,7 @@ class Gripper:
             if self.delta.is_connected:
                 self.delta.set_globale_signal(7, False)
             self.movement_time = movement_time
+            self.last_control_time = time()
         except:
             pass
 
@@ -93,9 +95,11 @@ class Gripper:
 
         self.opening = opening
         self.orientation = orientation
-        opening = (opening * (self.open_max - self.open_min) / 100) + self.open_min
-        orientation = (orientation * (self.orient_max - self.orient_min) / 180) + self.orient_min
-        pos = f"{self.opening} {self.orientation}\n"
+        opening = int((opening * (self.open_max - self.open_min) / 100) + self.open_min)
+        orientation = 180 - int(
+            (orientation * (self.orient_max - self.orient_min) / 180) + self.orient_min
+        )
+        pos = f"{opening} {orientation}\n"
         self.ser.write(pos.encode())
         return True
 

@@ -1381,11 +1381,15 @@ class Robot:
         """
         if not self.is_connected:
             return False
-        self.set_globale_signal(signal, True)
         self.set_number_variables(15, opening)
         self.set_number_variables(16, orientation)
+        self.set_globale_signal(signal, True)
+        sleep(0.1)
         self.set_globale_signal(signal, False)
         return True
+
+    def is_gripper_moving(self):
+        return self.get_globale_signal(7)
     # }}}
 
 
