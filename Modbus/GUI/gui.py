@@ -950,27 +950,23 @@ class App(ttk.Frame):
         self.delta.set_zero_torque(False)
         self.enalbe_var.set(True)
         self.delta.enable()
-        self.gripper_enable_var.set(False)
+        self.gripper_enable_var.set(True)
         if not self.delta.is_connected:
             self.run_var.set(False)
             self.gripper_enable_var.set(True)
             return
         for i in self.pos_list:
             self.delta.set_and_move(*i[0])
-            if (
-                i[1][0] != self.gripper_var.get()
-                or i[1][1] != self.gripper_orient_var.get()
-            ):
-                while self.delta.is_moving():
-                    pass
-                self.gripper_scale.set(i[1][0])
-                self.gripper_var.set(i[1][0])
-                self.gripper_orient_scale.set(i[1][1])
-                self.gripper_orient_var.set(i[1][1])
-                self.gripper_mov()
-                sleep(1.5)
+            while self.delta.is_moving():
+                pass
+            self.gripper_scale.set(i[1][0])
+            self.gripper_var.set(i[1][0])
+            self.gripper_orient_scale.set(i[1][1])
+            self.gripper_orient_var.set(i[1][1])
+            self.gripper_mov()
+            while self.delta.is_gripper_moving():
+                pass
         self.run_var.set(False)
-        self.gripper_enable_var.set(True)
 
     def sort_list(self):
         sort = self.sort_var.get().split()
@@ -1035,14 +1031,9 @@ class App(ttk.Frame):
     def gripper_mov(self):
         if not self.gripper_enable_var.get():
             return
-        if (
-            self.gripper_var.get() != self.gripper_opening
-            or self.gripper_orient_var.get() != self.gripper_orientation
-        ):
-            self.gripper_opening = self.gripper_var.get()
-            self.gripper_orientation = self.gripper_orient_var.get()
-            print(self.gripper_opening, self.gripper_orientation)
-            self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
+        self.gripper_opening = self.gripper_var.get()
+        self.gripper_orientation = self.gripper_orient_var.get()
+        self.delta.control_gripper(self.gripper_opening, self.gripper_orientation)
 
     def enable_robot(self):
         if self.enalbe_var.get():
