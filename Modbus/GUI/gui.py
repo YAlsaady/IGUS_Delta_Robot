@@ -13,7 +13,7 @@ Classes:
     - App: Represents the main application window and contains methods for initializing the GUI and running the application.
 
 """
-from time import localtime, sleep, strftime
+from time import localtime, strftime
 import tkinter as tk
 from tkinter import ttk
 import os
@@ -21,7 +21,6 @@ import webbrowser
 import json
 
 from src.igus_modbus import Robot
-from src.gripper import Gripper
 
 PATH = os.path.dirname(os.path.abspath(__file__)) + "/"
 
@@ -36,7 +35,6 @@ class App(ttk.Frame):
         self.tk.call("source", PATH + "azure.tcl")
         self.tk.call("set_theme", "dark")
         self.delta = Robot("192.168.3.11")
-        self.gripper = Gripper()
         # Make the app responsive
         for index in [0, 1, 2]:
             self.columnconfigure(index=index, weight=1)
@@ -242,8 +240,6 @@ class App(ttk.Frame):
 
     # {{{ Speed
     def speed_widgets(self):
-        self.separator = ttk.Separator(self.tab_1)
-        self.separator.grid(row=2, column=0, padx=(10, 10), pady=10, sticky="nwew")
         self.speed_frame = ttk.LabelFrame(self.tab_1, text="Speed", padding=(20, 20))
         self.speed_frame.grid(row=3, column=0, padx=(20, 20), pady=10, sticky="nwew")
 
@@ -306,8 +302,49 @@ class App(ttk.Frame):
         self.speed_title_label.grid(
             row=1, column=0, padx=(5, 10), pady=(20, 0), sticky="ew"
         )
+        self.table_up = ttk.Button(
+            self.speed_frame,
+            text="Up",
+            command=lambda: (
+                self.delta.change_table_hight(1,1),
+            ),
+        )
+        self.table_up.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+        self.table_down = ttk.Button(
+            self.speed_frame,
+            text="Down",
+            command=lambda: (
+                self.delta.change_table_hight(-1,1),
+            ),
+        )
+        self.table_down.grid(row=2, column=2, padx=5, pady=10, sticky="nsew")
+        self.table_title_label = ttk.Label(
+            self.speed_frame, text="       Table", font=("-size", self.fontsize)
+        )
+        self.table_title_label.grid(
+            row=2, column=1, padx=(5, 10), pady=(20, 0), sticky="ew"
+        )
 
     #  }}}
+    def tabel_widgets(self):
+        self.table_frame = ttk.LabelFrame(self.tab_1, text="Table", padding=(20, 20))
+        self.table_frame.grid(row=4, column=0, padx=(20, 20), pady=10, sticky="nwew")
+        self.table_up = ttk.Button(
+            self.table_frame,
+            text="Up",
+            command=lambda: (
+                print("Up")
+            ),
+        )
+        self.table_up.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
+        self.table_down = ttk.Button(
+            self.table_frame,
+            text="Down",
+            command=lambda: (
+                print("Down")
+            ),
+        )
+        self.table_down.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
 
     # {{{ Gripper
     def gripper_widgets(self, tab_name, row, column):
@@ -578,8 +615,6 @@ class App(ttk.Frame):
 
     # {{{ Errors
     def error_widgets(self):
-        self.separator = ttk.Separator(self.tab_1)
-        self.separator.grid(row=2, column=1, padx=(10, 10), pady=10, sticky="nwew")
         self.error_frame = ttk.LabelFrame(self.tab_1, text="Error", padding=(20, 10))
         self.error_frame.grid(
             row=3, column=1, padx=(20, 10), pady=(20, 10), sticky="nwewns", rowspan=3

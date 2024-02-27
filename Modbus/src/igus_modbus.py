@@ -1288,12 +1288,12 @@ class Robot:
         num_programs = self.client.read_input_registers(331)[0]
 
         # Ensure that the list starts from the top by repeatedly navigating to the previous program
-        for i in range(num_programs):
+        for _ in range(num_programs):
             self.client.write_single_coil(131, False)
             self.client.write_single_coil(131, True)
 
         # Loop through the program indices
-        for i in range(num_programs):
+        for _ in range(num_programs):
             program_name = self.read_string(self.client.read_input_registers(333, 32))
             # Remove null characters from the program name
             program_name = str(program_name).replace("\x00", "")
@@ -1390,6 +1390,16 @@ class Robot:
 
     def is_gripper_moving(self):
         return self.get_globale_signal(7)
+    
+    def change_table_hight(self, direction: int=0,movement_time: int=0, signal: int = 6):
+        if not self.is_connected:
+            return False
+        self.set_number_variables(17, direction)
+        self.set_number_variables(18, movement_time)
+        self.set_globale_signal(signal, True)
+        sleep(0.1)
+        self.set_globale_signal(signal, False)
+        return True
     # }}}
 
 
