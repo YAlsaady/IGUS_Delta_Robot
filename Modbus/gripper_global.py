@@ -13,5 +13,6 @@ if __name__ == "__main__":
         if gripper.is_connected:
             gripper.modbus()
             gripper.is_moving()
+            gripper.is_table_moving()
         else:
             gripper = Gripper()
