@@ -86,7 +86,11 @@ class Gripper:
         if orientation is not None and not (0 <= orientation <= 180):
             return False  # Orientation value out of range
 
-        if self.opening == opening and self.orientation == orientation:
+        if (
+            self.opening == opening
+            and self.orientation == orientation
+            and self.table_hight == table_hight
+        ):
             return True
 
         if orientation is None:
@@ -99,12 +103,16 @@ class Gripper:
 
         self.opening = opening
         self.orientation = orientation
+        table_hight = int(table_hight)
         self.table_hight = table_hight
         opening = int((opening * (self.open_max - self.open_min) / 100) + self.open_min)
         orientation = 180 - int(
             (orientation * (self.orient_max - self.orient_min) / 180) + self.orient_min
         )
+        if table_hight == 2:
+            table_hight = -1
         pos = f"{opening} {orientation} {table_hight}\n"
+        print(pos)
         self.ser.write(pos.encode())
         return True
 
@@ -126,12 +134,16 @@ class Gripper:
         if self.delta.is_connected:
             self.delta.set_globale_signal(7, state)
         return state
-    
+
     def is_table_moving(self) -> bool:
-        if self.table_movement_time >= time():
+        if self.table_movement_time > time():
             return True
         if self.table_hight:
+            print(self.table_movement_time)
+            print(time())
             self.controll(self.opening, self.orientation, 0)
+            self.delta.set_number_variables(13, 0)
+            self.delta.set_number_variables(14, 0)
         return False
 
     def open(self) -> bool:
@@ -182,10 +194,10 @@ class Gripper:
     def modbus(
         self,
         signal: int = 6,
+        table_hight: int = 13,
+        table_movement_time: int = 14,
         opening: int = 15,
         orientation: int = 16,
-        table_hight: int = 17,
-        table_movement_time: int = 18,
     ):
         """
         Control the gripper using Modbus signals and variables.
@@ -213,9 +225,10 @@ class Gripper:
 
         opening = self.delta.get_writable_number_variable(opening)
         orientation = self.delta.get_writable_number_variable(orientation)
-        table_hight = self.delta.get_writable_number_variable(table_hight)
-        self.table_movement_time = self.delta.get_writable_number_variable(table_movement_time)
-        self.table_movement_time += time()
-        self.delta.set_number_variables(table_movement_time, 0)
-
+        table_hight = int(self.delta.get_writable_number_variable(table_hight))
+        if self.delta.get_writable_number_variable(table_movement_time):
+            self.table_movement_time = self.delta.get_writable_number_variable(
+                table_movement_time
+            ) / 1000
+            self.table_movement_time = self.table_movement_time+time()
         return self.controll(opening, orientation, table_hight)

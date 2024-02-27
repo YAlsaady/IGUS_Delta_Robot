@@ -1384,7 +1384,7 @@ class Robot:
         self.set_number_variables(15, opening)
         self.set_number_variables(16, orientation)
         self.set_globale_signal(signal, True)
-        sleep(0.1)
+        sleep(0.2)
         self.set_globale_signal(signal, False)
         return True
 
@@ -1394,10 +1394,10 @@ class Robot:
     def change_table_hight(self, direction: int=0,movement_time: int=0, signal: int = 6):
         if not self.is_connected:
             return False
-        self.set_number_variables(17, direction)
-        self.set_number_variables(18, movement_time)
+        self.set_number_variables(13, direction)
+        self.set_number_variables(14, movement_time)
         self.set_globale_signal(signal, True)
-        sleep(0.1)
+        sleep(0.2)
         self.set_globale_signal(signal, False)
         return True
     # }}}

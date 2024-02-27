@@ -306,7 +306,7 @@ class App(ttk.Frame):
             self.speed_frame,
             text="Up",
             command=lambda: (
-                self.delta.change_table_hight(1,1),
+                self.delta.change_table_hight(1,100),
             ),
         )
         self.table_up.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
@@ -314,7 +314,7 @@ class App(ttk.Frame):
             self.speed_frame,
             text="Down",
             command=lambda: (
-                self.delta.change_table_hight(-1,1),
+                self.delta.change_table_hight(2,100),
             ),
         )
         self.table_down.grid(row=2, column=2, padx=5, pady=10, sticky="nsew")
