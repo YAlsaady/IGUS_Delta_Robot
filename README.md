@@ -220,6 +220,6 @@ Additional documentation, including API reference, can be found in the `Modbus/d
 
 ## Acknowledgements
 This project utilizes the following libraries and resources:
-- **[pymodbus](https://github.com/pymodbus-dev/pymodbus):** Used for communication with the Delta robot via the Modbus TCP/IP protocol.
+- **[pymodbusTCP](https://github.com/sourceperl/pyModbusTCP):** Used for communication with the Delta robot via the Modbus TCP/IP protocol.
 - **[Azure-ttk-theme](https://github.com/rdbende/Azure-ttk-theme):** Served as the basis for developing the graphical user interface (GUI), enhancing the aesthetics and functionality of the interface.
 
